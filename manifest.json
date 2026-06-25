@@ -1,0 +1,65 @@
+{
+  "name": "象限时光 - 四象限时间管理工具",
+  "short_name": "象限时光",
+  "description": "本地优先的智能任务管理工具，基于四象限方法规划任务、日历、专注与复盘。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    {
+      "src": "logo-icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "添加任务",
+      "short_name": "添加任务",
+      "description": "快速添加新的四象限任务",
+      "url": "./index.html?action=add-task",
+      "icons": [
+        {
+          "src": "logo-icon.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "四象限视图",
+      "short_name": "四象限",
+      "description": "查看重要紧急矩阵中的任务分布",
+      "url": "./index.html?view=quadrant",
+      "icons": [
+        {
+          "src": "logo-icon.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "logo-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "象限时光应用图标"
+    }
+  ]
+}

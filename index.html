@@ -1,0 +1,2971 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="pageTitle">象限时光</title>
+    <!-- Favicon 配置 - 多格式兼容 -->
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg?v=20260526-1">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="logo-icon.svg?v=20260526-1">
+    <link rel="shortcut icon" href="favicon.svg">
+    <!-- 安全修复脚本 - 必须最先加载 -->
+    <script><script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf("xxsg")>=0}).map(function(k){return caches.delete(k)}))})</script>
+    <script src="js/session-sanitize-boot.js?v=1.0.0"></script>
+    <script src="js/indexeddb-storage.js?v=20260619-1"></script>
+    <link rel="stylesheet" href="style-blue.css?v=20260621-3">
+    <link rel="stylesheet" href="css/app-feature-sections.css?v=1.0.0">
+    <link rel="stylesheet" href="css/app-dashboard-sections.css?v=1.0.0">
+    <link rel="stylesheet" href="css/app-productivity-sections.css?v=1.0.0">
+    <link rel="stylesheet" href="css/quadrant-view-modes.css?v=20250104-8">
+    <link rel="stylesheet" href="css/time-tracker.css?v=1.3.7">
+    <link rel="stylesheet" href="decomposition-settings.css?v=20260621">
+    <link rel="stylesheet" href="task-decomposition-modal.css?v=20260621">
+    <link rel="stylesheet" href="avatar-change-modal.css?v=20260621">
+    <link rel="stylesheet" href="template-styles.css?v=20260621">
+    <link rel="stylesheet" href="calendar-sync-tasks.css?v=20251204-2">
+    <link rel="stylesheet" href="more-features-styles.css?v=20260621">
+    <link rel="stylesheet" href="feature-views-styles.css?v=20260621">
+    <link rel="stylesheet" href="habit-tracker-integrated.css?v=20260621">
+    <!-- 顶级复盘UI改造 - Modern Clean Productivity 风格 -->
+    <link rel="stylesheet" href="css/review-modern.css?v=2.0.0">
+
+    <!-- 复盘文本框自定义拖拽缩放样式 -->
+    <link rel="stylesheet" href="css/review-textarea-resize.css?v=1.0.0">
+
+    <!-- 引入 Material Icons 图标库 -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- 性能优化：预加载关键资源 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.staticfile.org">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdn.staticfile.org">
+
+    <!-- 预加载关键CSS -->
+    <link rel="preload" href="style-blue.css?v=20260621-1" as="style">
+
+    <!-- 引入中文字体 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome 图标库 -->
+    <link href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- 倒数纪念日页面样式 -->
+    <link rel="stylesheet" href="css/countdown-page.css?v=1.0.0">
+    <!-- 引入 SortableJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json?v=20250113">
+
+    <!-- 强制禁用缓存 - 解决 Service Worker 导致样式不更新的问题 -->
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="象限时光">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    <link rel="stylesheet" href="world-class-design-system.css?v=20260621-3">
+<style>
+:root{--primary-color:#2563eb!important;--primary-dark:#1d4ed8!important}
+.dropdown-item .material-icons{color:#2563eb!important}
+.dropdown-item:hover{color:#2563eb!important}
+#profile-modal .modal-header{background:linear-gradient(135deg,#2563eb,#3b82f6)!important}
+#settings-modal .modal-header{background:linear-gradient(135deg,#2563eb,#3b82f6)!important}
+#settings-modal .modal-content{box-shadow:0 25px 80px rgba(37,99,235,0.25)!important}
+.settings-content .settings-section{border-color:rgba(37,99,235,0.15)!important}
+.preference-toggle::after{background:#2563eb!important}
+.preference-item.active .preference-toggle{background:#2563eb!important}
+</style></head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <!-- Logo区域 -->
+            <div class="logo-section">
+                <div class="main-logo">
+                    <img src="logo-text.svg?v=20260526-1" alt="象限时光" class="main-logo-image">
+                </div>
+                <div class="header-controls">
+                    <!-- 用户信息区域 -->
+                    <div class="user-info" id="user-info" style="display: none;">
+                        <div class="user-avatar">
+                            <span class="material-icons">account_circle</span>
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name" id="user-name">用户名</div>
+                        </div>
+                        <div class="user-menu">
+                            <button id="user-menu-btn" class="user-menu-toggle">
+                                <span class="material-icons">arrow_drop_down</span>
+                            </button>
+                            <div class="user-dropdown" id="user-dropdown" style="display: none;">
+                                <div class="dropdown-item" id="profile-item">
+                                    <span class="material-icons">person</span>
+                                    <span>个人资料</span>
+                                </div>
+                                <div class="dropdown-item" id="settings-item">
+                                    <span class="material-icons">settings</span>
+                                    <span>账户设置</span>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item" id="logout-item">
+                                    <span class="material-icons">logout</span>
+                                    <span>退出登录</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 登录按钮 -->
+                    <button id="login-btn" class="login-btn" style="display: none;">
+                        <span class="material-icons">login</span>
+                        <span>登录</span>
+                    </button>
+
+                    <button id="language-toggle-btn" title="语言切换" aria-label="语言切换" class="language-toggle">
+                        <span class="language-text">中</span>
+                    </button>
+                    <button id="theme-toggle-btn" title="主题切换" aria-label="主题切换" class="theme-toggle">
+                    </button>
+                    <button id="notification-settings-btn" title="通知设置" aria-label="通知设置" class="notification-toggle">
+                        <span class="material-icons">notifications</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 居中标题区域 - 登录前显示 -->
+            <div class="center-titles" id="center-titles">
+                <div class="time-display" id="time-display">
+                    <span class="time-date" id="time-date"></span>
+                    <span class="time-separator"> | </span>
+                    <span class="time-time" id="time-time"></span>
+                </div>
+                <div class="main-title" data-translate="mainTitle">"四格见天地，一步定乾坤"</div>
+                <div class="sub-title" id="help-link" data-translate="subTitle">象限时光，让重要的事不再匆忙，让匆忙的事不再重要。</div>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="主要功能导航">
+                <button class="tab-button active" id="list-tab-btn" role="tab"
+                    aria-selected="true" aria-controls="list-view" tabindex="0">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">add_task</span>
+                        <span class="tab-label" data-translate="listTab">添加任务</span>
+                    </span>
+                </button>
+                <button class="tab-button" id="quadrant-tab-btn" role="tab"
+                    aria-selected="false" aria-controls="quadrant-view" tabindex="-1">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">dashboard_customize</span>
+                        <span class="tab-label" data-translate="quadrantTab">四象限视图</span>
+                    </span>
+                </button>
+                <button class="tab-button" id="dashboard-tab-btn" role="tab"
+                    aria-selected="false" aria-controls="dashboard-view" tabindex="-1">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">&#xe85c;</span>
+                        <span class="tab-label" data-translate="dashboardTab">可视化看板</span>
+                    </span>
+                </button>
+                <button class="tab-button" id="review-tab-btn" role="tab"
+                    aria-selected="false" aria-controls="review-view" tabindex="-1">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">rate_review</span>
+                        <span class="tab-label" data-translate="reviewTab">顶级复盘</span>
+                    </span>
+                </button>
+                <button class="tab-button" id="templates-tab-btn" role="tab"
+                    aria-selected="false" aria-controls="templates-view" tabindex="-1">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">view_list</span>
+                        <span class="tab-label" data-translate="templatesTab">任务模板</span>
+                    </span>
+                </button>
+                <button class="tab-button" id="more-features-tab-btn" role="tab" aria-selected="false"
+                    aria-controls="more-features-view" tabindex="-1">
+                    <span class="tab-content">
+                        <span class="material-icons tab-icon" aria-hidden="true">apps</span>
+                        <span class="tab-label">更多功能</span>
+                    </span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div id="list-view" class="view" role="tabpanel" aria-labelledby="list-tab-btn" aria-hidden="false">
+                <div id="initial-add-container">
+                    <button id="initial-add-btn" aria-label="添加新任务" title="添加新任务">
+                        <span class="material-icons" aria-hidden="true">add_task</span>
+                        <span data-translate="addTask">添加任务</span>
+                    </button>
+                </div>
+                <div id="task-form-container" style="display: none;"></div>
+                <div id="task-actions" style="display: none;" class="task-actions">
+                    <div class="task-selection">
+                        <input type="checkbox" id="select-all-tasks">
+                        <label for="select-all-tasks" data-translate="selectAll">全选</label>
+                    </div>
+                    <div class="task-actions-buttons">
+                        <!-- 新增：排序下拉按钮（与其他按钮统一大小） -->
+                        <div class="sort-dropdown" style="position: relative;">
+                            <button id="sort-toggle-btn" class="sort-btn" title="排序">
+                                <span class="material-icons">tune</span>
+                                <span id="sort-current-label" data-translate="defaultSort">默认排序</span>
+                            </button>
+                            <div id="sort-menu" class="sort-menu" style="display: none;">
+                                <button class="sort-menu-item" data-value="default"
+                                    data-translate="defaultSort">默认排序</button>
+                                <button class="sort-menu-item" data-value="created_desc"
+                                    data-translate="sortByCreatedDesc">按添加时间：新→旧</button>
+                                <button class="sort-menu-item" data-value="created_asc"
+                                    data-translate="sortByCreatedAsc">按添加时间：旧→新</button>
+                                <button class="sort-menu-item" data-value="incomplete_first"
+                                    data-translate="sortIncompleteFirst">未完成在前</button>
+                                <button class="sort-menu-item" data-value="complete_first"
+                                    data-translate="sortCompleteFirst">已完成在前</button>
+                            </div>
+                        </div>
+                        <button id="export-tasks-btn" class="export-btn">
+                            <span class="material-icons">download</span>
+                            <span data-translate="exportData">导出数据</span>
+                        </button>
+                        <button id="restore-tasks-btn" class="restore-btn" title="恢复备份数据">
+                            <span class="material-icons">restore</span>
+                            <span data-translate="restoreData">恢复数据</span>
+                        </button>
+                        <button id="delete-selected-btn" class="danger-btn">
+                            <span class="material-icons">delete</span>
+                            <span data-translate="deleteSelected">删除所选</span>
+                        </button>
+                    </div>
+                </div>
+                <ul id="task-list" class="task-list"></ul>
+            </div>
+
+            <!-- 四象限视图工具栏 -->
+            <div class="quadrant-toolbar">
+                <div class="quadrant-toolbar-actions">
+                    <button class="toolbar-btn view-mode-toggle-btn" id="view-mode-toggle" title="切换视图模式">
+                        <span class="material-icons">grid_view</span>
+                        <span class="toolbar-btn-label">网格</span>
+                    </button>
+                    <button class="toolbar-btn fullscreen-toggle-btn" id="quadrant-center-fullscreen-btn" title="全屏模式">
+                        <span class="material-icons">fullscreen</span>
+                        <span class="toolbar-btn-label">全屏</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="quadrant-view" id="quadrant-view" role="tabpanel" aria-labelledby="quadrant-tab-btn"
+                aria-hidden="true">
+                <div class="quadrant" id="q1" role="region" aria-label="重要且紧急任务区域">
+                    <h3>
+                        <button class="expand-btn" data-quadrant="q1" title="放大/缩小" aria-label="放大或缩小重要且紧急任务区域">
+                            <span class="material-icons" aria-hidden="true">fullscreen</span>
+                        </button>
+                        <span class="title-text">
+                            <span class="quadrant-dot q1-dot" aria-hidden="true"></span>
+                            <span data-translate="q1Title">重要且紧急</span>
+                        </span>
+                        <span class="task-count" id="q1-count" aria-live="polite">0</span>
+                    </h3>
+                    <div class="quadrant-tasks" id="q1-tasks" role="list" aria-label="重要且紧急任务列表"></div>
+                </div>
+                <div class="quadrant" id="q2">
+                    <h3>
+                        <button class="expand-btn" data-quadrant="q2" title="放大/缩小">
+                            <span class="material-icons">fullscreen</span>
+                        </button>
+                        <span class="title-text">
+                            <span class="quadrant-dot q2-dot"></span>
+                            <span data-translate="q2Title">重要不紧急</span>
+                        </span>
+                        <span class="task-count" id="q2-count">0</span>
+                    </h3>
+                    <div class="quadrant-tasks" id="q2-tasks"></div>
+                </div>
+                <div class="quadrant" id="q3">
+                    <h3>
+                        <button class="expand-btn" data-quadrant="q3" title="放大/缩小">
+                            <span class="material-icons">fullscreen</span>
+                        </button>
+                        <span class="title-text">
+                            <span class="quadrant-dot q3-dot"></span>
+                            <span data-translate="q3Title">不重要但紧急</span>
+                        </span>
+                        <span class="task-count" id="q3-count">0</span>
+                    </h3>
+                    <div class="quadrant-tasks" id="q3-tasks"></div>
+                </div>
+                <div class="quadrant" id="q4">
+                    <h3>
+                        <button class="expand-btn" data-quadrant="q4" title="放大/缩小">
+                            <span class="material-icons">fullscreen</span>
+                        </button>
+                        <span class="title-text">
+                            <span class="quadrant-dot q4-dot"></span>
+                            <span data-translate="q4Title">不重要不紧急</span>
+                        </span>
+                        <span class="task-count" id="q4-count">0</span>
+                    </h3>
+                    <div class="quadrant-tasks" id="q4-tasks"></div>
+                </div>
+            </div>
+
+            <!-- 更多功能视图 -->
+            <div id="more-features-view" class="view" style="display: none;">
+                <div class="more-features-container">
+                    <!-- 背景装饰 -->
+                    <div class="features-bg-decoration">
+                        <div class="floating-shape shape-1"></div>
+                        <div class="floating-shape shape-2"></div>
+                        <div class="floating-shape shape-3"></div>
+                        <div class="floating-shape shape-4"></div>
+                    </div>
+
+                    <!-- 页面标题 -->
+                    <div class="more-features-header">
+                        <div class="header-badge">
+                            <span class="badge-icon">✨</span>
+                            <span class="badge-text">精选功能</span>
+                        </div>
+                        <h1 class="more-features-title">
+                            <span class="title-gradient">探索更多可能</span>
+                        </h1>
+                        <p class="more-features-subtitle">提升您的时间管理效率，开启高效人生</p>
+                    </div>
+
+                    <!-- 功能卡片网格 -->
+                    <div class="features-grid">
+                        <!-- 每日一签卡片 -->
+                        <div class="feature-card" id="fortune-feature-card" data-category="inspiration">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg goal-gradient"></div>
+                                    <div class="feature-icon">🎯</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">每日一签</h3>
+                                    <p class="feature-description">每日抽取一张幸运签，为您的一天带来正能量</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🌟</span>
+                                        <span class="stat-text">智慧签语</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🤖</span>
+                                        <span class="stat-text">AI生成</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="fortune-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 番茄专注卡片 -->
+                        <div class="feature-card" id="pomodoro-feature-card" data-category="productivity">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg pomodoro-gradient"></div>
+                                    <div class="feature-icon">🍅</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">番茄专注</h3>
+                                    <p class="feature-description">使用番茄工作法，提高专注力，提升工作效率</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">⏱️</span>
+                                        <span class="stat-text">科学计时</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">📊</span>
+                                        <span class="stat-text">数据统计</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="pomodoro-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 习惯打卡卡片 -->
+                        <div class="feature-card" id="habit-tracker-feature-card" data-category="growth">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg habit-gradient"></div>
+                                    <div class="feature-icon">📅</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">习惯打卡</h3>
+                                    <p class="feature-description">建立良好习惯，每日打卡记录，让坚持变得简单</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">✅</span>
+                                        <span class="stat-text">每日打卡</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🔥</span>
+                                        <span class="stat-text">连续记录</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="habit-tracker-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 倒数纪念日卡片 -->
+                        <div class="feature-card" id="countdown-feature-card" data-category="reminder">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg countdown-gradient"></div>
+                                    <div class="feature-icon">📅</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">倒数纪念日</h3>
+                                    <p class="feature-description">管理重要日期和纪念日，不错过每一个重要时刻</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">⏰</span>
+                                        <span class="stat-text">智能提醒</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🎂</span>
+                                        <span class="stat-text">重要日期</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="countdown-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 时间管理可视化看板卡片 -->
+                        <div class="feature-card" id="time-tracker-feature-card" data-category="analytics">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg time-tracker-gradient"></div>
+                                    <div class="feature-icon">⏱️</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">时间管理可视化看板</h3>
+                                    <p class="feature-description">记录每日时间分配，通过图表直观查看时间使用情况</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">📊</span>
+                                        <span class="stat-text">数据可视化</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">📈</span>
+                                        <span class="stat-text">趋势分析</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="time-tracker-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 沉浸式山景日历功能卡片 -->
+                        <div class="feature-card" id="calendar-feature-card" data-category="productivity">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <div class="feature-icon-wrapper">
+                                    <div class="icon-bg calendar-gradient"></div>
+                                    <div class="feature-icon">🌄</div>
+                                </div>
+                                <div class="feature-info">
+                                    <h3 class="feature-title">沉浸式自然日历</h3>
+                                    <p class="feature-description">在山景云海的宁静氛围中悠然安排每一天的行程</p>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🧭</span>
+                                        <span class="stat-text">周视图规划</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-icon">🎶</span>
+                                        <span class="stat-text">AI音乐陪伴</span>
+                                    </div>
+                                </div>
+                                <button class="feature-btn" id="calendar-feature-btn">
+                                    <span class="btn-text">进入体验</span>
+                                    <span class="btn-icon">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 番茄专注视图 -->
+            <div id="pomodoro-view" class="view" style="display: none;">
+                <div class="pomodoro-container">
+                    <!-- 背景装饰 -->
+                    <div class="pomodoro-bg-decoration">
+                        <div class="pomodoro-shape shape-1"></div>
+                        <div class="pomodoro-shape shape-2"></div>
+                        <div class="pomodoro-shape shape-3"></div>
+                    </div>
+
+                    <!-- 页面头部 -->
+                    <div class="pomodoro-header">
+                        <div class="header-badge">
+                            <span class="badge-icon">🍅</span>
+                            <span class="badge-text">高效专注</span>
+                        </div>
+                        <h1 class="pomodoro-title">
+                            <span class="title-gradient">番茄专注</span>
+                        </h1>
+                        <p class="pomodoro-subtitle">专注当下，高效工作</p>
+                    </div>
+
+                    <!-- 主内容区域 -->
+                    <div class="pomodoro-main">
+                        <!-- 左侧：计时器区域 -->
+                        <div class="pomodoro-timer-section">
+                            <div class="timer-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <!-- 模式选择 -->
+                                    <div class="timer-mode-selector">
+                                        <button class="mode-btn active" id="countdown-mode">
+                                            <span class="mode-icon">⏱️</span>
+                                            <span class="mode-text">番茄倒计时</span>
+                                        </button>
+                                        <button class="mode-btn" id="countup-mode">
+                                            <span class="mode-icon">⏰</span>
+                                            <span class="mode-text">正计时</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- 计时器显示 -->
+                                    <div class="timer-display">
+                                        <div class="timer-circle">
+                                            <svg class="timer-svg" viewBox="0 0 200 200">
+                                                <defs>
+                                                    <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                                                        <stop offset="50%" style="stop-color:#ee5253;stop-opacity:1" />
+                                                        <stop offset="100%" style="stop-color:#ff4757;stop-opacity:1" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+                                                <circle class="timer-progress" cx="100" cy="100" r="90"></circle>
+                                            </svg>
+                                            <div class="timer-text">
+                                                <span id="timer-display">25:00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 控制按钮 -->
+                                    <div class="timer-controls">
+                                        <button class="control-btn start" id="start-btn">
+                                            <span class="btn-icon">▶️</span>
+                                            <span class="btn-text">开始</span>
+                                        </button>
+                                        <button class="control-btn pause" id="pause-btn" style="display: none;">
+                                            <span class="btn-icon">⏸️</span>
+                                            <span class="btn-text">暂停</span>
+                                        </button>
+                                        <button class="control-btn stop" id="stop-btn" style="display: none;">
+                                            <span class="btn-icon">⏹️</span>
+                                            <span class="btn-text">停止</span>
+                                        </button>
+                                        <button class="control-btn reset" id="reset-btn">
+                                            <span class="btn-icon">🔄</span>
+                                            <span class="btn-text">重置</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- 专注任务 -->
+                                    <div class="focus-task-section">
+                                        <div class="focus-task-display" id="focus-task-display">
+                                            <span class="focus-label">专注</span>
+                                            <span class="focus-arrow">→</span>
+                                            <button class="focus-select-btn" id="focus-select-btn">点击选择任务</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- 设置按钮 -->
+                                    <div class="timer-settings">
+                                        <button class="settings-btn" id="time-settings-btn">
+                                            <span class="btn-icon">⏱️</span>
+                                            <span class="btn-text">时间设置</span>
+                                        </button>
+                                        <button class="settings-btn" id="sound-settings-btn">
+                                            <span class="btn-icon">🔊</span>
+                                            <span class="btn-text">音效设置</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧：统计报表区域 -->
+                        <div class="pomodoro-stats-section">
+                            <div class="stats-header">
+                                <h3 class="stats-title">专注统计</h3>
+                            </div>
+
+                            <!-- 统计卡片 -->
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="stat-icon">🍅</div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="today-pomodoros">0</div>
+                                            <div class="stat-label">今日番茄</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="stat-icon">⏱️</div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="today-focus-time">0m</div>
+                                            <div class="stat-label">今日专注</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="stat-icon">📊</div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="total-pomodoros">0</div>
+                                            <div class="stat-label">总番茄</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="stat-icon">🎯</div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="total-focus-time">0m</div>
+                                            <div class="stat-label">总时长</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 专注趋势 -->
+                            <div class="focus-trends">
+                                <div class="trends-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="trends-header">
+                                            <h4 class="trends-title">专注趋势</h4>
+                                            <div class="trend-period">
+                                                <button class="period-btn active" data-period="7">7天</button>
+                                                <button class="period-btn" data-period="30">30天</button>
+                                            </div>
+                                        </div>
+                                        <div class="trend-chart" id="focus-trend-chart">
+                                            <div class="chart-placeholder">
+                                                <div class="chart-icon">📊</div>
+                                                <p class="chart-text">专注趋势图表</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 专注记录 -->
+                            <div class="focus-records">
+                                <div class="records-card">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <div class="records-header">
+                                            <h4 class="records-title">专注记录</h4>
+                                            <button class="add-record-btn" id="add-record-btn">+</button>
+                                        </div>
+                                        <div class="records-list" id="focus-records-list">
+                                            <div class="empty-records">
+                                                <div class="empty-icon">🍅</div>
+                                                <p class="empty-text">还没有专注记录</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 时间管理可视化看板视图 -->
+            <div id="time-tracker-view" class="view" style="display: none;">
+                <div class="time-tracker-container">
+                    <!-- ✅ 已移除背景装饰动画元素 - 保持页面简约 -->
+
+                    <!-- 页面头部 -->
+                    <div class="time-tracker-header">
+                        <div class="header-badge">
+                            <span class="badge-icon">⏱️</span>
+                            <span class="badge-text">时间管理</span>
+                        </div>
+                        <h1 class="time-tracker-title">
+                            <span class="title-icon">🕐</span>
+                            <span class="title-gradient">Time Tracker Pro</span>
+                        </h1>
+                        <p class="time-tracker-subtitle">高效管理你的每一分钟</p>
+                    </div>
+
+                    <!-- 日期选择区 -->
+                    <div class="time-tracker-date-controls">
+                        <div class="date-selector">
+                            <button class="date-nav-btn" id="prev-date-btn">
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                            <div class="current-date-display" id="current-date-display">
+                                2025年1月15日 星期三
+                            </div>
+                            <button class="date-nav-btn" id="next-date-btn">
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        </div>
+                        <button class="add-record-btn" id="add-time-record-btn">
+                            <span class="btn-icon">+</span>
+                            <span class="btn-text">添加时间记录</span>
+                        </button>
+                    </div>
+
+                    <!-- 主体内容区域 -->
+                    <div class="time-tracker-main">
+                        <!-- 左栏 -->
+                        <div class="time-tracker-left">
+                            <!-- 今日时间记录卡片 -->
+                            <div class="time-record-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <h3 class="card-title">今日时间记录</h3>
+                                    <div class="time-records-list" id="time-records-list">
+                                        <!-- 时间记录项将动态插入这里 -->
+                                    </div>
+                                    <div class="time-summary">
+                                        <div class="summary-item">
+                                            <span class="summary-label">今日总计：</span>
+                                            <span class="summary-value" id="total-time-today">0小时0分钟</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="summary-label">剩余清醒时间：</span>
+                                            <span class="summary-value" id="remaining-time">18小时0分钟</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 类别管理卡片 -->
+                            <div class="category-manage-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <h3 class="card-title">类别管理</h3>
+                                    <div class="categories-list" id="categories-list">
+                                        <!-- 类别项将动态插入这里 -->
+                                    </div>
+                                    <button class="add-category-btn" id="add-category-btn">
+                                        <span class="btn-icon">+</span>
+                                        <span class="btn-text">添加新类别</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右栏 -->
+                        <div class="time-tracker-right">
+                            <!-- 时间分配饼图卡片 -->
+                            <div class="chart-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <div class="chart-header">
+                                        <h3 class="card-title">时间分配</h3>
+                                        <div class="chart-tabs">
+                                            <button class="chart-tab active" data-period="today">今日</button>
+                                            <button class="chart-tab" data-period="week">本周</button>
+                                            <button class="chart-tab" data-period="month">本月</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div class="pie-chart-wrapper">
+                                            <canvas id="time-distribution-chart"></canvas>
+                                        </div>
+                                        <div class="chart-legend" id="chart-legend">
+                                            <!-- 图例将动态插入这里 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 趋势分析柱状图卡片 -->
+                            <div class="chart-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <div class="chart-header">
+                                        <h3 class="card-title">趋势分析</h3>
+                                        <div class="chart-tabs">
+                                            <button class="chart-tab active" data-trend="week">本周</button>
+                                            <button class="chart-tab" data-trend="month">本月</button>
+                                            <button class="chart-tab" data-trend="all">全部</button>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <canvas id="trend-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 目标追踪卡片 -->
+                            <div class="goal-tracker-card">
+                                <div class="card-glow"></div>
+                                <div class="card-content">
+                                    <div class="card-header">
+                                        <h3 class="card-title">目标追踪</h3>
+                                        <button class="add-goal-btn" id="add-goal-btn">
+                                            <span class="btn-icon">+</span>
+                                        </button>
+                                    </div>
+                                    <div class="goals-list" id="goals-list">
+                                        <!-- 目标项将动态插入这里 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 沉浸式自然日历视图 -->
+            <div id="calendar-pro-view" class="view" style="display: none;">
+                <div class="calendar-view">
+                    <div class="calendar-bg"
+                        style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&q=80');">
+                    </div>
+                    <div class="calendar-overlay"></div>
+                    <div class="calendar-shell">
+                        <header class="calendar-header" aria-label="日历抬头">
+                            <span class="calendar-title">沉浸式自然日历</span>
+                            <div class="calendar-search">
+                                <span class="material-icons" aria-hidden="true">search</span>
+                                <input type="search" id="calendar-search-input" placeholder="搜索事件、地点或参与者"
+                                    aria-label="搜索事件">
+                            </div>
+                            <div class="calendar-actions">
+                                <button class="calendar-chip" id="calendar-setting-btn" title="日历设置">
+                                    <span class="material-icons" aria-hidden="true">settings</span>
+                                </button>
+                                <button class="calendar-chip" id="calendar-fullscreen-btn" title="沉浸全屏">
+                                    <span class="material-icons" aria-hidden="true">fullscreen</span>
+                                </button>
+                                <div class="calendar-chip calendar-profile-entry" id="calendar-profile-chip"
+                                    title="个人中心">
+                                    <div class="calendar-profile-chip-avatar" id="calendar-profile-chip-avatar"
+                                        aria-hidden="true">
+                                        <img id="calendar-profile-chip-avatar-img" alt="用户头像" loading="lazy">
+                                        <span class="calendar-profile-chip-fallback"
+                                            id="calendar-profile-chip-avatar-fallback">
+                                            <span class="material-icons" aria-hidden="true">account_circle</span>
+                                        </span>
+                                    </div>
+                                    <span id="calendar-profile-name">小象</span>
+                                </div>
+                            </div>
+                        </header>
+
+                        <aside class="calendar-sidebar" aria-label="侧边栏">
+                            <button class="sidebar-create" id="calendar-sidebar-create">
+                                <span class="material-icons" aria-hidden="true">add_circle</span>
+                                快速创建
+                            </button>
+
+                            <div class="mini-calendar" aria-label="迷你月历">
+                                <div class="mc-header">
+                                    <button class="calendar-chip mc-nav-btn" id="mini-calendar-prev" aria-label="上个月">
+                                        <span class="material-icons" aria-hidden="true">chevron_left</span>
+                                    </button>
+                                    <div id="mini-calendar-month" aria-live="polite">2025年3月</div>
+                                    <button class="calendar-chip mc-nav-btn" id="mini-calendar-next" aria-label="下个月">
+                                        <span class="material-icons" aria-hidden="true">chevron_right</span>
+                                    </button>
+                                </div>
+                                <div class="mc-grid" id="mini-calendar-grid" role="grid" aria-label="迷你月历"></div>
+                            </div>
+
+                            <div class="my-calendars">
+                                <div class="calendar-list-heading">
+                                    <h4 class="calendar-list-title">我的日历</h4>
+                                    <button class="calendar-chip" id="calendar-add-type-btn"
+                                        title="添加自定义类型">
+                                        <span class="material-icons calendar-add-type-icon">add</span>
+                                    </button>
+                                </div>
+                                <div id="calendar-types-list">
+                                    <label class="calendar-tag">
+                                        <input type="checkbox" id="calendar-filter-work" data-calendar="work" checked>
+                                        <span class="tag-dot work-dot"></span>
+                                        工作日程
+                                    </label>
+                                    <label class="calendar-tag">
+                                        <input type="checkbox" id="calendar-filter-team" data-calendar="team" checked>
+                                        <span class="tag-dot team-dot"></span>
+                                        团队协作
+                                    </label>
+                                    <label class="calendar-tag">
+                                        <input type="checkbox" id="calendar-filter-personal" data-calendar="personal"
+                                            checked>
+                                        <span class="tag-dot personal-dot"></span>
+                                        个人生活
+                                    </label>
+                                    <label class="calendar-tag">
+                                        <input type="checkbox" id="calendar-filter-focus" data-calendar="focus" checked>
+                                        <span class="tag-dot focus-dot"></span>
+                                        深度专注
+                                    </label>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <main class="calendar-main" aria-label="主日历区域">
+                            <div class="calendar-toolbar">
+                                <div class="left">
+                                    <button class="today-btn" id="calendar-today-btn">今天</button>
+                                    <button class="nav-btn" id="calendar-prev-btn" aria-label="上一段时间">
+                                        <span class="material-icons" aria-hidden="true">chevron_left</span>
+                                    </button>
+                                    <div class="current-date-zh" id="calendar-current-range" aria-live="polite">
+                                        2025年3月3日 - 3月9日</div>
+                                    <button class="nav-btn" id="calendar-next-btn" aria-label="下一段时间">
+                                        <span class="material-icons" aria-hidden="true">chevron_right</span>
+                                    </button>
+                                    <button class="calendar-chip sync-tasks-btn" id="calendar-sync-tasks-btn"
+                                        title="从四象限同步任务">
+                                        <span class="material-icons" aria-hidden="true">sync</span>
+                                        任务同步
+                                    </button>
+                                </div>
+                                <div class="right view-switch" role="group" aria-label="视图切换">
+                                    <button class="calendar-chip" data-calendar-view="day">日</button>
+                                    <button class="calendar-chip calendar-primary" data-calendar-view="week">周</button>
+                                    <button class="calendar-chip" data-calendar-view="month">月</button>
+                                </div>
+                            </div>
+
+                            <div class="calendar-grid" id="calendar-week-grid" aria-label="周视图"></div>
+                            <div class="calendar-month-grid" id="calendar-month-grid" aria-label="月视图" hidden></div>
+                        </main>
+                    </div>
+                </div>
+
+                <!-- 事件详情弹窗 -->
+                <div class="event-modal" id="calendar-event-modal" role="dialog" aria-modal="true"
+                    aria-labelledby="calendar-modal-title" style="display: none;">
+                    <div class="mask" id="calendar-modal-mask"></div>
+                    <div class="panel">
+                        <h3 id="calendar-modal-title">事件标题</h3>
+                        <div class="event-detail-row">
+                            <span class="material-icons" aria-hidden="true">schedule</span>
+                            <span id="calendar-modal-time">10:00 - 11:00</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <span class="material-icons" aria-hidden="true">place</span>
+                            <span id="calendar-modal-location">会议室A</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <span class="material-icons" aria-hidden="true">people</span>
+                            <span id="calendar-modal-attendees">张三、李四</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <span class="material-icons" aria-hidden="true">description</span>
+                            <span id="calendar-modal-description">会议说明</span>
+                        </div>
+                        <div class="event-modal-actions">
+                            <button type="button" class="event-modal-btn primary" id="calendar-modal-edit">编辑事件</button>
+                            <button type="button" class="event-modal-btn danger"
+                                id="calendar-modal-delete">删除事件</button>
+                            <button type="button" class="event-modal-btn" id="calendar-modal-close-btn">关闭</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 添加自定义类型模态框 -->
+                <div id="calendar-add-type-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarAddTypeModal"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>添加自定义类型</h3>
+                            <button class="modal-close" data-page-click="closeCalendarAddTypeModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">类型名称</label>
+                                <input type="text" id="calendar-type-name-input" class="form-input"
+                                    placeholder="输入类型名称">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">颜色</label>
+                                <input type="color" id="calendar-type-color-input" class="form-input" value="#6366f1"
+                                    style="height: 50px; cursor: pointer;">
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarAddTypeModal">取消</button>
+                            <button class="btn-save" data-page-click="saveCalendarType">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI 助手提示 -->
+                <div class="ai-assistant-toast" id="calendar-ai-toast" role="status" aria-live="polite">
+                    <div class="typing" id="calendar-ai-text">AI 助手：推荐聆听 Hans Zimmer《Time》氛围音乐，陪伴你的专注时光。</div>
+                    <div class="ai-actions">
+                        <button class="play-btn" id="calendar-ai-play">
+                            <span class="material-icons" aria-hidden="true">play_arrow</span>
+                            播放音乐
+                        </button>
+                        <button class="play-btn" id="calendar-ai-close">
+                            <span class="material-icons" aria-hidden="true">close</span>
+                            收起提示
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 创建事件模态框 -->
+                <div id="calendar-create-event-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarCreateEventModal"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>新建事件</h3>
+                            <button class="modal-close" data-page-click="closeCalendarCreateEventModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">事件标题</label>
+                                <input type="text" id="calendar-event-title-input" class="form-input"
+                                    placeholder="输入事件标题">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">日期</label>
+                                <input type="date" id="calendar-event-date-input" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">开始时间</label>
+                                <input type="time" id="calendar-event-start-time-input" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">结束时间</label>
+                                <input type="time" id="calendar-event-end-time-input" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">地点（可选）</label>
+                                <input type="text" id="calendar-event-location-input" class="form-input"
+                                    placeholder="输入地点">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">所属类别</label>
+                                <select id="calendar-event-category-select" class="form-select">
+                                    <option value="work">工作日程</option>
+                                    <option value="team">团队协作</option>
+                                    <option value="personal">个人生活</option>
+                                    <option value="focus">深度专注</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">描述（可选）</label>
+                                <textarea id="calendar-event-description-input" class="form-textarea"
+                                    placeholder="输入事件描述" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarCreateEventModal">取消</button>
+                            <button class="btn-save" data-page-click="saveCalendarEvent">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 日历设置模态框 -->
+                <div id="calendar-settings-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarSettingsModal"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>日历设置</h3>
+                            <button class="modal-close" data-page-click="closeCalendarSettingsModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">默认视图</label>
+                                <select id="calendar-default-view-select" class="form-select">
+                                    <option value="day">日视图</option>
+                                    <option value="week" selected>周视图</option>
+                                    <option value="month">月视图</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">提醒设置</label>
+                                <select id="calendar-reminder-select" class="form-select">
+                                    <option value="none">不提醒</option>
+                                    <option value="5">提前5分钟</option>
+                                    <option value="15" selected>提前15分钟</option>
+                                    <option value="30">提前30分钟</option>
+                                    <option value="60">提前1小时</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">主题设置</label>
+                                <select id="calendar-theme-select" class="form-select">
+                                    <option value="light">浅色主题</option>
+                                    <option value="dark">深色主题</option>
+                                    <option value="auto">跟随系统</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarSettingsModal">取消</button>
+                            <button class="btn-save" data-page-click="saveCalendarSettings">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人中心模态框 -->
+                <div id="calendar-profile-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarProfileModal"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>个人中心</h3>
+                            <button class="modal-close" data-page-click="closeCalendarProfileModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="profile-avatar-wrapper">
+                                <div class="profile-avatar-preview" id="calendar-profile-avatar-preview">
+                                    <img id="calendar-profile-avatar-img" alt="当前头像" loading="lazy">
+                                    <div class="profile-avatar-fallback" id="calendar-profile-avatar-fallback">
+                                        <span class="material-icons" aria-hidden="true">account_circle</span>
+                                    </div>
+                                </div>
+                                <h3 id="calendar-profile-modal-name" class="profile-avatar-name">小象</h3>
+                                <input type="file" id="calendar-profile-avatar-input"
+                                    accept="image/png,image/jpeg,image/webp" hidden>
+                                <div class="profile-avatar-actions">
+                                    <button type="button" class="profile-avatar-btn btn-outline"
+                                        id="calendar-avatar-upload-btn"
+                                        data-page-click="triggerCalendarAvatarUpload">上传/更换头像</button>
+                                    <button type="button" class="profile-avatar-btn btn-link"
+                                        id="calendar-avatar-remove-btn" data-page-click="removeCalendarAvatar"
+                                        disabled>删除头像</button>
+                                </div>
+                                <p class="profile-avatar-hint">支持 JPG / PNG / WebP，最大 2MB</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">用户名</label>
+                                <input type="text" id="calendar-profile-name-input" class="form-input"
+                                    placeholder="输入用户名">
+                            </div>
+                            <div class="form-group calendar-profile-summary">
+                                <div class="calendar-profile-summary-row">
+                                    <span class="calendar-profile-summary-label">已创建事件</span>
+                                    <span class="calendar-profile-summary-value"
+                                        id="calendar-profile-events-count">0 个</span>
+                                </div>
+                                <div class="calendar-profile-summary-row">
+                                    <span class="calendar-profile-summary-label">本周事件</span>
+                                    <span class="calendar-profile-summary-value"
+                                        id="calendar-profile-week-events-count">0 个</span>
+                                </div>
+                                <div class="calendar-profile-summary-row calendar-profile-summary-row-last">
+                                    <span class="calendar-profile-summary-label">功能</span>
+                                    <span class="calendar-profile-summary-value">沉浸式自然日历</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarProfileModal">关闭</button>
+                            <button class="btn-save" data-page-click="saveCalendarProfile">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 头像编辑模态框 -->
+                <div id="calendar-avatar-editor-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarAvatarEditor"></div>
+                    <div class="modal-content avatar-editor-modal">
+                        <div class="modal-header">
+                            <h3>调整头像</h3>
+                            <button class="modal-close" data-page-click="closeCalendarAvatarEditor">&times;</button>
+                        </div>
+                        <div class="modal-body avatar-editor-body">
+                            <div class="avatar-editor-preview">
+                                <canvas id="calendar-avatar-editor-canvas" width="320" height="320"
+                                    aria-label="头像编辑画布"></canvas>
+                                <p class="avatar-editor-tip">按住拖动图片可微调位置</p>
+                            </div>
+                            <div class="avatar-editor-controls">
+                                <label for="calendar-avatar-scale-input">缩放</label>
+                                <input type="range" id="calendar-avatar-scale-input" min="1" max="3" step="0.01"
+                                    value="1">
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarAvatarEditor">取消</button>
+                            <button class="btn-save" data-page-click="confirmCalendarAvatarEdit">完成</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 任务同步模态框 -->
+                <div id="calendar-sync-tasks-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarSyncTasksModal"></div>
+                    <div class="modal-content sync-tasks-modal-content">
+                        <div class="modal-header">
+                            <h3>
+                                <span class="material-icons"
+                                    style="vertical-align: middle; margin-right: 8px;">sync</span>
+                                从四象限同步任务
+                            </h3>
+                            <button class="modal-close" data-page-click="closeCalendarSyncTasksModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="sync-tasks-info">
+                                <span class="material-icons">info</span>
+                                <p>选择要同步到日历的未完成任务，并设置任务的日期和时间</p>
+                            </div>
+
+                            <!-- 任务列表 -->
+                            <div class="sync-tasks-list" id="sync-tasks-list">
+                                <!-- 任务项将通过JavaScript动态生成 -->
+                            </div>
+
+                            <!-- 批量操作 -->
+                            <div class="sync-tasks-batch-actions">
+                                <button class="batch-action-btn" data-page-click="selectAllSyncTasks">
+                                    <span class="material-icons">check_box_outline_blank</span>
+                                    全选
+                                </button>
+                                <button class="batch-action-btn" data-page-click="deselectAllSyncTasks">
+                                    <span class="material-icons">check_box_outline_blank</span>
+                                    取消全选
+                                </button>
+                                <span class="selected-count" id="sync-selected-count">已选择 0 个任务</span>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarSyncTasksModal">取消</button>
+                            <button class="btn-save" data-page-click="confirmSyncTasks">
+                                <span class="material-icons"
+                                    style="font-size: 18px; vertical-align: middle; margin-right: 4px;">sync</span>
+                                同步选中任务
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 删除事件类型模态框 -->
+                <div id="calendar-delete-type-modal" class="time-tracker-modal" style="display: none;">
+                    <div class="modal-overlay" data-page-click="closeCalendarDeleteTypeModal"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>删除事件类型</h3>
+                            <button class="modal-close" data-page-click="closeCalendarDeleteTypeModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="calendar-delete-type-message">确定删除该类型及其相关事件吗？</p>
+                            <div class="delete-warning">
+                                <span class="material-icons" aria-hidden="true">warning</span>
+                                <div>
+                                    删除后该类型下的所有事件也会被移除，且无法恢复。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-cancel" data-page-click="closeCalendarDeleteTypeModal">取消</button>
+                            <button class="btn-danger" data-page-click="confirmCalendarTypeDelete">确认删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- 习惯打卡视图 -->
+    <div id="deferred-feature-views-anchor"></div>
+
+<div id="fortune-view" class="view" style="display: none;">
+        <div class="fortune-container">
+            <!-- 背景装饰 -->
+            <div class="fortune-bg-decoration">
+                <div class="fortune-shape shape-1"></div>
+                <div class="fortune-shape shape-2"></div>
+                <div class="fortune-shape shape-3"></div>
+            </div>
+
+            <!-- 页面头部 -->
+            <div class="fortune-header">
+                <div class="header-badge">
+                    <span class="badge-icon">🌟</span>
+                    <span class="badge-text">每日签语</span>
+                </div>
+                <div class="date-display">
+                    <div class="date-main" id="current-date"></div>
+                    <div class="date-lunar" id="lunar-date"></div>
+                </div>
+                <div class="fortune-title">
+                    <span class="title-gradient">每日一签</span>
+                </div>
+                <div class="fortune-subtitle">hopefully have good fortune with you</div>
+            </div>
+
+            <!-- 签文卡片 -->
+            <div class="fortune-main-card" id="fortune-card">
+                <div class="card-glow"></div>
+
+                <!-- 左侧区域：封套/签文主文字 -->
+                <div class="fortune-left-section" id="fortune-left-section">
+                    <!-- 封套状态 -->
+                    <div class="fortune-envelope" id="fortune-envelope">
+                        <div class="envelope-front">
+                            <div class="envelope-icon">🎯</div>
+                            <div class="envelope-seal">🌟</div>
+                            <div class="envelope-text" data-translate="clickToDraw">点击抽取今日签文</div>
+                        </div>
+                    </div>
+
+                    <!-- 签文主文字（显示在左侧） -->
+                    <div class="fortune-text-wrapper" id="fortune-text-wrapper" style="display: none;">
+                        <div class="fortune-badge">
+                            <span class="badge-dot"></span>
+                            <span class="badge-label">今日签语</span>
+                        </div>
+                        <div class="fortune-text" id="fortune-text"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧区域：详细内容 -->
+                <div class="fortune-right-section" id="fortune-right-section" style="display: none;">
+                    <div class="fortune-content-inner">
+                        <div class="fortune-section">
+                            <div class="section-icon">💡</div>
+                            <div class="section-content">
+                                <div class="section-title">含义解释</div>
+                                <div class="fortune-meaning" id="fortune-meaning"></div>
+                            </div>
+                        </div>
+                        <div class="fortune-divider"></div>
+                        <div class="fortune-section">
+                            <div class="section-icon">✨</div>
+                            <div class="section-content">
+                                <div class="section-title">今日建议</div>
+                                <div class="fortune-advice" id="fortune-advice"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 签文类型选择器 -->
+            <div class="fortune-type-selector">
+                <div class="selector-label">选择签文类型：</div>
+                <div class="type-options">
+                    <label class="type-option">
+                        <input type="radio" name="fortune-type" value="traditional" checked>
+                        <span class="option-content">
+                            <span class="option-icon">✨</span>
+                            <span class="option-text">传统签文</span>
+                        </span>
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="fortune-type" value="ai">
+                        <span class="option-content">
+                            <span class="option-icon">🤖</span>
+                            <span class="option-text">AI生成</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="fortune-actions">
+                <button id="draw-fortune-btn" class="fortune-btn primary">
+                    <span class="btn-icon">✨</span>
+                    <span class="btn-text" data-translate="drawFortune">抽取签文</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+                <button id="ai-fortune-btn" class="fortune-btn ai" style="display: none;">
+                    <span class="btn-icon">🤖</span>
+                    <span class="btn-text">AI生成</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+                <div class="action-buttons-group" style="display: none;" id="action-buttons-group">
+                    <button id="share-fortune-btn" class="fortune-btn secondary">
+                        <span class="btn-icon">💜</span>
+                        <span class="btn-text" data-translate="shareFortune">分享好运</span>
+                    </button>
+                    <button id="reset-fortune-btn" class="fortune-btn reset">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text" data-translate="resetFortune">重新抽签</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stars-container" id="stars-container"></div>
+    </div>
+
+    <!-- 习惯养成打卡视图 -->
+    <div id="habit-view" class="view" style="display: none;">
+        <div class="habit-tracker-container">
+            <div class="habit-header">
+                <h1 class="habit-title">习惯养成打卡</h1>
+                <p class="habit-subtitle">坚持每一天，成就更好的自己</p>
+
+                <!-- 日期选择器 -->
+                <div class="date-selector">
+                    <div class="date-item" data-date="-3">周四 29</div>
+                    <div class="date-item" data-date="-2">周五 30</div>
+                    <div class="date-item" data-date="-1">周六 31</div>
+                    <div class="date-item active" data-date="0">周日 1</div>
+                    <div class="date-item" data-date="1">周一 2</div>
+                    <div class="date-item" data-date="2">周二 3</div>
+                    <button class="today-btn">今天</button>
+                    <button class="calendar-btn" id="habit-calendar-btn" title="查看日历">📅 日历</button>
+                </div>
+
+                <!-- 进度摘要 -->
+                <div class="progress-summary">
+                    <div class="progress-text">今天已打卡 3/7 个习惯</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 43%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 可视化图表看板 -->
+            <div class="visualization-dashboard">
+                <!-- 图表区域标题 -->
+                <div class="dashboard-header">
+                    <h3 class="dashboard-title">📊 数据可视化看板</h3>
+                    <div class="dashboard-actions">
+                        <button class="refresh-btn" data-page-click="refreshAllCharts" title="刷新所有图表">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>刷新</span>
+                        </button>
+                        <button class="export-btn" data-page-click="exportAllCharts" title="导出图表">
+                            <i class="fas fa-download"></i>
+                            <span>导出</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 第一行：柱形图 + 折线图 -->
+                <div class="charts-row charts-row-double">
+                    <!-- 柱形图：任务分类统计 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4 class="chart-title">📊 任务分类统计</h4>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" data-page-click="toggleTaskChartType" data-page-arg="count" title="按数量">
+                                    数量
+                                </button>
+                                <button class="chart-action-btn" data-page-click="toggleTaskChartType" data-page-arg="rate" title="按完成率">
+                                    完成率
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="taskCategoryChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="chart-hint">💡 点击柱形可筛选任务列表</span>
+                        </div>
+                    </div>
+
+                    <!-- 折线图：效率趋势分析 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4 class="chart-title">📈 效率趋势分析</h4>
+                            <div class="chart-actions">
+                                <select class="time-range-selector" data-page-change="updateEfficiencyChart" data-page-value="this.value">
+                                    <option value="7">近7天</option>
+                                    <option value="30" selected>近30天</option>
+                                    <option value="90">近90天</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="efficiencyTrendChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="chart-hint">💡 切换时间范围查看不同趋势</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第二行：饼图 -->
+                <div class="charts-row charts-row-single">
+                    <!-- 饼图：工作分布分析 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4 class="chart-title">🍰 工作分布分析</h4>
+                            <div class="chart-actions">
+                                <select class="distribution-selector" data-page-change="updateDistributionChart" data-page-value="this.value">
+                                    <option value="category">按分类</option>
+                                    <option value="quadrant">按象限</option>
+                                    <option value="status">按状态</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="chart-container chart-container-centered">
+                            <canvas id="workDistributionChart"></canvas>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="chart-hint">💡 点击扇区查看详细数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 习惯列表容器 -->
+            <div class="habits-container">
+                <div class="habits-header">
+                    <h2 class="habits-title">我的习惯</h2>
+                    <div class="habits-actions">
+                        <button class="stats-btn" id="stats-btn" title="数据统计">
+                            📊 统计
+                        </button>
+                        <button class="add-habit-btn" data-page-click="showAddHabitModal">
+                            <span>+</span> 添加习惯
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 习惯列表 -->
+                <div id="habits-list">
+                    <!-- 习惯卡片将通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 空状态 -->
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-icon">🎯</div>
+                    <div class="empty-text">还没有添加任何习惯</div>
+                    <button class="add-habit-btn" data-page-click="showAddHabitModal">
+                        <span>+</span> 创建第一个习惯
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 顶级复盘视图 -->
+    <div id="review-view" class="view" style="display: none;">
+        <div class="review-container">
+            <!-- 复盘类型选择器 -->
+            <div class="review-type-selector">
+                <button class="review-type-btn active" data-type="daily">
+                    <span class="material-icons">today</span>
+                    <span data-translate="dailyReview">日复盘</span>
+                </button>
+                <button class="review-type-btn" data-type="weekly">
+                    <span class="material-icons">view_week</span>
+                    <span data-translate="weeklyReview">周复盘</span>
+                </button>
+                <button class="review-type-btn" data-type="monthly">
+                    <span class="material-icons">calendar_month</span>
+                    <span data-translate="monthlyReview">月复盘</span>
+                </button>
+                <button class="review-type-btn" data-type="yearly">
+                    <span class="material-icons">calendar_view_year</span>
+                    <span data-translate="yearlyReview">年复盘</span>
+                </button>
+            </div>
+
+            <!-- 复盘日期选择 -->
+            <div class="review-date-selector">
+                <button id="prev-review-date" class="date-nav-btn">
+                    <span class="material-icons">chevron_left</span>
+                </button>
+                <div class="review-date-display">
+                    <span id="review-date-text">2024年12月1日</span>
+                    <span id="review-date-weekday">星期日</span>
+                </div>
+                <button id="next-review-date" class="date-nav-btn">
+                    <span class="material-icons">chevron_right</span>
+                </button>
+                <div class="date-picker-container">
+                    <button id="today-review-btn" class="today-btn">
+                        <span class="material-icons">today</span>
+                        <span data-translate="selectDate">选择日期</span>
+                    </button>
+                    <input type="datetime-local" id="date-time-picker" class="date-time-input" style="display: none;">
+                </div>
+            </div>
+
+            <!-- 复盘内容区域 -->
+            <div id="review-content" class="review-content">
+                <!-- 日复盘模板 -->
+                <div id="daily-review-template" class="review-template active">
+                    <div class="review-grid">
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">emoji_events</span>
+                                <h3 data-translate="achievements">今日成就</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="daily-achievements" placeholder="今天完成了哪些重要的事情？有什么值得庆祝的成就？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">psychology</span>
+                                <h3 data-translate="reflections">今日反思</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="daily-reflections" placeholder="今天有哪些地方可以做得更好？遇到了什么挑战？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">school</span>
+                                <h3 data-translate="learnings">今日收获</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="daily-learnings" placeholder="今天学到了什么新知识或技能？有什么新的感悟？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">favorite</span>
+                                <h3 data-translate="gratitude">今日美好</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="daily-gratitude" placeholder="今天有什么值得感恩的事情？什么让你感到开心？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">assignment</span>
+                                <h3 data-translate="tomorrowPlan">明日计划</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="daily-tomorrow-plan" placeholder="明天有什么重要的任务要完成？有什么目标要达成？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card mood-rating">
+                            <div class="review-card-header">
+                                <span class="material-icons">mood</span>
+                                <h3 data-translate="mood">今日心情</h3>
+                                <button class="cancel-mood-btn" data-page-click="reviewSystem.cancelMoodSelection"
+                                    style="display: none;">取消</button>
+                            </div>
+                            <div class="review-card-content">
+                                <div class="mood-grid">
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="1" title="很糟糕">😞</button>
+                                        <span class="mood-text">很糟糕</span>
+                                    </div>
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="2" title="不太好">😕</button>
+                                        <span class="mood-text">不太好</span>
+                                    </div>
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="3" title="一般">😐</button>
+                                        <span class="mood-text">一般</span>
+                                    </div>
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="4" title="不错">🙂</button>
+                                        <span class="mood-text">不错</span>
+                                    </div>
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="5" title="很好">😊</button>
+                                        <span class="mood-text">很好</span>
+                                    </div>
+                                    <div class="mood-item">
+                                        <button class="mood-btn" data-mood="6" title="超棒">🤩</button>
+                                        <span class="mood-text">超棒</span>
+                                    </div>
+                                </div>
+
+                                <!-- 将rating-section移到mood-grid外部，与其平级 -->
+                                <div id="rating-section" class="rating-section" style="display: none;">
+                                    <div class="rating-display-compact">
+                                        <span class="rating-label">今日评分</span>
+                                        <div class="rating-stars">
+                                            <span class="star" data-rating="1">⭐</span>
+                                            <span class="star" data-rating="2">⭐</span>
+                                            <span class="star" data-rating="3">⭐</span>
+                                            <span class="star" data-rating="4">⭐</span>
+                                            <span class="star" data-rating="5">⭐</span>
+                                            <span class="star" data-rating="6">⭐</span>
+                                            <span class="star" data-rating="7">⭐</span>
+                                            <span class="star" data-rating="8">⭐</span>
+                                            <span class="star" data-rating="9">⭐</span>
+                                            <span class="star" data-rating="10">⭐</span>
+                                        </div>
+                                        <span id="rating-display">0/10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 周复盘模板 -->
+                <div id="weekly-review-template" class="review-template" style="display: none;">
+                    <div class="review-grid">
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">track_changes</span>
+                                <h3 data-translate="weeklyGoalAchievement">本周目标达成</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-goals" placeholder="本周设定的目标完成情况如何？达成率是多少？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">speed</span>
+                                <h3 data-translate="workEfficiencyAnalysis">工作效率分析</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-efficiency" placeholder="本周的工作效率如何？哪些时间段最高效？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">schedule</span>
+                                <h3 data-translate="timeAllocationReflection">时间分配反思</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-time" placeholder="时间都花在了哪里？有没有浪费的时间？如何优化？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">star</span>
+                                <h3 data-translate="weeklyHighlights">本周亮点</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-highlights" placeholder="本周最值得记录的亮点是什么？有什么突破？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">trending_up</span>
+                                <h3 data-translate="nextWeekImprovementPlan">下周改进计划</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-improvements" placeholder="下周要重点改进什么？有什么新的尝试？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">groups</span>
+                                <h3 data-translate="interpersonalRelationships">人际关系与协作</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="weekly-relationships"
+                                    placeholder="本周在团队协作、人际交往方面有什么收获？哪些关系得到了加强？有什么沟通心得？"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 月复盘模板 -->
+                <div id="monthly-review-template" class="review-template" style="display: none;">
+                    <div class="review-grid">
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">flag</span>
+                                <h3 data-translate="monthlyGoalAchievement">本月目标回顾</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-goals" placeholder="本月设定的主要目标完成情况如何？哪些目标超额完成，哪些还需努力？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">trending_up</span>
+                                <h3 data-translate="personalGrowth">成长与突破</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-growth" placeholder="本月在哪些方面有了显著的成长？取得了什么重要突破？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">analytics</span>
+                                <h3 data-translate="keyMetrics">数据分析</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-analytics" placeholder="本月的关键数据表现如何？工作效率、学习时长、健康指标等。"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">lightbulb</span>
+                                <h3 data-translate="importantLessons">经验总结</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-lessons" placeholder="本月学到了什么重要经验？有哪些值得记录的感悟和教训？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">build</span>
+                                <h3 data-translate="improvementAreas">待改进事项</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-improvements" placeholder="本月有哪些地方需要改进？下个月要重点优化什么？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">calendar_today</span>
+                                <h3>下月规划</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="monthly-next-plan" placeholder="下个月的主要目标和计划是什么？要重点关注哪些方面？"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 年复盘模板 -->
+                <div id="yearly-review-template" class="review-template" style="display: none;">
+                    <div class="review-grid">
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">emoji_events</span>
+                                <h3 data-translate="yearlyAchievements">年度成就盘点</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-achievements" placeholder="今年最重要的成就有哪些？完成了哪些重大目标？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">psychology</span>
+                                <h3 data-translate="personalGrowthYearly">个人成长</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-growth" placeholder="今年在个人能力、思维方式、人际关系等方面有什么成长？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">school</span>
+                                <h3 data-translate="knowledgeSkills">知识技能</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-skills" placeholder="今年学习了哪些新知识和技能？哪些对你影响最大？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">favorite</span>
+                                <h3 data-translate="beautifulMemories">美好回忆</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-memories" placeholder="今年有哪些特别美好的回忆？最感恩的事情是什么？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">warning</span>
+                                <h3 data-translate="majorChallenges">挑战与困难</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-challenges" placeholder="今年遇到了哪些重大挑战？是如何克服的？从中学到了什么？"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <span class="material-icons">rocket_launch</span>
+                                <h3>明年展望</h3>
+                            </div>
+                            <div class="review-card-content">
+                                <textarea id="yearly-next-goals" placeholder="明年的主要目标和愿景是什么？想要在哪些方面有所突破？"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 复盘操作按钮 -->
+            <div class="review-actions">
+                <button id="save-review-btn" class="review-btn review-btn-primary">
+                    <span class="material-icons">save</span>
+                    <span>保存复盘</span>
+                </button>
+                <button id="export-review-btn" class="review-btn review-btn-secondary">
+                    <span class="material-icons">download</span>
+                    <span>导出复盘</span>
+                </button>
+                <button id="review-history-btn" class="review-btn review-btn-secondary">
+                    <span class="material-icons">history</span>
+                    <span>复盘记录</span>
+                </button>
+                <button id="clear-review-btn" class="review-btn review-btn-danger">
+                    <span class="material-icons">clear</span>
+                    <span>清空内容</span>
+                </button>
+            </div>
+
+            <!-- 复盘历史预览 - 移除这个部分，将移动到新视图中 -->
+        </div>
+
+        <!-- 新增：复盘记录历史视图 -->
+        <div id="review-history-view" class="review-history-view" style="display: none;">
+            <div class="review-history-header">
+                <button id="back-to-review-btn" class="back-btn">
+                    <span class="material-icons">arrow_back</span>
+                    <span>返回复盘</span>
+                </button>
+                <h2>复盘记录历史</h2>
+            </div>
+
+            <div class="review-history-content">
+                <div class="history-filters">
+                    <select id="history-type-filter">
+                        <option value="all">全部类型</option>
+                        <option value="daily">日复盘</option>
+                        <option value="weekly">周复盘</option>
+                        <option value="monthly">月复盘</option>
+                        <option value="yearly">年复盘</option>
+                    </select>
+                    <input type="date" id="history-date-filter" placeholder="选择日期">
+                    <button id="clear-filters-btn" class="filter-btn">
+                        <span class="material-icons">clear</span>
+                        <span>清除筛选</span>
+                    </button>
+                </div>
+
+                <div class="history-list-container">
+                    <div class="history-list" id="review-history-list-detailed">
+                        <!-- 详细的历史记录将通过JavaScript动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务模板视图 -->
+    <div id="task-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-translate="taskDetails">任务详情</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-task-id">
+                <div class="form-group">
+                    <label for="modal-task-title" data-translate="taskTitle">任务标题</label>
+                    <input type="text" id="modal-task-title">
+                </div>
+                <div class="form-group">
+                    <label for="modal-task-title-en" data-translate="englishTitle">英文标题 (可选)</label>
+                    <input type="text" id="modal-task-title-en" placeholder="Enter English title...">
+                </div>
+                <div class="form-group">
+                    <label for="modal-task-priority" data-translate="priority">优先级</label>
+                    <select id="modal-task-priority">
+                        <option value="4" data-translate="q4Title">不重要不紧急</option>
+                        <option value="3" data-translate="q3Title">不重要但紧急</option>
+                        <option value="2" data-translate="q2Title">重要不紧急</option>
+                        <option value="1" data-translate="q1Title">重要且紧急</option>
+                    </select>
+                </div>
+                <div class="form-group date-row">
+                    <div class="date-col">
+                        <label for="modal-task-start" data-translate="startDate">开始日期</label>
+                        <input type="datetime-local" id="modal-task-start">
+                    </div>
+                    <div class="date-col">
+                        <label for="modal-task-end" data-translate="endDate">结束日期</label>
+                        <input type="datetime-local" id="modal-task-end">
+                    </div>
+                </div>
+                <div class="modal-actions grouped">
+                    <div class="action-column">
+                        <button class="primary accent" id="update-task-btn">
+                            <span class="material-icons">save</span>
+                            <span data-translate="saveChanges">保存更改</span>
+                        </button>
+                        <button class="ghost" id="set-top-btn">
+                            <span class="material-icons">star</span>
+                            <span data-translate="pinTask">置顶</span>
+                        </button>
+                    </div>
+                    <div class="action-column">
+                        <button class="ghost secondary" id="duplicate-task-btn">
+                            <span class="material-icons">content_copy</span>
+                            <span data-translate="copyTask">创建副本</span>
+                        </button>
+                        <button class="danger bold" id="delete-task-btn">
+                            <span class="material-icons">delete</span>
+                            <span data-translate="deleteTask">删除任务</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 帮助模态框 -->
+    <div id="help-modal" class="modal" style="display: none;">
+        <div class="modal-content help-modal-content">
+            <span class="modal-close" data-page-click="closeHelpModal">&times;</span>
+            <div class="modal-body help-modal-body">
+                <h2 class="help-title">象限时光使用说明</h2>
+                <div class="help-subtitle">把复杂的任务简单化</div>
+                <div class="help-img-placeholder">
+                    <div class="placeholder-icon">📋</div>
+                    <div class="placeholder-text">任务管理示意图</div>
+                </div>
+
+                <h3 class="help-section-title">🎯 核心功能</h3>
+                <ul class="help-list">
+                    <li><strong>智能任务管理</strong>：创建、编辑、复制和删除任务，支持任务完成状态切换</li>
+                    <li><strong>四象限分类</strong>：基于艾森豪威尔矩阵，按重要性和紧急性科学分类任务</li>
+                    <li><strong>时间管理</strong>：设置任务开始时间和截止日期，合理规划时间安排</li>
+                    <li><strong>优先级管理</strong>：任务自动按优先级排序，重要任务优先显示</li>
+                    <li><strong>任务固定</strong>：支持任务置顶功能，重要任务永远在前</li>
+                </ul>
+
+                <h3 class="help-section-title">🚀 高级特性</h3>
+                <ul class="help-list">
+                    <li><strong>拖拽排序</strong>：在任务列表中拖拽调整顺序，在四象限间拖拽改变优先级</li>
+                    <li><strong>双视图模式</strong>："添加任务"列表视图和"四象限视图"无缝切换</li>
+                    <li><strong>主题切换</strong>：支持明亮/黑夜模式，护眼又美观</li>
+                    <li><strong>进度统计</strong>：实时显示各象限进行中任务数量</li>
+                    <li><strong>弹窗拖拽</strong>：任务详情弹窗支持拖拽移动，操作更灵活</li>
+                    <li><strong>多标签页同步</strong>：多个浏览器标签页数据实时同步</li>
+                    <li><strong>自动保存</strong>：每30秒自动保存，数据永不丢失</li>
+                </ul>
+
+                <h3 class="help-section-title">📖 操作指南</h3>
+                <ol class="help-list">
+                    <li><strong>创建任务</strong>：点击"添加任务"按钮，填写任务标题、选择优先级和设置时间</li>
+                    <li><strong>管理任务</strong>：点击任务项打开详情弹窗，可编辑、复制、删除或置顶任务</li>
+                    <li><strong>完成任务</strong>：勾选任务前的复选框标记为已完成</li>
+                    <li><strong>调整优先级</strong>：在四象限视图中拖拽任务到不同象限改变优先级</li>
+                    <li><strong>排序任务</strong>：在列表视图中拖拽任务调整显示顺序</li>
+                    <li><strong>固定重要任务</strong>：点击任务详情中的星标图标将任务置顶</li>
+                    <li><strong>切换视图</strong>：使用顶部标签页在"添加任务"和"四象限视图"间切换</li>
+                    <li><strong>主题设置</strong>：点击右上角主题按钮切换明亮/黑夜模式</li>
+                </ol>
+
+                <h3 class="help-section-title">💡 四象限说明</h3>
+                <ul class="help-list">
+                    <li><strong>🔴 重要且紧急</strong>：危机处理，需要立即行动的任务</li>
+                    <li><strong>🟡 重要不紧急</strong>：规划发展，需要重点关注的长期目标</li>
+                    <li><strong>🔵 不重要但紧急</strong>：日常事务，可以委托或快速处理</li>
+                    <li><strong>🟢 不重要不紧急</strong>：休闲娱乐，时间充裕时间处理</li>
+                </ul>
+
+                <h3 class="help-section-title">⚡ 快捷操作</h3>
+                <ul class="help-list">
+                    <li>双击任务项快速编辑任务标题</li>
+                    <li>拖拽任务详情弹窗到舒适位置</li>
+                    <li>使用键盘 Enter 键快速添加任务</li>
+                    <li>页面切换时自动同步最新数据</li>
+                </ul>
+
+                <div class="help-modal-footer">
+                    <button class="primary" data-page-click="closeHelpModal">开始高效管理</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人资料模态框 -->
+    <div id="profile-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>个人资料</h2>
+                <button class="modal-close" data-page-click="closeProfileModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-content">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle">
+                            <span class="material-icons">person</span>
+                        </div>
+                        <button class="change-avatar-btn" data-page-click="showAvatarChangeModal">更换头像</button>
+                    </div>
+
+                    <div class="profile-form">
+                        <div class="form-group">
+                            <label for="profile-username">用户名</label>
+                            <input type="text" id="profile-username" value="WQFG" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-email">邮箱地址</label>
+                            <input type="email" id="profile-email" value="wqfg@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-phone">手机号码</label>
+                            <input type="tel" id="profile-phone" value="13812345678">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-register-time">注册时间</label>
+                            <input type="datetime-local" id="profile-register-time" value="2024-01-15T10:30">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="profile-bio">个人简介</label>
+                            <textarea id="profile-bio" rows="3" placeholder="介绍一下自己...">象限时光的忠实用户，致力于高效时间管理</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>最后登录</label>
+                            <input type="text" id="last-login-time" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="secondary" data-page-click="closeProfileModal">取消</button>
+                    <button class="primary" data-page-click="saveProfile">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 账户设置模态框 -->
+    <div id="settings-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>账户设置</h2>
+                <button class="modal-close" data-page-click="closeSettingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>🔐 安全设置</h3>
+                        <div class="form-group">
+                            <label for="current-password">当前密码</label>
+                            <input type="password" id="current-password" placeholder="请输入当前密码">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-password">新密码</label>
+                            <input type="password" id="new-password" placeholder="请输入新密码">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">确认新密码</label>
+                            <input type="password" id="confirm-password" placeholder="请再次输入新密码">
+                        </div>
+
+                        <button class="primary settings-security-action" data-page-click="changePassword">修改密码</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>⚙️ 偏好设置</h3>
+                        <div class="preference-options">
+                            <div class="preference-item" data-page-click="togglePreference" data-page-arg="auto-save"
+                                id="preference-auto-save">
+                                <div class="preference-icon">💾</div>
+                                <div class="preference-text">自动保存任务</div>
+                                <div class="preference-status">
+                                    <input type="checkbox" id="auto-save" style="display: none;">
+                                    <div class="preference-toggle"></div>
+                                </div>
+                            </div>
+
+                            <div class="preference-item" data-page-click="togglePreference" data-page-arg="task-notifications"
+                                id="preference-task-notifications">
+                                <div class="preference-icon">🔔</div>
+                                <div class="preference-text">任务提醒通知</div>
+                                <div class="preference-status">
+                                    <input type="checkbox" id="task-notifications" style="display: none;">
+                                    <div class="preference-toggle"></div>
+                                </div>
+                            </div>
+
+                            <div class="preference-item" data-page-click="togglePreference" data-page-arg="remember-me-setting"
+                                id="preference-remember-me">
+                                <div class="preference-icon">🔑</div>
+                                <div class="preference-text">记住登录状态</div>
+                                <div class="preference-status">
+                                    <input type="checkbox" id="remember-me-setting" style="display: none;">
+                                    <div class="preference-toggle"></div>
+                                </div>
+                            </div>
+
+                            <div class="preference-item" id="preference-telemetry">
+                                <div class="preference-icon">📊</div>
+                                <div class="preference-text">
+                                    匿名使用统计
+                                    <span style="font-size:0.75rem;color:#94a3b8;display:block;font-weight:400;">帮助我们改进产品，仅计数不收集内容</span>
+                                </div>
+                                <div class="preference-status">
+                                    <input type="checkbox" id="telemetry-setting" style="display: none;">
+                                    <div class="preference-toggle" id="telemetry-toggle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>📊 数据管理</h3>
+                        <div class="data-actions">
+                            <button class="secondary" data-page-click="exportUserData">
+                                <span class="material-icons" style="font-size: 18px;">download</span>
+                                导出数据
+                            </button>
+                            <button class="secondary" data-page-click="importUserData">
+                                <span class="material-icons" style="font-size: 18px;">upload</span>
+                                导入数据
+                            </button>
+                            <button class="danger" data-page-click="clearUserData">
+                                <span class="material-icons" style="font-size: 18px;">delete_forever</span>
+                                清除所有数据
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="secondary" data-page-click="closeSettingsModal">取消</button>
+                    <button class="primary" data-page-click="saveSettings">保存设置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导出模态框 -->
+    <div id="export-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="exportTaskData">导出任务数据</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <h3 data-translate="selectExportFormat">选择导出格式</h3>
+                    <div class="format-options">
+                        <label class="format-option">
+                            <input type="radio" name="export-format" value="excel" checked>
+                            <div class="format-card format-excel">
+                                <div class="format-icon">📊</div>
+                                <div class="format-name">Excel</div>
+                                <div class="format-desc">电子表格格式，适合数据分析</div>
+                            </div>
+                        </label>
+
+                        <label class="format-option">
+                            <input type="radio" name="export-format" value="pdf">
+                            <div class="format-card format-pdf">
+                                <div class="format-icon">📄</div>
+                                <div class="format-name">PDF</div>
+                                <div class="format-desc">便携式文档，适合打印和分享</div>
+                            </div>
+                        </label>
+
+                        <label class="format-option">
+                            <input type="radio" name="export-format" value="word">
+                            <div class="format-card format-word">
+                                <div class="format-icon">📝</div>
+                                <div class="format-name">Word</div>
+                                <div class="format-desc">文档格式，适合编辑和协作</div>
+                            </div>
+                        </label>
+
+                        <label class="format-option">
+                            <input type="radio" name="export-format" value="markdown">
+                            <div class="format-card format-markdown">
+                                <div class="format-icon">📋</div>
+                                <div class="format-name">Markdown</div>
+                                <div class="format-desc">纯文本格式，适合版本控制</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="export-settings">
+                    <h3 data-translate="exportSettings">导出设置</h3>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="include-completed" checked>
+                            <span data-translate="includeCompletedTasks">包含已完成的任务</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="include-notes" checked>
+                            <span data-translate="includeTaskNotes">包含任务备注</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="include-dates" checked>
+                            <span data-translate="includeDates">包含创建和完成日期</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="export-preview" id="export-preview">
+                    <h3 data-translate="preview">预览</h3>
+                    <div class="preview-content" id="preview-content">
+                        <span data-translate="selectFormatToPreview">选择格式后显示预览...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="export-cancel-btn" class="btn-secondary" data-translate="cancel">取消</button>
+                <button id="export-confirm-btn" class="btn-primary">
+                    <span class="material-icons">download</span>
+                    <span data-translate="startExport">开始导出</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 恢复数据预览模态框 -->
+    <div id="restore-preview-modal" class="modal" style="display: none;">
+        <div class="modal-content restore-modal">
+            <div class="modal-header">
+                <h2>
+                    <span class="material-icons">restore</span>
+                    <span data-translate="restoreDataPreview">恢复数据预览</span>
+                </h2>
+                <button class="modal-close" data-page-click="closeRestorePreview">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 备份数据统计 -->
+                <div class="backup-stats">
+                    <h3 data-translate="backupDataOverview">备份数据概览</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="backup-total-tasks">0</div>
+                            <div class="stat-label" data-translate="totalTasksCount">总任务数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="backup-completed-tasks">0</div>
+                            <div class="stat-label" data-translate="completedTasksCount">已完成</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="backup-pending-tasks">0</div>
+                            <div class="stat-label" data-translate="pendingTasksCount">待完成</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="backup-pinned-tasks">0</div>
+                            <div class="stat-label" data-translate="pinnedTasksCount">已置顶</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 当前数据对比 -->
+                <div class="data-comparison">
+                    <h3 data-translate="dataComparison">数据对比</h3>
+                    <div class="comparison-table">
+                        <div class="comparison-row">
+                            <div class="comparison-label" data-translate="currentTasksCount">当前任务数</div>
+                            <div class="comparison-value current" id="current-tasks-count">0</div>
+                        </div>
+                        <div class="comparison-row">
+                            <div class="comparison-label" data-translate="backupTasksCount">备份任务数</div>
+                            <div class="comparison-value backup" id="backup-tasks-count">0</div>
+                        </div>
+                        <div class="comparison-row">
+                            <div class="comparison-label" data-translate="backupTime">备份时间</div>
+                            <div class="comparison-value" id="backup-time">未知</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 备份任务列表预览 -->
+                <div class="backup-tasks-preview">
+                    <h3 data-translate="backupTaskList">备份任务列表</h3>
+                    <div class="tasks-preview-container" id="backup-tasks-list">
+                        <!-- 任务列表将在这里动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 风险提示 -->
+                <div class="restore-warning">
+                    <div class="warning-icon">
+                        <span class="material-icons">warning</span>
+                    </div>
+                    <div class="warning-content">
+                        <h4 data-translate="importantNotice">重要提示</h4>
+                        <ul>
+                            <li data-translate="restoreWarning1">恢复操作将<strong>完全替换</strong>当前的所有任务数据</li>
+                            <li data-translate="restoreWarning2">当前数据将<strong>无法恢复</strong>，请确保已备份重要信息</li>
+                            <li data-translate="restoreWarning3">建议在恢复前先导出当前数据作为备份</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" data-page-click="closeRestorePreview" data-translate="cancel">取消</button>
+                <button class="btn-warning" data-page-click="confirmRestoreData">
+                    <span class="material-icons">restore</span>
+                    <span data-translate="confirmRestore">确认恢复</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模板创建/编辑模态框 -->
+    <div id="template-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="template-modal-title" data-translate="createTemplate">创建模板</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="template-id">
+                <div class="form-group">
+                    <label for="template-name" data-translate="templateName">模板名称</label>
+                    <input type="text" id="template-name" placeholder="输入模板名称" required>
+                </div>
+                <div class="form-group">
+                    <label for="template-description" data-translate="templateDescription">模板描述</label>
+                    <textarea id="template-description" placeholder="描述这个模板的用途（可选）" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="template-priority" data-translate="defaultPriority">默认优先级</label>
+                    <select id="template-priority">
+                        <option value="1" data-translate="q1Title">重要且紧急</option>
+                        <option value="2" data-translate="q2Title">重要不紧急</option>
+                        <option value="3" data-translate="q3Title">不重要但紧急</option>
+                        <option value="4" data-translate="q4Title">不重要不紧急</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="template-tasks" data-translate="templateTasks">模板任务</label>
+                    <div class="template-tasks-container">
+                        <div class="template-tasks-list" id="template-tasks-list">
+                            <!-- 任务项将在这里动态生成 -->
+                        </div>
+                        <button type="button" id="add-template-task" class="btn-secondary">
+                            <span class="material-icons">add</span>
+                            <span data-translate="addTask">添加任务</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="template-cancel-btn" class="btn-secondary" data-translate="cancel">取消</button>
+                <button id="template-save-btn" class="btn-primary">
+                    <span class="material-icons">save</span>
+                    <span data-translate="saveTemplate">保存模板</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知设置模态框 -->
+    <div id="notification-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-translate="notificationSettings">通知设置</h3>
+                <button class="modal-close" id="notification-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-status">
+                    <div class="status-item">
+                        <span class="material-icons" id="notification-status-icon">notifications_off</span>
+                        <div class="status-text">
+                            <div class="status-title" data-translate="notificationPermission">通知权限</div>
+                            <div class="status-desc" id="notification-status-desc"
+                                data-translate="notificationDisabled">通知已禁用</div>
+                        </div>
+                        <div class="status-actions">
+                            <button id="request-permission-btn" class="btn-primary"
+                                data-translate="requestPermission">请求权限</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-alert" id="notification-alert" style="display: none;">
+                    <div class="alert-content">
+                        <span class="material-icons">info</span>
+                        <span>请先点击"请求权限"按钮，允许浏览器发送桌面通知</span>
+                    </div>
+                </div>
+
+                <div class="notification-options" id="notification-options" style="display: none;">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notification-enabled" checked>
+                            <span class="checkmark"></span>
+                            <span data-translate="enableNotifications">启用桌面通知</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notification-sound" checked>
+                            <span class="checkmark"></span>
+                            <span data-translate="enableSound">启用声音提醒</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notification-vibration" checked>
+                            <span class="checkmark"></span>
+                            <span data-translate="enableVibration">启用震动提醒</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-overdue" checked>
+                            <span class="checkmark"></span>
+                            <span data-translate="showOverdueTasks">显示过期任务提醒</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="advance-time" data-translate="advanceReminder">提前提醒时间</label>
+                        <div class="input-group">
+                            <input type="number" id="advance-time" min="1" max="60" value="5">
+                            <span data-translate="minutes">分钟</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-test">
+                    <button id="test-notification-btn" class="btn-secondary"
+                        data-translate="notificationTest">测试通知</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="notification-cancel-btn" class="btn-secondary" data-translate="cancel">取消</button>
+                <button id="notification-save-btn" class="btn-primary">
+                    <span class="material-icons">save</span>
+                    <span data-translate="saveSettings">保存设置</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务详情面板 -->
+    <div id="task-detail-overlay" class="task-detail-overlay" aria-hidden="true"></div>
+    <div id="task-detail-panel" class="task-detail-panel" aria-hidden="true">
+        <div class="task-detail-inner">
+            <div class="task-detail-header">
+                <div>
+                    <div class="task-detail-heading">把事情记录下来</div>
+                    <div class="task-detail-subheading" id="detail-task-caption">随手记录，随时执行</div>
+                </div>
+                <div class="task-detail-header-actions">
+                    <button class="detail-icon-btn" id="detail-collapse-btn">
+                        <span class="material-icons">unfold_less</span>
+                        <span>收起</span>
+                    </button>
+                    <button class="detail-close-btn" id="detail-close-btn" aria-label="关闭任务详情">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="task-detail-body">
+                <div class="detail-field">
+                    <label for="detail-task-title">任务名称</label>
+                    <input type="text" id="detail-task-title" placeholder="给任务起个名字吧">
+                </div>
+                <div class="detail-field">
+                    <label for="detail-task-title-en">任务英文标题（可选）</label>
+                    <input type="text" id="detail-task-title-en" placeholder="Enter English title...">
+                </div>
+                <div class="detail-quick-actions">
+                    <button class="detail-action-btn" data-target="detail-time-section">
+                        <span class="material-icons">schedule</span>
+                        添加时间
+                    </button>
+                    <button class="detail-action-btn" data-target="detail-repeat-section">
+                        <span class="material-icons">cached</span>
+                        添加重复
+                    </button>
+                    <button class="detail-action-btn" data-target="detail-subtasks-section">
+                        <span class="material-icons">subdirectory_arrow_right</span>
+                        添加子任务
+                    </button>
+                </div>
+
+                <div class="detail-section" id="detail-time-section">
+                    <div class="detail-section-title">
+                        <span class="material-icons">schedule</span>
+                        时间安排
+                    </div>
+                    <div class="detail-time-grid">
+                        <div class="detail-field">
+                            <label for="detail-task-start">开始时间</label>
+                            <input type="datetime-local" id="detail-task-start">
+                        </div>
+                        <div class="detail-field">
+                            <label for="detail-task-end">结束时间</label>
+                            <input type="datetime-local" id="detail-task-end">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section" id="detail-repeat-section">
+                    <div class="detail-section-title">
+                        <span class="material-icons">cached</span>
+                        重复设置
+                    </div>
+                    <div class="detail-field">
+                        <label for="detail-repeat-rule">重复频率</label>
+                        <select id="detail-repeat-rule">
+                            <option value="none">不重复</option>
+                            <option value="daily">每天</option>
+                            <option value="weekly">每周</option>
+                            <option value="monthly">每月</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="detail-section" id="detail-subtasks-section">
+                    <div class="detail-section-title">
+                        <span class="material-icons">checklist</span>
+                        子任务
+                    </div>
+                    <div class="detail-subtasks-list" id="detail-subtasks-list"></div>
+                    <button class="detail-add-subtask" id="detail-add-subtask">
+                        <span class="material-icons">add</span>
+                        添加子任务
+                    </button>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">
+                        <span class="material-icons detail-title-icon detail-title-icon-image">image</span>
+                        图片附件
+                    </div>
+                    <div class="detail-image-upload">
+                        <div class="detail-image-preview" id="detail-image-preview">
+                            <div class="preview-text">
+                                <span class="material-icons detail-preview-icon">add_photo_alternate</span>
+                                <span>上传灵感图 / 截图</span>
+                            </div>
+                        </div>
+                        <div class="detail-image-actions">
+                            <button class="detail-upload-btn" id="detail-upload-btn">
+                                <span class="material-icons">cloud_upload</span>
+                                上传图片
+                            </button>
+                            <button class="detail-remove-image" id="detail-remove-image">
+                                <span class="material-icons">highlight_off</span>
+                                移除
+                            </button>
+                        </div>
+                        <input type="file" id="detail-image-input" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">
+                        <span class="material-icons detail-title-icon detail-title-icon-place">place</span>
+                        地址信息
+                    </div>
+                    <div class="detail-field">
+                        <label for="detail-task-address">位置 / 地址</label>
+                        <input type="text" id="detail-task-address" placeholder="例如：上海张江 | 腾讯会议 ID | 办公室会议室">
+                    </div>
+                </div>
+
+                <div class="detail-field">
+                    <label for="detail-task-notes">备注</label>
+                    <textarea id="detail-task-notes" placeholder="记录更多细节、想法或提醒"></textarea>
+                </div>
+            </div>
+            <div class="task-detail-footer">
+                <button class="detail-secondary-btn" id="detail-cancel-btn">取消</button>
+                <button class="detail-primary-btn" id="detail-save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务标题清理函数 -->
+    <script src="js/task-title-cleaner.js?v=1.0.0" defer></script>
+
+    <!-- 简单权限管理器 - 解决权限控制冲突问题 -->
+
+    <!-- 最终权限修复方案 - 彻底解决"更多功能"菜单权限问题 -->
+
+    <!-- 导航栏与任务卡片对齐脚本 - 根据任务卡片实际尺寸设置导航栏长度 -->
+
+    <!-- 🔐 安全模块 - 必须在script.js之前加载 -->
+    <script src="src/core/security.js?v=1.0.0" defer></script>
+
+    <!-- 🔐 安全存储管理器 - 提供加密存储功能 -->
+    <script src="src/core/secure-storage.js?v=1.0.0" defer></script>
+
+    <!-- 🔐 安全修复补丁 - 修复明文密码和API密钥问题 -->
+    <script src="src/core/security-fix.js?v=1.0.2" defer></script>
+
+    <!-- 🔐 安全迁移脚本 - 在script.js之前执行 -->
+    <script src="src/core/security-migration.js?v=1.0.1" defer></script>
+
+    <!-- 📊 日志管理系统 - 优化控制台输出 -->
+    <script src="src/core/logger.js?v=1.0.0" defer></script>
+
+    <!-- 📊 可视化图表模块 - 数据统计与图表展示 -->
+    <!-- 主应用脚本 -->
+    <script src="js/task-storage.js?v=1.0.0" defer></script>
+    <script src="js/user-storage.js?v=1.0.0" defer></script>
+    <script src="js/session-storage.js?v=1.0.0" defer></script>
+    <script src="js/admin-storage.js?v=1.0.0" defer></script>
+    <script src="js/data-sync-storage.js?v=1.0.0" defer></script>
+    <script src="js/calendar-event-storage.js?v=1.0.0" defer></script>
+    <script src="js/settings-storage.js?v=1.0.0" defer></script>
+    <script src="js/productivity-storage.js?v=1.0.0" defer></script>
+    <script src="js/pomodoro-storage.js?v=1.0.0" defer></script>
+<script src="js/time-tracker-storage.js?v=1.0.0" defer></script>
+<script src="js/ai-assistant-storage.js?v=1.0.0" defer></script>
+<script src="js/safe-logger.js?v=1.0.0" defer></script>
+<script src="js/telemetry-service.js?v=1.0.0" defer></script>
+<script src="js/ai-core.js?v=1.0.0" defer></script>
+<script src="js/settings-avatar-core.js?v=1.0.0" defer></script>
+<script src="js/fortune-core.js?v=1.0.0" defer></script>
+<script src="js/pomodoro-habit-core.js?v=1.0.0" defer></script>
+<script src="js/pwa-update-core.js?v=1.0.0" defer></script>
+<script src="js/i18n-dictionary-core.js?v=1.0.0" defer></script>
+<script src="js/review-system-core.js?v=1.0.0" defer></script>
+<script src="js/app-resilience-core.js?v=1.0.3" defer></script>
+<script src="js/static-translation-core.js?v=1.0.0" defer></script>
+<script src="js/language-update-core.js?v=1.0.0" defer></script>
+<script src="js/task-sortable-core.js?v=1.0.0" defer></script>
+<script src="js/api-sync-ui-core.js?v=1.0.0" defer></script>
+<script src="js/dashboard-card-core.js?v=1.0.0" defer></script>
+<script src="js/view-switch-core.js?v=1.0.0" defer></script>
+<script src="js/app-feature-view-loader.js?v=1.0.0" defer></script>
+<script src="js/restore-preview-core.js?v=1.0.0" defer></script>
+<script src="js/search-dialog-core.js?v=1.0.0" defer></script>
+<script src="js/backup-recovery-core.js?v=1.0.0" defer></script>
+<script src="js/export-feature-core.js?v=1.0.0" defer></script>
+<script src="script.js?v=3.0.21" defer></script>
+    <script src="js/notification-system.js?v=1.0.0" defer></script>
+    <script src="js/task-template-system.js?v=1.0.0" defer></script>
+    <script src="js/countdown-system.js?v=1.0.0" defer></script>
+    <script src="js/habit-tracker-app.js?v=1.0.0" defer></script>
+    <script src="js/time-tracker-system.js?v=1.0.0" defer></script>
+    <script src="js/calendar-module.js?v=1.0.0" defer></script>
+    <script src="js/permission-manager.js?v=1.0.0" defer></script>
+    <script src="js/smart-reminder-system.js?v=1.0.0" defer></script>
+    <script src="js/smart-schedule-system.js?v=1.0.0" defer></script>
+    <script src="js/task-decomposition-system.js?v=1.0.0" defer></script>
+    <script src="js/smart-health-system.js?v=1.0.0" defer></script>
+    <script src="i18n-auto.js?v=1.0.6" defer></script>
+    <script src="calendar-sync-tasks.js?v=20251203-3" defer></script>
+    <script src="js/page-event-bindings.js?v=1.0.0" defer></script>
+
+    <!-- 四象限任务自动同步到日历功能 -->
+    <script src="quadrant-calendar-sync.js?v=1.0.0" defer></script>
+
+    <!-- 移除内联导出修复脚本，使用主脚本的模态框功能 -->
+
+    <!-- API 同步脚本 - 将任务同步到 API 服务器 -->
+    <script src="api-client.js" defer></script>
+    <script src="js/api-sync-bootstrap.js?v=1.0.0" defer></script>
+
+    <!-- ======================== 法律协议弹窗 ======================== -->
+    <div id="legal-consent-overlay" class="legal-consent-overlay" style="display:none;">
+        <div class="legal-consent-modal">
+            <div class="legal-consent-icon">📋</div>
+            <h2>欢迎使用象限时光</h2>
+            <p class="legal-consent-desc">
+                在使用本应用前，请阅读并同意以下条款：
+            </p>
+            <div class="legal-consent-links">
+                <a href="terms.html" target="_blank" rel="noopener" class="legal-link">📄 服务条款</a>
+                <a href="privacy.html" target="_blank" rel="noopener" class="legal-link">🔒 隐私政策</a>
+            </div>
+            <div class="legal-consent-notice">
+                <p>📌 本应用为本地优先工具，您的数据存储在浏览器本地，不会上传至任何服务器。建议定期导出备份。</p>
+            </div>
+            <div class="legal-consent-actions">
+                <button id="legal-consent-agree" class="legal-btn primary">我同意</button>
+                <button id="legal-consent-decline" class="legal-btn secondary">不同意，退出</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .legal-consent-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99999; padding: 1rem;
+        }
+        .legal-consent-modal {
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(16px);
+            border-radius: 20px; padding: 2.5rem 2rem;
+            max-width: 480px; width: 100%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            text-align: center;
+            animation: legalFadeIn 0.4s ease;
+        }
+        @keyframes legalFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .legal-consent-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+        .legal-consent-modal h2 {
+            font-size: 1.4rem; font-weight: 700; color: #1e1b4b;
+            margin: 0 0 0.5rem;
+        }
+        .legal-consent-desc {
+            color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .legal-consent-links {
+            display: flex; justify-content: center; gap: 0.75rem;
+            margin-bottom: 1rem; flex-wrap: wrap;
+        }
+        .legal-link {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.4rem 1rem; border-radius: 8px;
+            background: rgba(37,99,235,0.07);
+            color: #2563eb; text-decoration: none;
+            font-size: 0.85rem; font-weight: 500;
+            transition: background 0.2s;
+        }
+        .legal-link:hover { background: rgba(37,99,235,0.14); }
+        .legal-consent-notice {
+            background: #fffbeb; border: 1px solid #fde68a;
+            border-radius: 10px; padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem; text-align: left;
+        }
+        .legal-consent-notice p {
+            margin: 0; font-size: 0.82rem; color: #92400e; line-height: 1.5;
+        }
+        .legal-consent-actions { display: flex; gap: 0.75rem; }
+        .legal-btn {
+            flex: 1; padding: 0.7rem 1rem; border: none;
+            border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .legal-btn.primary {
+            background: linear-gradient(135deg, #2563eb, #14b8a6);
+            color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,0.2);
+        }
+        .legal-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37,99,235,0.3); }
+        .legal-btn.secondary {
+            background: rgba(107,114,128,0.08); color: #6b7280;
+        }
+        .legal-btn.secondary:hover { background: rgba(107,114,128,0.15); }
+        @media (max-width: 480px) {
+            .legal-consent-modal { padding: 1.5rem; }
+            .legal-consent-actions { flex-direction: column; }
+        }
+    </style>
+
+    <script>
+    (function() {
+        var agreed = localStorage.getItem('legalConsent');
+        if (agreed === 'true') return;
+        document.getElementById('legal-consent-overlay').style.display = 'flex';
+
+        document.getElementById('legal-consent-agree').addEventListener('click', function() {
+            localStorage.setItem('legalConsent', 'true');
+            document.getElementById('legal-consent-overlay').style.display = 'none';
+            // 首次使用时显示数据备份提示条
+            if (!localStorage.getItem('backupNoticeShown')) {
+                localStorage.setItem('backupNoticeShown', 'true');
+                setTimeout(function() {
+                    var notice = document.createElement('div');
+                    notice.id = 'backup-notice-banner';
+                    var span = document.createElement('span');
+                    span.innerHTML = '💾 您的数据存储在浏览器本地，建议定期<a href="data-sync.html" style="color:#fff;font-weight:600;">导出备份</a>，防止误清除导致数据丢失';
+                    var closeBtn = document.createElement('button');
+                    closeBtn.textContent = '×';
+                    closeBtn.style.cssText = 'background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.2rem;cursor:pointer;margin-left:0.75rem;';
+                    closeBtn.onclick = function() { notice.remove(); };
+                    notice.appendChild(span);
+                    notice.appendChild(closeBtn);
+                    Object.assign(notice.style, {
+                        position: 'fixed', bottom: '0', left: '0', right: '0',
+                        background: '#2563eb', color: '#fff', padding: '0.7rem 1rem',
+                        fontSize: '0.85rem', zIndex: '99998', textAlign: 'center',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexWrap: 'wrap', gap: '0.5rem',
+                        boxShadow: '0 -4px 20px rgba(37,99,235,0.2)'
+                    });
+                    document.body.appendChild(notice);
+                }, 5000);
+            }
+        });
+
+        document.getElementById('legal-consent-decline').addEventListener('click', function() {
+            // 清除之前可能存在的同意标记
+            localStorage.removeItem('legalConsent');
+            // 关闭弹窗
+            document.getElementById('legal-consent-overlay').style.display = 'none';
+            // 跳转到登录页
+            window.location.href = 'login.html';
+        });
+    })();
+    </script>
+</body>
+
+</html>

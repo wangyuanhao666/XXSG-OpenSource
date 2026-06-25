@@ -1,0 +1,1375 @@
+<div id="habit-tracker-view" class="view" style="display: none;">
+        <!-- 主页面 -->
+        <div class="ht-main-page" id="ht-mainPage">
+            <div class="ht-container">
+                <!-- 欢迎卡片 -->
+                <div class="ht-welcome-card">
+                    <div class="ht-welcome-badge">
+                        <i class="fas fa-star"></i>
+                        <span>每日坚持</span>
+                    </div>
+                    <h1 class="ht-page-title">习惯养成打卡</h1>
+                    <p class="ht-page-subtitle">让坚持成为习惯，让优秀成为本能</p>
+
+                    <!-- 页面导航栏 -->
+                    <div class="ht-navbar">
+                        <button class="ht-back-btn" id="ht-backBtn" data-page-click="switchView" data-page-arg="more-features" title="返回更多功能" style="display: none;">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>返回</span>
+                        </button>
+                        <div class="ht-nav-brand">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>习惯打卡</span>
+                        </div>
+                        <div class="ht-nav-actions">
+                            <button class="ht-nav-btn active" data-page="main" title="主页">
+                                <i class="fas fa-home"></i>
+                            </button>
+                            <button class="ht-nav-btn" data-page="calendar" title="日历">
+                                <i class="fas fa-calendar-alt"></i>
+                            </button>
+                            <button class="ht-nav-btn" data-page="stats" title="统计">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button class="ht-nav-btn" data-page="settings" title="设置">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 今日进度 -->
+                <div class="ht-progress-card">
+                    <div class="ht-progress-header">
+                        <h2>今日进度</h2>
+                        <span class="ht-progress-date" id="ht-todayDate"></span>
+                    </div>
+                    <div class="ht-progress-stats">
+                        <div class="ht-stat-box">
+                            <span class="ht-stat-value" id="ht-completedCount">0</span>
+                            <span class="ht-stat-label">已完成</span>
+                        </div>
+                        <div class="ht-progress-bar-wrapper">
+                            <div class="ht-progress-bar">
+                                <div class="ht-progress-fill" id="ht-progressFill"></div>
+                            </div>
+                            <span class="ht-progress-percent" id="ht-progressPercent">0%</span>
+                        </div>
+                        <div class="ht-stat-box">
+                            <span class="ht-stat-value" id="ht-totalCount">0</span>
+                            <span class="ht-stat-label">总计</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速操作 -->
+                <div class="ht-quick-actions">
+                    <button class="ht-action-btn ht-btn-primary" id="ht-addHabitBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>添加习惯</span>
+                    </button>
+                    <div class="ht-filter-dropdown">
+                        <button class="ht-action-btn" id="ht-filterBtn">
+                            <i class="fas fa-filter"></i>
+                            <span>筛选</span>
+                            <i class="fas fa-chevron-down ht-filter-arrow"></i>
+                        </button>
+                        <div class="ht-filter-menu" id="ht-filterMenu">
+                            <div class="ht-filter-option active" data-filter="all">
+                                <i class="fas fa-check-circle"></i>
+                                <span>全部</span>
+                            </div>
+                            <div class="ht-filter-option" data-filter="health">
+                                <i class="fas fa-heart"></i>
+                                <span>健康</span>
+                            </div>
+                            <div class="ht-filter-option" data-filter="study">
+                                <i class="fas fa-book"></i>
+                                <span>学习</span>
+                            </div>
+                            <div class="ht-filter-option" data-filter="work">
+                                <i class="fas fa-briefcase"></i>
+                                <span>工作</span>
+                            </div>
+                            <div class="ht-filter-option" data-filter="life">
+                                <i class="fas fa-home"></i>
+                                <span>生活</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 习惯列表 -->
+                <div class="ht-habits-container">
+                    <h2 class="ht-section-title">我的习惯</h2>
+                    <div class="ht-habits-list" id="ht-habitsList"></div>
+                    <div class="ht-empty-state" id="ht-emptyState">
+                        <div class="ht-empty-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <p class="ht-empty-title">还没有习惯</p>
+                        <p class="ht-empty-desc">点击上方"添加习惯"按钮开始吧</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日历页面 -->
+        <div class="ht-page" id="ht-calendarPage">
+            <div class="ht-container">
+                <!-- 页面导航栏 -->
+                <div class="ht-page-navbar">
+                    <button class="ht-back-btn" id="ht-backBtn-calendar" data-page-click="habitTrackerApp.showPage" data-page-arg="main" title="返回主页">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>返回</span>
+                    </button>
+                    <h1 class="ht-page-title-inline">打卡日历</h1>
+                </div>
+                <div class="ht-calendar-selector">
+                    <label>查看习惯：</label>
+                    <select id="ht-calendarHabitFilter">
+                        <option value="all">所有习惯</option>
+                    </select>
+                </div>
+                <div class="ht-calendar-controls">
+                    <button class="ht-month-nav" id="ht-prevMonth">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 class="ht-current-month" id="ht-currentMonth"></h2>
+                    <button class="ht-month-nav" id="ht-nextMonth">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="ht-calendar-wrapper">
+                    <div class="ht-calendar-weekdays">
+                        <div class="ht-weekday">日</div>
+                        <div class="ht-weekday">一</div>
+                        <div class="ht-weekday">二</div>
+                        <div class="ht-weekday">三</div>
+                        <div class="ht-weekday">四</div>
+                        <div class="ht-weekday">五</div>
+                        <div class="ht-weekday">六</div>
+                    </div>
+                    <div class="ht-calendar-grid" id="ht-calendarGrid"></div>
+                </div>
+                <div class="ht-calendar-stats">
+                    <div class="ht-stat-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <span class="ht-stat-label">本月打卡</span>
+                            <span class="ht-stat-value" id="ht-monthCheckins">0</span>
+                        </div>
+                    </div>
+                    <div class="ht-stat-item">
+                        <i class="fas fa-percentage"></i>
+                        <div>
+                            <span class="ht-stat-label">完成率</span>
+                            <span class="ht-stat-value" id="ht-monthRate">0%</span>
+                        </div>
+                    </div>
+                    <div class="ht-stat-item">
+                        <i class="fas fa-fire"></i>
+                        <div>
+                            <span class="ht-stat-label">连续打卡</span>
+                            <span class="ht-stat-value" id="ht-currentStreak">0天</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计页面 -->
+        <div class="ht-page" id="ht-statsPage">
+            <div class="ht-container">
+                <!-- 页面导航栏 -->
+                <div class="ht-page-navbar">
+                    <button class="ht-back-btn" id="ht-backBtn-stats" data-page-click="habitTrackerApp.showPage" data-page-arg="main" title="返回主页">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>返回</span>
+                    </button>
+                    <h1 class="ht-page-title-inline">数据统计</h1>
+                </div>
+                <div class="ht-stats-cards">
+                    <div class="ht-stat-card">
+                        <div class="ht-stat-icon ht-icon-purple">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="ht-stat-number" id="ht-totalHabits">0</div>
+                        <div class="ht-stat-label">总习惯</div>
+                    </div>
+                    <div class="ht-stat-card">
+                        <div class="ht-stat-icon ht-icon-green">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div class="ht-stat-number" id="ht-totalCheckins">0</div>
+                        <div class="ht-stat-label">总打卡</div>
+                    </div>
+                    <div class="ht-stat-card">
+                        <div class="ht-stat-icon ht-icon-orange">
+                            <i class="fas fa-fire-alt"></i>
+                        </div>
+                        <div class="ht-stat-number" id="ht-longestStreak">0</div>
+                        <div class="ht-stat-label">最长连续</div>
+                    </div>
+                    <div class="ht-stat-card">
+                        <div class="ht-stat-icon ht-icon-blue">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="ht-stat-number" id="ht-completionRate">0%</div>
+                        <div class="ht-stat-label">本月完成率</div>
+                    </div>
+                </div>
+                <div class="ht-achievement-section">
+                    <h3 class="ht-section-title">
+                        <i class="fas fa-trophy"></i>
+                        成就徽章
+                    </h3>
+                    <div class="ht-achievements-grid" id="ht-achievementsGrid"></div>
+                </div>
+                <div class="ht-charts-row">
+                    <div class="ht-chart-container">
+                        <h3>
+                            <i class="fas fa-chart-area"></i>
+                            最近30天趋势
+                        </h3>
+                        <canvas id="ht-trendChart" width="600" height="300"></canvas>
+                    </div>
+                    <div class="ht-chart-container">
+                        <h3>
+                            <i class="fas fa-chart-pie"></i>
+                            分类占比
+                        </h3>
+                        <canvas id="ht-categoryChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="ht-ranking-section">
+                    <h3 class="ht-section-title">
+                        <i class="fas fa-medal"></i>
+                        习惯排行榜
+                    </h3>
+                    <div class="ht-ranking-list" id="ht-rankingList"></div>
+                </div>
+                <div class="ht-data-table-section">
+                    <h3 class="ht-section-title">
+                        <i class="fas fa-table"></i>
+                        详细数据
+                    </h3>
+                    <div class="ht-data-table" id="ht-dataTable"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div class="ht-page" id="ht-settingsPage">
+            <div class="ht-container">
+                <!-- 页面导航栏 -->
+                <div class="ht-page-navbar">
+                    <button class="ht-back-btn" id="ht-backBtn-settings" data-page-click="habitTrackerApp.showPage" data-page-arg="main" title="返回主页">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>返回</span>
+                    </button>
+                    <h1 class="ht-page-title-inline">设置</h1>
+                </div>
+                <div class="ht-settings-section">
+                    <h3>
+                        <i class="fas fa-palette"></i>
+                        主题设置
+                    </h3>
+                    <div class="ht-setting-item">
+                        <div class="ht-setting-info">
+                            <div class="ht-setting-label">选择主题色</div>
+                            <div class="ht-setting-desc">选择你喜欢的主题颜色风格</div>
+                        </div>
+                        <div class="ht-theme-colors" id="ht-themeColors">
+                            <div class="ht-theme-color active" data-theme="indigo" style="background: linear-gradient(135deg, #2563eb, #3b82f6);" title="默认紫"></div>
+                            <div class="ht-theme-color" data-theme="blue" style="background: linear-gradient(135deg, #4299e1, #2b6cb0);" title="海洋蓝"></div>
+                            <div class="ht-theme-color" data-theme="green" style="background: linear-gradient(135deg, #48bb78, #38a169);" title="清新绿"></div>
+                            <div class="ht-theme-color" data-theme="orange" style="background: linear-gradient(135deg, #f6ad55, #ed8936);" title="阳光橙"></div>
+                            <div class="ht-theme-color" data-theme="pink" style="background: linear-gradient(135deg, #fc8181, #f56565);" title="浪漫粉"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ht-settings-section">
+                    <h3>
+                        <i class="fas fa-database"></i>
+                        数据管理
+                    </h3>
+                    <button class="ht-settings-btn" id="ht-exportBtn">
+                        <i class="fas fa-file-export"></i>
+                        导出数据
+                    </button>
+                    <button class="ht-settings-btn" id="ht-importBtn">
+                        <i class="fas fa-file-import"></i>
+                        导入数据
+                    </button>
+                    <input type="file" id="ht-importFile" accept=".json" style="display:none">
+                    <button class="ht-settings-btn ht-btn-danger" id="ht-clearBtn">
+                        <i class="fas fa-trash-alt"></i>
+                        清空数据
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加/编辑习惯模态框 -->
+        <div class="ht-modal" id="ht-habitModal">
+            <div class="ht-modal-backdrop"></div>
+            <div class="ht-modal-dialog">
+                <div class="ht-modal-header">
+                    <h3 class="ht-modal-title" id="ht-modalTitle">添加习惯</h3>
+                    <button class="ht-modal-close" id="ht-closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="ht-modal-body">
+                    <div class="ht-form-group">
+                        <label>
+                            <i class="fas fa-edit"></i>
+                            习惯名称
+                        </label>
+                        <input type="text" id="ht-habitName" placeholder="例如：每天跑步30分钟" maxlength="30">
+                    </div>
+                    <div class="ht-form-group">
+                        <label>
+                            <i class="fas fa-icons"></i>
+                            选择图标
+                        </label>
+                        <div class="ht-icon-picker" id="ht-iconPicker">
+                            <div class="ht-icon-option selected" data-icon="fa-running" title="跑步运动">
+                                <i class="fas fa-running"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-book" title="学习阅读">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-tint" title="喝水记录">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-apple-alt" title="健康饮食">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-bed" title="早睡早起">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-dumbbell" title="健身锻炼">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-pen" title="写作日记">
+                                <i class="fas fa-pen"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-bullseye" title="目标达成">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-biking" title="骑行运动">
+                                <i class="fas fa-biking"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-palette" title="艺术创作">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-briefcase" title="工作计划">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-spa" title="冥想放松">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-coffee" title="咖啡时间">
+                                <i class="fas fa-coffee"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-fist-raised" title="力量训练">
+                                <i class="fas fa-fist-raised"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-laptop-code" title="编程学习">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-music" title="音乐练习">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-seedling" title="培养习惯">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="ht-icon-option" data-icon="fa-heart" title="健康生活">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ht-form-group">
+                        <label>
+                            <i class="fas fa-folder"></i>
+                            分类
+                        </label>
+                        <select id="ht-habitCategory">
+                            <option value="health">健康</option>
+                            <option value="study">学习</option>
+                            <option value="work">工作</option>
+                            <option value="life">生活</option>
+                            <option value="custom">✨ 自定义</option>
+                        </select>
+                    </div>
+                    <div class="ht-form-group ht-custom-category-group" id="ht-customCategoryGroup" style="display: none;">
+                        <label>
+                            <i class="fas fa-tag"></i>
+                            自定义分类名称
+                        </label>
+                        <input type="text" id="ht-customCategoryName" placeholder="例如：社交、理财、娱乐..." maxlength="10">
+                    </div>
+                    <div class="ht-form-group">
+                        <label>
+                            <i class="fas fa-sticky-note"></i>
+                            备注（可选）
+                        </label>
+                        <textarea id="ht-habitNote" placeholder="记录一些想法..." rows="3" maxlength="100"></textarea>
+                    </div>
+                </div>
+                <div class="ht-modal-footer">
+                    <button class="ht-btn ht-btn-secondary" id="ht-cancelBtn">取消</button>
+                    <button class="ht-btn ht-btn-primary" id="ht-saveBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 倒数纪念日视图 -->
+
+<div id="countdown-view" class="view" style="display: none;">
+        <div class="countdown-container">
+            <!-- 背景装饰 -->
+            <div class="countdown-bg-decoration">
+                <div class="countdown-shape shape-1"></div>
+                <div class="countdown-shape shape-2"></div>
+                <div class="countdown-shape shape-3"></div>
+            </div>
+
+            <!-- 页面头部 -->
+            <div class="countdown-header">
+                <div class="header-badge">
+                    <span class="badge-icon">📅</span>
+                    <span class="badge-text">时光纪念</span>
+                </div>
+                <h1 class="countdown-title">
+                    <span class="title-gradient">倒数纪念日</span>
+                </h1>
+                <p class="countdown-subtitle">管理重要日期和纪念日，不错过每一个重要时刻</p>
+            </div>
+
+            <!-- 添加纪念日按钮（左对齐） -->
+            <div class="countdown-toolbar">
+                <button class="add-countdown-btn" id="add-countdown-btn">
+                    <span class="btn-icon">+</span>
+                    <span class="btn-text">添加纪念日</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+
+            <!-- 搜索和筛选区域 -->
+            <div class="countdown-controls">
+                <div class="controls-card">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <div class="search-filter-section">
+                            <div class="search-and-actions">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="countdown-search" placeholder="搜索纪念日...">
+                                </div>
+                                <div class="data-management">
+                                    <button class="data-btn export-btn">
+                                        <span class="btn-icon">📤</span>
+                                        <span class="btn-text">导出</span>
+                                    </button>
+                                    <button class="data-btn import-btn">
+                                        <span class="btn-icon">📥</span>
+                                        <span class="btn-text">导入</span>
+                                    </button>
+                                    <button class="data-btn clear-btn">
+                                        <span class="btn-icon">🗑️</span>
+                                        <span class="btn-text">清空</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="filter-buttons">
+                                <button class="filter-btn active" data-filter="all">
+                                    <span class="filter-icon">📋</span>
+                                    <span class="filter-text">全部</span>
+                                </button>
+                                <button class="filter-btn" data-filter="anniversary">
+                                    <span class="filter-icon">💖</span>
+                                    <span class="filter-text">纪念日</span>
+                                </button>
+                                <button class="filter-btn" data-filter="birthday">
+                                    <span class="filter-icon">🎂</span>
+                                    <span class="filter-text">生日</span>
+                                </button>
+                                <button class="filter-btn" data-filter="holiday">
+                                    <span class="filter-icon">🎉</span>
+                                    <span class="filter-text">节日</span>
+                                </button>
+                                <button class="filter-btn" data-filter="countdown">
+                                    <span class="filter-icon">⏰</span>
+                                    <span class="filter-text">倒数日</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 纪念日网格 -->
+            <div class="countdown-grid" id="countdown-grid">
+                <!-- 纪念日卡片将在这里动态生成 -->
+                <div class="empty-countdown">
+                    <div class="empty-icon">📅</div>
+                    <h3 class="empty-title">还没有纪念日</h3>
+                    <p class="empty-text">点击"添加纪念日"开始创建您的第一个纪念日</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加纪念日模态框 -->
+    <div id="add-countdown-modal" class="countdown-modal" style="display: none;">
+        <div class="modal-overlay" data-page-click="closeCountdownModal" data-page-stop="true"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h3>添加纪念日</h3>
+                    <p class="modal-subtitle">管理重要日期和纪念日，不错过每一个重要时刻</p>
+                </div>
+                <button class="modal-close" data-page-click="closeCountdownModal" data-page-stop="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">名称</label>
+                        <div class="input-with-icon">
+                            <div class="icon-selector" id="icon-selector">
+                                <div class="selected-icon">📅</div>
+                                <button class="icon-change-btn" type="button">更换</button>
+                            </div>
+                            <input type="text" id="event-name" placeholder="输入纪念日名称" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">日期</label>
+                        <div class="date-input-group">
+                            <div class="calendar-toggle">
+                                <button type="button" class="calendar-btn active" data-type="solar">公历</button>
+                                <button type="button" class="calendar-btn" data-type="lunar">农历</button>
+                            </div>
+                            <input type="date" id="event-date" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">类型</label>
+                        <select id="event-type" class="form-select">
+                            <option value="anniversary">纪念日</option>
+                            <option value="birthday">生日</option>
+                            <option value="holiday">节日</option>
+                            <option value="countdown">倒数日</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">提醒</label>
+                        <div class="reminder-settings">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="reminder-enabled">
+                                <span class="checkmark"></span>
+                                启用提醒
+                            </label>
+                            <div class="reminder-options" id="reminder-options" style="display: none;">
+                                <select id="reminder-advance" class="form-select">
+                                    <option value="1">提前1天</option>
+                                    <option value="3">提前3天</option>
+                                    <option value="7">提前1周</option>
+                                    <option value="30">提前1个月</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">重复</label>
+                        <select id="event-repeat" class="form-select">
+                            <option value="none">不重复</option>
+                            <option value="yearly">每年重复</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 预制选项 -->
+                <div class="preset-section">
+                    <h4 class="preset-title">快速选择</h4>
+                    <div class="preset-categories">
+                        <div class="preset-category">
+                            <h5>传统节日</h5>
+                            <div class="preset-items">
+                                <div class="preset-item" data-name="春节" data-icon="🧨" data-type="holiday">
+                                    <span class="preset-icon">🧨</span>
+                                    <span class="preset-name">春节</span>
+                                </div>
+                                <div class="preset-item" data-name="元宵节" data-icon="🏮" data-type="holiday">
+                                    <span class="preset-icon">🏮</span>
+                                    <span class="preset-name">元宵节</span>
+                                </div>
+                                <div class="preset-item" data-name="清明节" data-icon="🌿" data-type="holiday">
+                                    <span class="preset-icon">🌿</span>
+                                    <span class="preset-name">清明节</span>
+                                </div>
+                                <div class="preset-item" data-name="端午节" data-icon="🚣" data-type="holiday">
+                                    <span class="preset-icon">🚣</span>
+                                    <span class="preset-name">端午节</span>
+                                </div>
+                                <div class="preset-item" data-name="七夕节" data-icon="🌌" data-type="holiday">
+                                    <span class="preset-icon">🌌</span>
+                                    <span class="preset-name">七夕节</span>
+                                </div>
+                                <div class="preset-item" data-name="中元节" data-icon="🕯️" data-type="holiday">
+                                    <span class="preset-icon">🕯️</span>
+                                    <span class="preset-name">中元节</span>
+                                </div>
+                                <div class="preset-item" data-name="中秋节" data-icon="🌕" data-type="holiday">
+                                    <span class="preset-icon">🌕</span>
+                                    <span class="preset-name">中秋节</span>
+                                </div>
+                                <div class="preset-item" data-name="重阳节" data-icon="🌼" data-type="holiday">
+                                    <span class="preset-icon">🌼</span>
+                                    <span class="preset-name">重阳节</span>
+                                </div>
+                                <div class="preset-item" data-name="冬至" data-icon="❄️" data-type="holiday">
+                                    <span class="preset-icon">❄️</span>
+                                    <span class="preset-name">冬至</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preset-category">
+                            <h5>现代节日</h5>
+                            <div class="preset-items">
+                                <div class="preset-item" data-name="元旦" data-icon="🎊" data-type="holiday">
+                                    <span class="preset-icon">🎊</span>
+                                    <span class="preset-name">元旦</span>
+                                </div>
+                                <div class="preset-item" data-name="国际劳动节" data-icon="🔨" data-type="holiday">
+                                    <span class="preset-icon">🔨</span>
+                                    <span class="preset-name">国际劳动节</span>
+                                </div>
+                                <div class="preset-item" data-name="国庆节" data-icon="🇨🇳" data-type="holiday">
+                                    <span class="preset-icon">🇨🇳</span>
+                                    <span class="preset-name">国庆节</span>
+                                </div>
+                                <div class="preset-item" data-name="五四青年节" data-icon="🎓" data-type="holiday">
+                                    <span class="preset-icon">🎓</span>
+                                    <span class="preset-name">五四青年节</span>
+                                </div>
+                                <div class="preset-item" data-name="三八国际妇女节" data-icon="💐" data-type="holiday">
+                                    <span class="preset-icon">💐</span>
+                                    <span class="preset-name">三八国际妇女节</span>
+                                </div>
+                                <div class="preset-item" data-name="六一国际儿童节" data-icon="🎈" data-type="holiday">
+                                    <span class="preset-icon">🎈</span>
+                                    <span class="preset-name">六一国际儿童节</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preset-category">
+                            <h5>生日类</h5>
+                            <div class="preset-items">
+                                <div class="preset-item" data-name="生日" data-icon="🎂" data-type="birthday">
+                                    <span class="preset-icon">🎂</span>
+                                    <span class="preset-name">生日</span>
+                                </div>
+                                <div class="preset-item" data-name="结婚纪念日" data-icon="💍" data-type="anniversary">
+                                    <span class="preset-icon">💍</span>
+                                    <span class="preset-name">结婚纪念日</span>
+                                </div>
+                                <div class="preset-item" data-name="恋爱纪念日" data-icon="💕" data-type="anniversary">
+                                    <span class="preset-icon">💕</span>
+                                    <span class="preset-name">恋爱纪念日</span>
+                                </div>
+                                <div class="preset-item" data-name="宝宝生日" data-icon="👶" data-type="birthday">
+                                    <span class="preset-icon">👶</span>
+                                    <span class="preset-name">宝宝生日</span>
+                                </div>
+                                <div class="preset-item" data-name="父母生日" data-icon="👨‍👩‍👧‍👦" data-type="birthday">
+                                    <span class="preset-icon">👨‍👩‍👧‍👦</span>
+                                    <span class="preset-name">父母生日</span>
+                                </div>
+                                <div class="preset-item" data-name="朋友生日" data-icon="👫" data-type="birthday">
+                                    <span class="preset-icon">👫</span>
+                                    <span class="preset-name">朋友生日</span>
+                                </div>
+                                <div class="preset-item" data-name="宠物生日" data-icon="🐾" data-type="birthday">
+                                    <span class="preset-icon">🐾</span>
+                                    <span class="preset-name">宠物生日</span>
+                                </div>
+                                <div class="preset-item" data-name="毕业纪念日" data-icon="🎓" data-type="anniversary">
+                                    <span class="preset-icon">🎓</span>
+                                    <span class="preset-name">毕业纪念日</span>
+                                </div>
+                                <div class="preset-item" data-name="相识纪念日" data-icon="🤝" data-type="anniversary">
+                                    <span class="preset-icon">🤝</span>
+                                    <span class="preset-name">相识纪念日</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preset-category">
+                            <h5>工作类</h5>
+                            <div class="preset-items">
+                                <div class="preset-item" data-name="入职纪念日" data-icon="💼" data-type="anniversary">
+                                    <span class="preset-icon">💼</span>
+                                    <span class="preset-name">入职纪念日</span>
+                                </div>
+                                <div class="preset-item" data-name="发工资" data-icon="💰" data-type="countdown">
+                                    <span class="preset-icon">💰</span>
+                                    <span class="preset-name">发工资</span>
+                                </div>
+                                <div class="preset-item" data-name="交房租" data-icon="🏠" data-type="countdown">
+                                    <span class="preset-icon">🏠</span>
+                                    <span class="preset-name">交房租</span>
+                                </div>
+                                <div class="preset-item" data-name="项目截止" data-icon="📅" data-type="countdown">
+                                    <span class="preset-icon">📅</span>
+                                    <span class="preset-name">项目截止</span>
+                                </div>
+                                <div class="preset-item" data-name="会议安排" data-icon="📋" data-type="countdown">
+                                    <span class="preset-icon">📋</span>
+                                    <span class="preset-name">会议安排</span>
+                                </div>
+                                <div class="preset-item" data-name="考试日期" data-icon="📝" data-type="countdown">
+                                    <span class="preset-icon">📝</span>
+                                    <span class="preset-name">考试日期</span>
+                                </div>
+                                <div class="preset-item" data-name="培训课程" data-icon="🎓" data-type="countdown">
+                                    <span class="preset-icon">🎓</span>
+                                    <span class="preset-name">培训课程</span>
+                                </div>
+                                <div class="preset-item" data-name="出差安排" data-icon="✈️" data-type="countdown">
+                                    <span class="preset-icon">✈️</span>
+                                    <span class="preset-name">出差安排</span>
+                                </div>
+                                <div class="preset-item" data-name="合同到期" data-icon="📄" data-type="countdown">
+                                    <span class="preset-icon">📄</span>
+                                    <span class="preset-name">合同到期</span>
+                                </div>
+                                <div class="preset-item" data-name="年度总结" data-icon="📊" data-type="countdown">
+                                    <span class="preset-icon">📊</span>
+                                    <span class="preset-name">年度总结</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" data-page-click="closeCountdownModal" data-page-stop="true">取消</button>
+                <button class="btn-save" data-page-click="saveCountdownEvent">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加时间记录模态框 -->
+    <div id="add-time-record-modal" class="time-tracker-modal" style="display: none;">
+        <div class="modal-overlay" data-page-click="closeTimeRecordModal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加时间记录</h3>
+                <button class="modal-close" data-page-click="closeTimeRecordModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">事项名称</label>
+                    <input type="text" id="record-name-input" class="form-input" placeholder="输入事项名称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">所属类别</label>
+                    <select id="record-category-select" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">时长</label>
+                    <div class="time-input-group">
+                        <select id="record-hours-select" class="form-select">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        <span>小时</span>
+                        <select id="record-minutes-select" class="form-select">
+                            <option value="0">0</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                            <option value="55">55</option>
+                        </select>
+                        <span>分钟</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">日期</label>
+                    <input type="date" id="record-date-input" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">备注（可选）</label>
+                    <textarea id="record-note-input" class="form-textarea" placeholder="输入备注信息" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" data-page-click="closeTimeRecordModal">取消</button>
+                <button class="btn-save" data-page-click="saveTimeRecord">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加类别模态框 -->
+    <div id="add-category-modal" class="time-tracker-modal" style="display: none;">
+        <div class="modal-overlay" data-page-click="closeCategoryModal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加新类别</h3>
+                <button class="modal-close" data-page-click="closeCategoryModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">类别名称</label>
+                    <input type="text" id="category-name-input" class="form-input" placeholder="输入类别名称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">颜色</label>
+                    <div class="color-picker">
+                        <input type="color" id="category-color-input" value="#a855f7">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">图标</label>
+                    <input type="text" id="category-icon-input" class="form-input" placeholder="输入emoji图标，如：💼">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" data-page-click="closeCategoryModal">取消</button>
+                <button class="btn-save" data-page-click="saveCategory">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加目标模态框 -->
+    <div id="add-goal-modal" class="time-tracker-modal" style="display: none;">
+        <div class="modal-overlay" data-page-click="closeGoalModal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加目标</h3>
+                <button class="modal-close" data-page-click="closeGoalModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">目标名称</label>
+                    <input type="text" id="goal-name-input" class="form-input" placeholder="如：工作8小时">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">目标时长（小时）</label>
+                    <input type="number" id="goal-hours-input" class="form-input" min="0" max="18" step="0.5"
+                        placeholder="输入目标时长">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">所属类别</label>
+                    <select id="goal-category-select" class="form-select"></select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" data-page-click="closeGoalModal">取消</button>
+                <button class="btn-save" data-page-click="saveGoal">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 可视化看板视图 -->
+
+<div id="dashboard-view" class="view" style="display: none;">
+        <div class="dashboard-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="dashboard-total-tasks">0</div>
+                <div class="stat-label" data-translate="totalTasks">总任务</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="dashboard-completed-tasks">0</div>
+                <div class="stat-label" data-translate="completedTasks">已完成</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="dashboard-completion-rate">0%</div>
+                <div class="stat-label" data-translate="completionRate">完成率</div>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 data-translate="taskDistribution">任务分布</h3>
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="chart-container">
+                        <div id="taskDistributionChart"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 data-translate="completionTrend">完成趋势</h3>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="chart-container">
+                        <div id="completionTrendChart"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 data-translate="efficiencyMetrics">效率指标</h3>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-value" id="avg-completion-time">2.5 <span data-translate="days">天</span>
+                            </div>
+                            <div class="metric-label" data-translate="avgCompletionTime">平均完成时间</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value" id="productivity-score">0%</div>
+                            <div class="metric-label" data-translate="productivityScore">生产力评分</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 可视化图表看板 -->
+        <div class="visualization-dashboard">
+            <!-- 图表区域标题 -->
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">📊 数据可视化看板</h3>
+                <div class="dashboard-actions">
+                    <button class="refresh-btn" data-page-click="refreshAllCharts" title="刷新所有图表">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>刷新</span>
+                    </button>
+                    <button class="export-btn" data-page-click="exportAllCharts" title="导出图表">
+                        <i class="fas fa-download"></i>
+                        <span>导出</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 第一行：柱形图 + 折线图 -->
+            <div class="charts-row charts-row-double">
+                <!-- 柱形图：任务分类统计 -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">📊 任务分类统计</h4>
+                        <div class="chart-actions">
+                            <button class="chart-action-btn active" data-page-click="toggleTaskCompletion" data-page-arg="completed" title="显示已完成任务">
+                                已完成
+                            </button>
+                            <button class="chart-action-btn" data-page-click="toggleTaskCompletion" data-page-arg="incomplete" title="显示未完成任务">
+                                未完成
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="taskCategoryChart"></canvas>
+                    </div>
+                    <div class="chart-footer">
+                        <span class="chart-hint">💡 点击柱形筛选任务，双击查看详情</span>
+                    </div>
+                </div>
+
+                <!-- 折线图：效率趋势分析 -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">📈 效率趋势分析</h4>
+                        <div class="chart-actions">
+                            <select class="time-range-selector" data-page-change="updateEfficiencyChart" data-page-value="this.value">
+                                <option value="7">近7天</option>
+                                <option value="30" selected>近30天</option>
+                                <option value="90">近90天</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="efficiencyTrendChart"></canvas>
+                    </div>
+                    <div class="chart-footer">
+                        <span class="chart-hint">💡 双击数据点查看当日详细任务</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二行：饼图 -->
+            <div class="charts-row charts-row-single">
+                <!-- 饼图：工作分布分析 -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">🍰 工作分布分析</h4>
+                        <div class="chart-actions">
+                            <select class="distribution-selector" data-page-change="updateDistributionChart" data-page-value="this.value">
+                                <option value="category">按分类</option>
+                                <option value="quadrant">按象限</option>
+                                <option value="status">按状态</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container chart-container-centered">
+                        <canvas id="workDistributionChart"></canvas>
+                    </div>
+                    <div class="chart-footer">
+                        <span class="chart-hint">💡 点击扇区筛选任务，双击查看详情</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工作习惯分析 -->
+        <div class="dashboard-section">
+            <div class="behavior-analysis-section">
+                <div class="section-header">
+                    <h3>🧠 工作习惯分析</h3>
+                    <div class="analysis-actions">
+                        <button class="analysis-btn" data-page-click="refreshBehaviorAnalysis" title="刷新分析">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="analysis-btn" data-page-click="exportBehaviorData" title="导出数据">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="behavior-grid">
+                    <div class="behavior-card">
+                        <div class="behavior-icon">⏰</div>
+                        <div class="behavior-content">
+                            <div class="behavior-title">工作时间分布</div>
+                            <div class="behavior-value" id="work-time-distribution">分析中...</div>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-icon">📈</div>
+                        <div class="behavior-content">
+                            <div class="behavior-title">效率曲线</div>
+                            <div class="behavior-value" id="efficiency-curve">分析中...</div>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-icon">🎯</div>
+                        <div class="behavior-content">
+                            <div class="behavior-title">任务偏好</div>
+                            <div class="behavior-value" id="task-preferences">分析中...</div>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-icon">⚖️</div>
+                        <div class="behavior-content">
+                            <div class="behavior-title">工作负荷</div>
+                            <div class="behavior-value" id="workload-assessment">分析中...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个性化建议 -->
+                <div class="recommendations-section">
+                    <h4>💡 个性化建议</h4>
+                    <div id="personalized-recommendations" class="recommendations-list">
+                        <div class="recommendation-item">
+                            <span class="recommendation-icon">🔍</span>
+                            <span class="recommendation-text">正在分析您的工作模式，请稍候...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 智能健康管理 -->
+                <div class="smart-health-section">
+                    <div class="section-header">
+                        <h4>💪 智能健康管理</h4>
+                        <div class="health-actions">
+                            <button class="health-btn" data-page-click="viewHealthReport" title="健康报告">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button class="health-btn" data-page-click="viewHealthRecommendations" title="健康建议">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="health-btn" data-page-click="recordHealthActivity" title="记录活动">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="health-status">
+                        <div class="status-item">
+                            <div class="status-icon">💪</div>
+                            <div class="status-content">
+                                <div class="status-title">健康评分</div>
+                                <div class="status-value" id="wellness-score">85</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">⚖️</div>
+                            <div class="status-content">
+                                <div class="status-title">工作强度</div>
+                                <div class="status-value" id="work-intensity">中等</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">🧘</div>
+                            <div class="status-content">
+                                <div class="status-title">压力水平</div>
+                                <div class="status-value" id="stress-level">低</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 健康建议 -->
+                    <div id="health-recommendations" class="health-recommendations" style="display: none;">
+                        <h5>💡 健康建议</h5>
+                        <div id="health-recommendations-list" class="health-recommendations-list">
+                            <div class="health-recommendation-item">
+                                <span class="recommendation-icon">☕</span>
+                                <span class="recommendation-text">建议休息一下，喝杯水</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 智能任务分解 -->
+                <div class="smart-decomposition-section">
+                    <div class="section-header">
+                        <h4>🔧 智能任务分解</h4>
+                        <div class="decomposition-actions">
+                            <button class="decomposition-btn" data-page-click="showTaskDecompositionModal" title="分解任务">
+                                <i class="fas fa-sitemap"></i>
+                            </button>
+                            <button class="decomposition-btn" data-page-click="viewDecompositionHistory" title="分解历史">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="decomposition-btn" data-page-click="viewDecompositionSettings" title="分解设置">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="decomposition-status">
+                        <div class="status-item">
+                            <div class="status-icon">🔧</div>
+                            <div class="status-content">
+                                <div class="status-title">分解状态</div>
+                                <div class="status-value" id="decomposition-status">待分解</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">📊</div>
+                            <div class="status-content">
+                                <div class="status-title">分解进度</div>
+                                <div class="status-value" id="decomposition-progress">0%</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">⚡</div>
+                            <div class="status-content">
+                                <div class="status-title">复杂度</div>
+                                <div class="status-value" id="task-complexity">待分析</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 任务分解结果 -->
+                    <div id="decomposition-results" class="decomposition-results" style="display: none;">
+                        <h5>📋 分解结果</h5>
+                        <div id="decomposition-list" class="decomposition-list">
+                            <div class="decomposition-item">
+                                <span class="decomposition-icon">🔍</span>
+                                <span class="decomposition-text">正在分析任务复杂度...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 智能日程规划 -->
+                <div class="smart-schedule-section">
+                    <div class="section-header">
+                        <h4>🗓️ 智能日程规划</h4>
+                        <div class="schedule-actions">
+                            <button class="schedule-btn" data-page-click="generateSmartSchedule" title="生成智能日程">
+                                <i class="fas fa-magic"></i>
+                            </button>
+                            <button class="schedule-btn" data-page-click="viewScheduleSettings" title="日程设置">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <button class="schedule-btn" data-page-click="exportSchedule" title="导出日程">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="schedule-status">
+                        <div class="status-item">
+                            <div class="status-icon">⏰</div>
+                            <div class="status-content">
+                                <div class="status-title">今日日程</div>
+                                <div class="status-value" id="schedule-status">未生成</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">📊</div>
+                            <div class="status-content">
+                                <div class="status-title">时间利用率</div>
+                                <div class="status-value" id="time-utilization">0%</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">⚡</div>
+                            <div class="status-content">
+                                <div class="status-title">效率优化</div>
+                                <div class="status-value" id="efficiency-score">待分析</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 日程时间线 -->
+                    <div id="schedule-timeline" class="schedule-timeline collapsed" style="display: none;">
+                        <h5 data-page-click="toggleScheduleTimeline">
+                            <span>📅 今日时间线</span>
+                            <span class="timeline-toggle-icon">▼</span>
+                        </h5>
+                        <div id="timeline-container" class="timeline-container">
+                            <div class="timeline-item">
+                                <span class="timeline-icon">📋</span>
+                                <span class="timeline-text">正在生成智能日程...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 智能提醒系统 -->
+                <div class="smart-reminder-section">
+                    <div class="section-header">
+                        <h4>🔔 智能提醒系统</h4>
+                        <div class="reminder-actions">
+                            <button class="reminder-btn" data-page-click="toggleReminderSettings" title="提醒设置">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <button class="reminder-btn" data-page-click="viewReminderHistory" title="提醒历史">
+                                <i class="fas fa-history"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="reminder-status">
+                        <div class="status-item">
+                            <div class="status-icon">⚖️</div>
+                            <div class="status-content">
+                                <div class="status-title">工作负荷监控</div>
+                                <div class="status-value" id="workload-status">监控中...</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">😴</div>
+                            <div class="status-content">
+                                <div class="status-title">疲劳检测</div>
+                                <div class="status-value" id="fatigue-status">检测中...</div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-icon">⏰</div>
+                            <div class="status-content">
+                                <div class="status-title">最佳执行时间</div>
+                                <div class="status-value" id="optimal-time-status">分析中...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 提醒历史 -->
+                    <div id="reminder-history" class="reminder-history" style="display: none;">
+                        <h5>📋 最近提醒</h5>
+                        <div id="reminder-history-list" class="reminder-history-list">
+                            <div class="history-item">
+                                <span class="history-icon">📊</span>
+                                <span class="history-text">正在加载提醒历史...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 每日一签视图 -->
+
+<div id="templates-view" class="view" style="display: none;">
+        <div class="templates-container">
+            <div class="templates-header">
+                <h2 data-translate="taskTemplates">任务模板</h2>
+                <p data-translate="templatesDescription">创建和管理常用的任务模板，快速生成重复性任务</p>
+                <button id="create-template-btn" class="btn-primary">
+                    <span class="material-icons">add</span>
+                    <span data-translate="createTemplate">创建模板</span>
+                </button>
+            </div>
+
+            <div class="templates-content">
+                <div class="templates-filters">
+                    <div class="filter-group">
+                        <label data-translate="filterByPriority">按优先级筛选：</label>
+                        <select id="template-priority-filter">
+                            <option value="all" data-translate="allPriorities">全部优先级</option>
+                            <option value="1" data-translate="q1Title">重要且紧急</option>
+                            <option value="2" data-translate="q2Title">重要不紧急</option>
+                            <option value="3" data-translate="q3Title">不重要但紧急</option>
+                            <option value="4" data-translate="q4Title">不重要不紧急</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label data-translate="searchTemplates">搜索模板：</label>
+                        <input type="text" id="template-search" placeholder="输入模板名称搜索...">
+                    </div>
+                </div>
+
+                <div class="templates-grid" id="templates-grid">
+                    <!-- 模板卡片将在这里动态生成 -->
+                </div>
+
+                <div class="templates-empty" id="templates-empty" style="display: none;">
+                    <h3 data-translate="noTemplates">暂无模板</h3>
+                    <p data-translate="createFirstTemplate">点击上方「创建模板」按钮开始创建您的第一个任务模板</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 任务模态框 -->

@@ -1,0 +1,472 @@
+/* ==========================================================================
+   分解设置模态框样式 - 现代化精美设计
+   ========================================================================== */
+
+/* 模态框容器 */
+.decomposition-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 背景遮罩 */
+.decomposition-settings-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+}
+
+/* 模态框主体 */
+.decomposition-settings-modal .modal-content {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 24px;
+    box-shadow: 0 25px 80px rgba(102, 126, 234, 0.25);
+    max-width: 850px;
+    width: 92%;
+    max-height: 90vh;
+    overflow: hidden;
+    z-index: 10001;
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 模态框头部 */
+.decomposition-settings-modal .modal-header {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #f093fb 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    color: white;
+    padding: 2rem 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 头部装饰 */
+.decomposition-settings-modal .modal-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.decomposition-settings-modal .modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.decomposition-settings-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 关闭按钮 */
+.decomposition-settings-modal .modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.decomposition-settings-modal .modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* 模态框主体内容 */
+.decomposition-settings-modal .modal-body {
+    padding: 2rem;
+    max-height: 65vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* 自定义滚动条 */
+.decomposition-settings-modal .modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.decomposition-settings-modal .modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.decomposition-settings-modal .modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-radius: 10px;
+}
+
+/* 标签页 */
+.decomposition-settings-modal .settings-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    position: relative;
+}
+
+.decomposition-settings-modal .tab-btn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-radius: 12px;
+    font-weight: 500;
+    color: #718096;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.decomposition-settings-modal .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1.1rem;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.decomposition-settings-modal .tab-btn.active {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    color: #2563eb;
+}
+
+.decomposition-settings-modal .tab-btn.active::after {
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+}
+
+.decomposition-settings-modal .tab-btn:hover:not(.active) {
+    background: rgba(102, 126, 234, 0.05);
+    color: #2563eb;
+}
+
+/* 设置面板 */
+.decomposition-settings-modal .settings-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.decomposition-settings-modal .settings-panel.active {
+    display: block;
+}
+
+.decomposition-settings-modal .settings-panel h4 {
+    color: #2d3748;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.decomposition-settings-modal .settings-panel h4::before {
+    content: '⚙️';
+    font-size: 1.3rem;
+}
+
+/* 设置项组 */
+.decomposition-settings-modal .setting-group {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(118, 75, 162, 0.03));
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.decomposition-settings-modal .setting-group:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.06), rgba(118, 75, 162, 0.06));
+    border-color: rgba(102, 126, 234, 0.2);
+}
+
+.decomposition-settings-modal .setting-group label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.95rem;
+}
+
+/* 输入框和选择器 */
+.decomposition-settings-modal .setting-group input,
+.decomposition-settings-modal .setting-group select {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: white;
+    color: #2d3748;
+}
+
+.decomposition-settings-modal .setting-group input:focus,
+.decomposition-settings-modal .setting-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+/* 范围滑块 */
+.decomposition-settings-modal .setting-group input[type="range"] {
+    padding: 0;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+}
+
+.decomposition-settings-modal .setting-group input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    transition: all 0.2s ease;
+}
+
+.decomposition-settings-modal .setting-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 复选框 */
+.decomposition-settings-modal .setting-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.75rem;
+    width: 20px;
+    height: 20px;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+/* 帮助文本 */
+.decomposition-settings-modal .setting-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #718096;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.decomposition-settings-modal .setting-group small::before {
+    content: '💡 ';
+}
+
+/* 模态框底部 */
+.decomposition-settings-modal .modal-footer {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+/* 按钮样式 */
+.decomposition-settings-modal .btn-primary,
+.decomposition-settings-modal .btn-secondary {
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.decomposition-settings-modal .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.decomposition-settings-modal .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.decomposition-settings-modal .btn-secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.decomposition-settings-modal .btn-secondary:hover {
+    background: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+/* 暗色模式适配 */
+body.dark-mode .decomposition-settings-modal .modal-content {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+}
+
+body.dark-mode .decomposition-settings-modal .modal-body {
+    background: transparent;
+}
+
+body.dark-mode .decomposition-settings-modal .modal-footer {
+    background: rgba(102, 126, 234, 0.05);
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .decomposition-settings-modal .settings-tabs {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .decomposition-settings-modal .tab-btn {
+    color: #a0aec0;
+}
+
+body.dark-mode .decomposition-settings-modal .tab-btn.active,
+body.dark-mode .decomposition-settings-modal .tab-btn:hover:not(.active) {
+    background: rgba(102, 126, 234, 0.15);
+    color: #90caf9;
+}
+
+body.dark-mode .decomposition-settings-modal .settings-panel h4 {
+    color: #f7fafc;
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group label {
+    color: #f7fafc;
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group input,
+body.dark-mode .decomposition-settings-modal .setting-group select {
+    background: rgba(45, 55, 72, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f7fafc;
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group input:focus,
+body.dark-mode .decomposition-settings-modal .setting-group select:focus {
+    border-color: #2563eb;
+    background: rgba(45, 55, 72, 1);
+}
+
+body.dark-mode .decomposition-settings-modal .setting-group input[type="range"] {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .decomposition-settings-modal .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f7fafc;
+}
+
+body.dark-mode .decomposition-settings-modal .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .decomposition-settings-modal .modal-content {
+        max-width: 95%;
+        margin: 1rem;
+    }
+
+    .decomposition-settings-modal .modal-header h3 {
+        font-size: 1.4rem;
+    }
+
+    .decomposition-settings-modal .modal-body {
+        padding: 1.5rem;
+    }
+
+    .decomposition-settings-modal .modal-footer {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+    }
+
+    .decomposition-settings-modal .btn-primary,
+    .decomposition-settings-modal .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .decomposition-settings-modal .settings-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .decomposition-settings-modal .tab-btn {
+        white-space: nowrap;
+    }
+}

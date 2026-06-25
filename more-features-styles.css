@@ -1,0 +1,507 @@
+/* ======================
+   更多功能页面样式 - 现代化重设计
+   性能优化版本
+   ====================== */
+.more-features-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+    background: transparent;
+    contain: layout style;
+}
+
+/* 背景装饰效果 - 性能优化 */
+.features-bg-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    contain: strict;
+}
+
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+    filter: blur(80px);
+    animation: float 40s infinite ease-in-out;
+    will-change: transform;
+    contain: strict;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 280px;
+    height: 280px;
+    top: 50%;
+    right: -100px;
+    animation-delay: 10s;
+    background: linear-gradient(135deg, rgba(249, 147, 251, 0.08), rgba(245, 87, 108, 0.08));
+}
+
+.shape-3 {
+    width: 250px;
+    height: 250px;
+    bottom: -100px;
+    left: 20%;
+    animation-delay: 20s;
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.08), rgba(0, 242, 254, 0.08));
+}
+
+.shape-4 {
+    width: 200px;
+    height: 200px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 30s;
+    background: linear-gradient(135deg, rgba(67, 233, 123, 0.08), rgba(56, 249, 215, 0.08));
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate3d(20px, -20px, 0) rotate(90deg);
+    }
+    50% {
+        transform: translate3d(0, -40px, 0) rotate(180deg);
+    }
+    75% {
+        transform: translate3d(-20px, -20px, 0) rotate(270deg);
+    }
+}
+
+/* 页面标题区域 - 性能优化 */
+.more-features-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 4rem;
+    z-index: 1;
+    contain: layout style;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.5s ease-out forwards;
+    contain: layout style;
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+    animation: pulse 3s infinite;
+    will-change: transform;
+}
+
+.badge-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #2563eb 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale3d(1, 1, 1); }
+    50% { transform: scale3d(1.05, 1.05, 1); }
+}
+
+.more-features-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.6s ease-out forwards;
+    contain: layout style;
+}
+
+.title-gradient {
+    background: linear-gradient(135deg, #2563eb 0%, #2563eb 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: shimmer 6s linear infinite;
+    will-change: background-position;
+}
+
+@keyframes shimmer {
+    to { background-position: 200% center; }
+}
+
+.more-features-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 功能卡片网格 - 性能优化 */
+.features-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 1;
+    contain: layout style;
+}
+
+/* 功能卡片设计 - 性能优化 */
+.feature-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out backwards;
+    contain: layout style paint;
+    will-change: transform;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.05s; }
+.feature-card:nth-child(2) { animation-delay: 0.1s; }
+.feature-card:nth-child(3) { animation-delay: 0.15s; }
+.feature-card:nth-child(4) { animation-delay: 0.2s; }
+.feature-card:nth-child(5) { animation-delay: 0.25s; }
+.feature-card:nth-child(6) { animation-delay: 0.3s; }
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* 卡片辉光效果 - 性能优化 */
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    will-change: transform, opacity;
+    contain: strict;
+}
+
+.feature-card:hover .card-glow {
+    opacity: 1;
+    animation: rotate 8s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 卡片内容 */
+.card-content {
+    position: relative;
+    padding: 1.7rem;
+    z-index: 1;
+}
+.feature-card .card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.3rem;
+}
+
+/* 图标区域 */
+.feature-icon-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.8rem;
+}
+
+.icon-bg {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    opacity: 0.15;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover .icon-bg {
+    opacity: 0.25;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-icon {
+    position: relative;
+    font-size: 3rem;
+    line-height: 80px;
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+/* 功能信息 */
+.feature-info {
+    margin-bottom: 0.7rem;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-title {
+    color: #2563eb;
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+/* 功能统计 */
+.feature-stats {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.stat-icon {
+    font-size: 1rem;
+}
+
+/* 功能按钮 */
+.feature-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #2563eb 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.feature-card .feature-btn {
+    margin-top: auto;
+    margin-bottom: 2rem;
+}
+
+.feature-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.feature-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.feature-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.feature-btn:active {
+    transform: translateY(0);
+}
+
+.btn-text, .btn-icon {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.feature-btn:hover .btn-icon {
+    transform: translateX(5px);
+}
+
+/* 不同卡片渐变色 */
+.feature-card[data-category="inspiration"] .feature-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #2563eb 100%);
+}
+
+.feature-card[data-category="productivity"] .feature-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.feature-card[data-category="growth"] .feature-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.feature-card[data-category="reminder"] .feature-btn {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.feature-card[data-category="analytics"] .feature-btn {
+    background: linear-gradient(135deg, #7c3aed 0%, #7c3aed 100%);
+}
+
+/* 暗色模式适配 */
+body.dark-mode .feature-card {
+    background: rgba(26, 32, 44, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .feature-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+body.dark-mode .badge-text {
+    color: #a0aec0;
+}
+
+body.dark-mode .more-features-subtitle {
+    color: #a0aec0;
+}
+
+body.dark-mode .feature-stats {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .feature-description {
+    color: #a0aec0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .more-features-container {
+        padding: 2rem 1rem;
+    }
+
+    .more-features-title {
+        font-size: 2.5rem;
+    }
+
+    .more-features-subtitle {
+        font-size: 1rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    .floating-shape {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .more-features-title {
+        font-size: 2rem;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .feature-card .card-content {
+        padding: 1.1rem;
+    }
+
+    .feature-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        line-height: 60px;
+    }
+}

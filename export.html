@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导出数据 - 象限时光</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-color: #e9ecef;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+        
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .export-page {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .export-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+        
+        .export-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+            z-index: 1;
+        }
+        
+        .export-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .export-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            pointer-events: none;
+        }
+        
+        .export-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0 0 1rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .export-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--white);
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            min-width: 48px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        .export-content {
+            padding: 2rem;
+        }
+        
+        .export-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-color) 100%);
+            padding: 2rem 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.6rem;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .export-form {
+            background: var(--light-color);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .form-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .format-option {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .format-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .format-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-color) 100%);
+            border: 3px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.2rem 0.8rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .format-option input[type="radio"]:checked + .format-card {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .format-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+        
+        .format-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .format-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .format-desc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.2;
+            font-weight: 500;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-color) 100%);
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .setting-item:hover {
+            background: linear-gradient(135deg, var(--light-color) 0%, #e9ecef 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+        
+        .setting-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .setting-item label {
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .preview-container {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-top: 1.5rem;
+        }
+        
+        .preview-tabs {
+            display: flex;
+            background: var(--light-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .preview-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .preview-tab:hover {
+            background: #e9ecef;
+            color: var(--text-primary);
+        }
+        
+        .preview-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: var(--white);
+        }
+        
+        .preview-content {
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: var(--text-secondary);
+            background: var(--light-color);
+        }
+        
+        .preview-placeholder .material-icons {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .preview-placeholder p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .preview-placeholder-detail {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .export-preview-shell {
+            min-height: 300px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .export-preview-card {
+            padding: 20px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .export-preview-title {
+            margin-bottom: 16px;
+            color: #333;
+            text-align: center;
+        }
+
+        .export-preview-code {
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .export-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-color) 100%);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            color: var(--white);
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success-color);
+        }
+        
+        .notification.error {
+            background: var(--danger-color);
+        }
+        
+        .notification.info {
+            background: var(--info-color);
+        }
+        
+        @media (max-width: 768px) {
+            .export-page {
+                padding: 0.5rem;
+            }
+            
+            .export-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .export-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .back-btn {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .export-content {
+                padding: 1.5rem;
+            }
+            
+            .export-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .format-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .format-card {
+                height: 100px;
+                padding: 1rem 0.6rem;
+            }
+            
+            .format-icon {
+                font-size: 1.8rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .format-title {
+                font-size: 0.85rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .format-desc {
+                font-size: 0.65rem;
+            }
+            
+            .settings-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .export-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .export-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .format-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+            
+            .format-card {
+                height: 90px;
+                padding: 0.8rem 0.4rem;
+            }
+            
+            .format-icon {
+                font-size: 1.6rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .format-title {
+                font-size: 0.8rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .format-desc {
+                font-size: 0.6rem;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="export-page">
+        <div class="export-container">
+            <div class="export-header">
+            <button class="back-btn" data-export-action="back" title="返回主页">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h1>📊 导出数据</h1>
+                <p>选择格式和设置，导出您的任务数据</p>
+            </div>
+            
+            <div class="export-content">
+                <div class="export-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-tasks">0</div>
+                        <div class="stat-label">总任务数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completed-tasks">0</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pending-tasks">0</div>
+                        <div class="stat-label">待完成</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pinned-tasks">0</div>
+                        <div class="stat-label">已置顶</div>
+                    </div>
+                </div>
+                
+                <div class="export-form">
+                    <div class="form-section">
+                        <h3>
+                            <span class="material-icons">file_download</span>
+                            选择导出格式
+                        </h3>
+                        <div class="format-grid">
+                            <div class="format-option">
+                                <input type="radio" id="format-excel" name="export-format" value="excel" checked>
+                                <label for="format-excel" class="format-card">
+                                    <span class="material-icons format-icon">table_chart</span>
+                                    <div class="format-title">Excel</div>
+                                    <div class="format-desc">电子表格格式，适合数据分析</div>
+                                </label>
+                            </div>
+                            <div class="format-option">
+                                <input type="radio" id="format-pdf" name="export-format" value="pdf">
+                                <label for="format-pdf" class="format-card">
+                                    <span class="material-icons format-icon">picture_as_pdf</span>
+                                    <div class="format-title">PDF</div>
+                                    <div class="format-desc">便携式文档，适合打印和分享</div>
+                                </label>
+                            </div>
+                            <div class="format-option">
+                                <input type="radio" id="format-word" name="export-format" value="word">
+                                <label for="format-word" class="format-card">
+                                    <span class="material-icons format-icon">description</span>
+                                    <div class="format-title">Word</div>
+                                    <div class="format-desc">文档格式，适合编辑和协作</div>
+                                </label>
+                            </div>
+                            <div class="format-option">
+                                <input type="radio" id="format-markdown" name="export-format" value="markdown">
+                                <label for="format-markdown" class="format-card">
+                                    <span class="material-icons format-icon">content_copy</span>
+                                    <div class="format-title">Markdown</div>
+                                    <div class="format-desc">纯文本格式，适合版本控制</div>
+                                </label>
+                            </div>
+                            <div class="format-option">
+                                <input type="radio" id="format-html" name="export-format" value="html">
+                                <label for="format-html" class="format-card">
+                                    <span class="material-icons format-icon">code</span>
+                                    <div class="format-title">HTML</div>
+                                    <div class="format-desc">网页格式，适合在线查看</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>
+                            <span class="material-icons">visibility</span>
+                            预览
+                        </h3>
+                        <div class="preview-container">
+                            <div class="preview-tabs">
+                                <button class="preview-tab active" data-format="excel">Excel</button>
+                                <button class="preview-tab" data-format="pdf">PDF</button>
+                                <button class="preview-tab" data-format="word">Word</button>
+                                <button class="preview-tab" data-format="markdown">Markdown</button>
+                                <button class="preview-tab" data-format="html">HTML</button>
+                            </div>
+                            <div class="preview-content" id="preview-content">
+                                <div class="preview-placeholder">
+                                    <span class="material-icons">preview</span>
+                                    <p>选择导出格式查看预览</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>
+                            <span class="material-icons">settings</span>
+                            导出设置
+                        </h3>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <input type="checkbox" id="include-completed" checked>
+                                <label for="include-completed">包含已完成的任务</label>
+                            </div>
+                            <div class="setting-item">
+                                <input type="checkbox" id="include-notes" checked>
+                                <label for="include-notes">包含任务备注</label>
+                            </div>
+                            <div class="setting-item">
+                                <input type="checkbox" id="include-dates" checked>
+                                <label for="include-dates">包含创建日期</label>
+                            </div>
+                            <div class="setting-item">
+                                <input type="checkbox" id="include-priority">
+                                <label for="include-priority">包含优先级信息</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="export-actions">
+                    <button class="btn btn-secondary" data-export-action="refresh">
+                            <span class="material-icons">refresh</span>
+                            刷新数据
+                        </button>
+                    <button class="btn btn-secondary" data-export-action="preview">
+                            <span class="material-icons">visibility</span>
+                            更新预览
+                        </button>
+                    <button class="btn btn-primary" data-export-action="export" id="export-btn">
+                            <span class="material-icons">download</span>
+                            开始导出
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>正在生成文件，请稍候...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="i18n-auto.js?v=1.0.6"></script>
+
+    <script>
+        let tasks = [];
+        let currentFormat = 'excel';
+
+        document.addEventListener('click', function (event) {
+            const button = event.target.closest('[data-export-action]');
+            if (!button) return;
+
+            const action = button.dataset.exportAction;
+            if (action === 'back') {
+                goBack();
+            } else if (action === 'refresh') {
+                refreshData();
+            } else if (action === 'preview') {
+                updatePreview();
+            } else if (action === 'export') {
+                exportData();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== 导出页面初始化开始 ===');
+            
+            // 检查库加载状态
+            checkLibraryStatus();
+            
+            // 加载任务数据
+            loadTasks();
+            updateStats();
+            initFormatSelection();
+            initPreviewTabs();
+            
+            // 初始化预览
+            updatePreview();
+            
+            // 添加数据同步监听器
+            setupDataSync();
+            
+            console.log('=== 导出页面初始化完成 ===');
+        });
+        
+        // 检查库加载状态
+        function checkLibraryStatus() {
+            console.log('检查库加载状态...');
+            
+            // 检查jsPDF
+            if (typeof window.jspdf !== 'undefined') {
+                console.log('✅ jsPDF库已加载');
+            } else {
+                console.log('❌ jsPDF库未加载');
+            }
+            
+            // 检查html2canvas
+            if (typeof window.html2canvas !== 'undefined') {
+                console.log('✅ html2canvas库已加载');
+            } else {
+                console.log('❌ html2canvas库未加载');
+            }
+        }
+        
+        // 设置数据同步
+        function setupDataSync() {
+            // 监听localStorage变化
+            window.addEventListener('storage', function(e) {
+                if (e.key && (e.key.startsWith('tasks') || e.key === 'currentUser' || e.key === 'isLoggedIn')) {
+                    console.log('检测到数据变化，重新加载任务数据');
+                    loadTasks();
+                    updateStats();
+                    updatePreview();
+                }
+            });
+            
+            // 定期检查数据更新（每5秒）
+            setInterval(function() {
+                const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                let isLoggedIn = false;
+                
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        currentUser = session.user;
+                        isLoggedIn = true;
+                    } catch (error) {
+                        console.error('解析用户会话失败:', error);
+                    }
+                }
+                
+                let storageKey = 'tasks';
+                if (isLoggedIn && currentUser && currentUser.id) {
+                    storageKey = `tasks_${currentUser.id}`;
+                }
+                
+                const currentData = localStorage.getItem(storageKey);
+                if (currentData && JSON.stringify(JSON.parse(currentData)) !== JSON.stringify(tasks)) {
+                    console.log('检测到任务数据更新，重新加载');
+                    loadTasks();
+                    updateStats();
+                    updatePreview();
+                }
+            }, 5000);
+        }
+        
+        function loadTasks() {
+            try {
+                // 获取用户会话信息 - 与主页面保持一致
+                const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                let isLoggedIn = false;
+                
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        currentUser = session.user;
+                        isLoggedIn = true;
+                console.log('Session user state loaded.');
+                    } catch (error) {
+                        console.error('解析用户会话失败:', error);
+                    }
+                }
+                
+                // 确定存储键 - 与主页面保持一致
+                let storageKey = 'tasks';
+                if (isLoggedIn && currentUser && currentUser.id) {
+                    storageKey = `tasks_${currentUser.id}`;
+                    console.log('使用用户特定存储键:', storageKey);
+                } else {
+                    console.log('使用默认存储键:', storageKey);
+                }
+                
+                // 从localStorage获取真实的任务数据
+                const tasksData = localStorage.getItem(storageKey);
+                if (tasksData) {
+                    const parsedTasks = JSON.parse(tasksData);
+                    console.log('已加载任务数据:', parsedTasks.length, '个任务');
+                    console.log('任务详情:', parsedTasks);
+                    
+                    // 验证任务数据完整性
+                    const validTasks = parsedTasks.filter(task => {
+                        const isValid = task && 
+                            typeof task === 'object' && 
+                            task.id && 
+                            task.title;
+                        
+                        if (!isValid) {
+                            console.warn('发现无效任务数据:', task);
+                        }
+                        return isValid;
+                    });
+                    
+                    tasks = validTasks;
+                    console.log('有效任务数量:', tasks.length);
+                } else {
+                    // 如果没有任务数据，显示空状态
+                    tasks = [];
+                    console.log('没有找到任务数据，显示空状态');
+                }
+            } catch (error) {
+                console.error('加载任务数据失败:', error);
+                tasks = [];
+            }
+        }
+        
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(task => task.completed).length;
+            const pending = total - completed;
+            const pinned = tasks.filter(task => task.pinned).length;
+            
+            document.getElementById('total-tasks').textContent = total;
+            document.getElementById('completed-tasks').textContent = completed;
+            document.getElementById('pending-tasks').textContent = pending;
+            document.getElementById('pinned-tasks').textContent = pinned;
+        }
+        
+        function initFormatSelection() {
+            const formatInputs = document.querySelectorAll('input[name="export-format"]');
+            formatInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    currentFormat = this.value;
+                    console.log('Format changed to:', currentFormat);
+                    updatePreviewTabs(currentFormat);
+                    updatePreview();
+                });
+            });
+            
+            // 为设置选项添加事件监听器
+            const settingInputs = document.querySelectorAll('#include-completed, #include-notes, #include-dates, #include-priority');
+            settingInputs.forEach(input => {
+                if (input) {
+                    input.addEventListener('change', function() {
+                        console.log('Setting changed:', this.id, this.checked);
+                        updatePreview();
+                    });
+                }
+            });
+        }
+        
+        function initPreviewTabs() {
+            const tabs = document.querySelectorAll('.preview-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const format = this.dataset.format;
+                    console.log('Preview tab clicked:', format);
+                    
+                    currentFormat = format;
+                    
+                    // 同步更新格式选择的radio按钮
+                    const formatInput = document.querySelector(`input[name="export-format"][value="${format}"]`);
+                    if (formatInput) {
+                        formatInput.checked = true;
+                    }
+                    
+                    updatePreviewTabs(format);
+                    updatePreview(format);
+                });
+            });
+        }
+        
+        function updatePreviewTabs(activeFormat) {
+            const tabs = document.querySelectorAll('.preview-tab');
+            tabs.forEach(tab => {
+                if (tab.dataset.format === activeFormat) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+        
+        function updatePreview(format = currentFormat) {
+            console.log('=== updatePreview 开始 ===');
+            console.log('format:', format);
+            console.log('tasks:', tasks);
+            
+            const previewContainer = document.querySelector('#preview-content');
+            if (!previewContainer) {
+                console.error('Preview container not found');
+                return;
+            }
+            
+            if (!tasks || tasks.length === 0) {
+                previewContainer.replaceChildren(createPreviewPlaceholder('inbox', '暂无任务数据', '请先添加一些任务后再进行导出'));
+                return;
+            }
+            
+            const includeCompleted = document.getElementById('include-completed')?.checked ?? true;
+            const includeNotes = document.getElementById('include-notes')?.checked ?? true;
+            const includeDates = document.getElementById('include-dates')?.checked ?? true;
+            const includePriority = document.getElementById('include-priority')?.checked ?? false;
+            
+            let filteredTasks = tasks;
+            if (!includeCompleted) {
+                filteredTasks = tasks.filter(task => !task.completed);
+            }
+            
+            if (filteredTasks.length === 0) {
+                previewContainer.replaceChildren(createPreviewPlaceholder('filter_list', '没有符合条件的任务', '请调整筛选条件后重试'));
+                return;
+            }
+            
+            try {
+                let previewContent = '';
+                
+                switch (format) {
+                    case 'excel':
+                        previewContent = generateExcelPreview(filteredTasks, includeNotes, includeDates, includePriority);
+                        break;
+                    case 'pdf':
+                        previewContent = generatePDFPreviewText(filteredTasks, includeNotes, includeDates, includePriority);
+                        break;
+                    case 'word':
+                        previewContent = generateWordPreviewText(filteredTasks, includeNotes, includeDates, includePriority);
+                        break;
+                    case 'markdown':
+                        previewContent = generateMarkdownPreviewText(filteredTasks, includeNotes, includeDates, includePriority);
+                        break;
+                    case 'html':
+                        previewContent = generateHTMLPreviewText(filteredTasks, includeNotes, includeDates, includePriority);
+                        break;
+                    default:
+                        previewContent = generateExcelPreview(filteredTasks, includeNotes, includeDates, includePriority);
+                }
+                
+                previewContainer.replaceChildren(createExportPreviewCard(format, previewContent));
+                
+                console.log('Preview content set successfully');
+                
+            } catch (error) {
+                console.error('Preview generation failed:', error);
+                previewContainer.replaceChildren(createPreviewPlaceholder('error', '预览内容生成失败', `错误信息: ${error.message}`));
+            }
+            
+            console.log('=== updatePreview 结束 ===');
+        }
+
+        function createPreviewPlaceholder(iconName, title, detail) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'preview-placeholder';
+            const icon = document.createElement('span');
+            icon.className = 'material-icons';
+            icon.textContent = iconName;
+            const titleEl = document.createElement('p');
+            titleEl.textContent = title;
+            const detailEl = document.createElement('p');
+            detailEl.style.fontSize = '14px';
+            detailEl.style.marginTop = '8px';
+            detailEl.textContent = detail;
+            placeholder.append(icon, titleEl, detailEl);
+            return placeholder;
+        }
+
+        function createExportPreviewCard(format, previewContent) {
+            const outer = document.createElement('div');
+            outer.className = 'export-preview-shell';
+            const card = document.createElement('div');
+            card.className = 'export-preview-card';
+            const title = document.createElement('h3');
+            title.className = 'export-preview-title';
+            title.textContent = `📋 ${format.toUpperCase()} 格式预览`;
+            const content = document.createElement('div');
+            content.className = 'export-preview-code';
+            content.textContent = previewContent;
+            card.append(title, content);
+            outer.appendChild(card);
+            return outer;
+        }
+
+        function renderSafeExportMarkup(container, markup) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(`<div>${markup}</div>`, 'text/html');
+            const root = doc.body.firstElementChild;
+            root.querySelectorAll('script, iframe, object, embed, link, meta').forEach(node => node.remove());
+            root.querySelectorAll('*').forEach(node => {
+                [...node.attributes].forEach(attr => {
+                    const name = attr.name.toLowerCase();
+                    const value = attr.value.trim().toLowerCase();
+                    if (name.startsWith('on') || ((name === 'href' || name === 'src') && value.startsWith('javascript:'))) {
+                        node.removeAttribute(attr.name);
+                    }
+                });
+            });
+            container.replaceChildren(...[...root.childNodes].map(node => document.importNode(node, true)));
+        }
+        
+        // 生成Excel预览内容
+        function generateExcelPreview(tasks, includeNotes, includeDates, includePriority) {
+            let csv = '序号,任务标题,优先级,状态';
+            if (includeDates) csv += ',创建时间';
+            if (includeNotes) csv += ',备注';
+            csv += '\n';
+            
+            tasks.forEach((task, index) => {
+                const title = (task.title || '无标题').replace(/,/g, '，');
+                const priority = task.priority || '中';
+                const status = task.completed ? '已完成' : '待完成';
+                
+                csv += `${index + 1},"${title}","${priority}","${status}"`;
+                
+                if (includeDates) {
+                    const dateStr = task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知';
+                    csv += `,"${dateStr}"`;
+                }
+                if (includeNotes) {
+                    const noteStr = (task.note || task.notes || '').replace(/,/g, '，').replace(/"/g, '""');
+                    csv += `,"${noteStr}"`;
+                }
+                csv += '\n';
+            });
+            
+            return csv;
+        }
+        
+        // 生成PDF预览文本
+        function generatePDFPreviewText(tasks, includeNotes, includeDates, includePriority) {
+            let preview = 'PDF 文档预览\n';
+            preview += '='.repeat(50) + '\n\n';
+            preview += `象限时光任务列表\n`;
+            preview += `导出时间: ${new Date().toLocaleString()}\n`;
+            preview += `任务总数: ${tasks.length}\n\n`;
+            
+            tasks.forEach((task, index) => {
+                preview += `${index + 1}. ${task.title || '无标题'}\n`;
+                preview += `   优先级: ${task.priority || '中'}\n`;
+                preview += `   状态: ${task.completed ? '已完成' : '待完成'}\n`;
+                if (includeDates && task.createdAt) {
+                    preview += `   创建时间: ${new Date(task.createdAt).toLocaleString()}\n`;
+                }
+                if (includeNotes && (task.note || task.notes)) {
+                    preview += `   备注: ${task.note || task.notes}\n`;
+                }
+                preview += '\n';
+            });
+            
+            return preview;
+        }
+        
+        // 生成Word预览文本
+        function generateWordPreviewText(tasks, includeNotes, includeDates, includePriority) {
+            let preview = '象限时光任务列表\n';
+            preview += '='.repeat(50) + '\n\n';
+            preview += `导出时间: ${new Date().toLocaleString()}\n`;
+            preview += `任务总数: ${tasks.length}\n\n`;
+            
+            preview += '任务列表:\n';
+            preview += '-'.repeat(30) + '\n\n';
+            
+            tasks.forEach((task, index) => {
+                preview += `${index + 1}. ${task.title || '无标题'}\n`;
+                preview += `   优先级: ${task.priority || '中'}\n`;
+                preview += `   状态: ${task.completed ? '✅ 已完成' : '⏳ 待完成'}\n`;
+                
+                if (includeDates && task.createdAt) {
+                    preview += `   创建时间: ${new Date(task.createdAt).toLocaleString()}\n`;
+                }
+                
+                if (includeNotes && (task.note || task.notes)) {
+                    preview += `   备注: ${task.note || task.notes}\n`;
+                }
+                
+                if (task.pinned) {
+                    preview += `   📌 已置顶\n`;
+                }
+                
+                preview += '\n';
+            });
+            
+            return preview;
+        }
+        
+        // 生成Markdown预览文本
+        function generateMarkdownPreviewText(tasks, includeNotes, includeDates, includePriority) {
+            let md = '# 象限时光任务列表\n\n';
+            md += `**导出时间:** ${new Date().toLocaleString()}\n`;
+            md += `**任务总数:** ${tasks.length}\n\n`;
+            md += '| 序号 | 任务标题 | 优先级 | 状态';
+            if (includeDates) md += ' | 创建时间';
+            if (includeNotes) md += ' | 备注';
+            md += ' |\n';
+            md += '|------|----------|--------|------';
+            if (includeDates) md += '|----------';
+            if (includeNotes) md += '|------';
+            md += '|\n';
+            
+            tasks.forEach((task, index) => {
+                md += `| ${index + 1} | ${task.title || '无标题'} | ${task.priority || '中'} | ${task.completed ? '✅ 已完成' : '⏳ 待完成'}`;
+                if (includeDates) {
+                    md += ` | ${task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知'}`;
+                }
+                if (includeNotes) {
+                    md += ` | ${task.note || task.notes || ''}`;
+                }
+                md += ' |\n';
+            });
+            
+            return md;
+        }
+        
+        // 生成HTML预览文本
+        function generateHTMLPreviewText(tasks, includeNotes, includeDates, includePriority) {
+            let html = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n';
+            html += '<meta charset="UTF-8">\n';
+            html += '<title>象限时光任务列表</title>\n';
+            html += '</head>\n<body>\n';
+            html += '<h1>象限时光任务列表</h1>\n';
+            html += `<p>导出时间: ${new Date().toLocaleString()}</p>\n`;
+            html += `<p>任务总数: ${tasks.length}</p>\n`;
+            html += '<table border="1">\n<tr><th>序号</th><th>任务标题</th><th>优先级</th><th>状态</th>';
+            if (includeDates) html += '<th>创建时间</th>';
+            if (includeNotes) html += '<th>备注</th>';
+            html += '</tr>\n';
+            
+            tasks.forEach((task, index) => {
+                html += '<tr>';
+                html += `<td>${index + 1}</td>`;
+                html += `<td>${task.title || '无标题'}</td>`;
+                html += `<td>${task.priority || '中'}</td>`;
+                html += `<td>${task.completed ? '已完成' : '待完成'}</td>`;
+                if (includeDates) {
+                    html += `<td>${task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知'}</td>`;
+                }
+                if (includeNotes) {
+                    html += `<td>${task.note || task.notes || ''}</td>`;
+                }
+                html += '</tr>\n';
+            });
+            
+            html += '</table>\n</body>\n</html>';
+            return html;
+        }
+        
+        function exportData() {
+            const exportBtn = document.getElementById('export-btn');
+            const loading = document.getElementById('loading');
+            
+            exportBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            setTimeout(() => {
+                try {
+                    const includeCompleted = document.getElementById('include-completed').checked;
+                    const includeNotes = document.getElementById('include-notes').checked;
+                    const includeDates = document.getElementById('include-dates').checked;
+                    const includePriority = document.getElementById('include-priority').checked;
+                    
+                    let filteredTasks = tasks;
+                    if (!includeCompleted) {
+                        filteredTasks = tasks.filter(task => !task.completed);
+                    }
+                    
+                    if (filteredTasks.length === 0) {
+                        showNotification('没有可导出的任务数据', 'error');
+                        return;
+                    }
+                    
+                    switch (currentFormat) {
+                        case 'excel':
+                            exportToCSV(filteredTasks, includeNotes, includeDates, includePriority);
+                            showNotification('Excel文件导出成功！', 'success');
+                            break;
+                        case 'pdf':
+                            try {
+                                exportToPDF(filteredTasks, includeNotes, includeDates, includePriority);
+                                showNotification('PDF文件导出成功！', 'success');
+                            } catch (error) {
+                                console.error('PDF导出失败:', error);
+                                showNotification('PDF导出失败: ' + error.message, 'error');
+                                return;
+                            }
+                            break;
+                        case 'word':
+                            exportToHTML(filteredTasks, includeNotes, includeDates, includePriority, 'doc');
+                            showNotification('Word文件导出成功！', 'success');
+                            break;
+                        case 'html':
+                            exportToHTML(filteredTasks, includeNotes, includeDates, includePriority, 'html');
+                            showNotification('HTML文件导出成功！', 'success');
+                            break;
+                        case 'markdown':
+                            exportToMarkdown(filteredTasks, includeNotes, includeDates, includePriority);
+                            showNotification('Markdown文件导出成功！', 'success');
+                            break;
+                    }
+                    
+                } catch (error) {
+                    console.error('导出失败:', error);
+                    showNotification('导出失败，请重试', 'error');
+                } finally {
+                    exportBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            }, 1000);
+        }
+        
+        function exportToCSV(tasks, includeNotes, includeDates, includePriority) {
+            let csv = '\uFEFF'; // BOM for UTF-8
+            
+            // 添加标题和统计信息
+            csv += '象限时光任务列表\n';
+            csv += `导出时间,${new Date().toLocaleString()}\n`;
+            csv += `任务总数,${tasks.length}\n`;
+            csv += `已完成,${tasks.filter(t => t.completed).length}\n`;
+            csv += `待完成,${tasks.filter(t => !t.completed).length}\n`;
+            csv += '\n';
+            
+            // 表头
+            csv += '序号,任务标题,优先级,状态';
+            if (includeDates) csv += ',创建时间';
+            if (includeNotes) csv += ',备注';
+            csv += '\n';
+            
+            // 数据行
+            tasks.forEach((task, index) => {
+                const title = (task.title || '无标题').replace(/,/g, '，');
+                const priority = task.priority || '中';
+                const status = task.completed ? '已完成' : '待完成';
+                
+                csv += `${index + 1},"${title}","${priority}","${status}"`;
+                
+                if (includeDates) {
+                    const dateStr = task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知';
+                    csv += `,"${dateStr}"`;
+                }
+                if (includeNotes) {
+                    const noteStr = (task.note || task.notes || '').replace(/,/g, '，').replace(/"/g, '""');
+                    csv += `,"${noteStr}"`;
+                }
+                csv += '\n';
+            });
+            
+            const fileName = `象限时光任务列表_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadFile(csv, fileName, 'text/csv');
+        }
+        
+        function exportToPDF(tasks, includeNotes, includeDates, includePriority) {
+            try {
+                console.log('开始PDF导出，任务数量:', tasks.length);
+                
+                // 检查库是否加载
+                if (typeof window.jspdf === 'undefined' || typeof window.html2canvas === 'undefined') {
+                    console.error('PDF库未加载，尝试动态加载...');
+                    return loadPDFLibraryAndExport(tasks, includeNotes, includeDates, includePriority);
+                }
+                
+                // 使用html2canvas + jsPDF的方式，完美支持中文
+                generatePDFWithCanvas(tasks, includeNotes, includeDates, includePriority);
+                
+            } catch (error) {
+                console.error('PDF导出详细错误:', error);
+                throw new Error(`PDF导出失败: ${error.message}`);
+            }
+        }
+        
+        // 使用html2canvas生成PDF（完美支持中文）
+        function generatePDFWithCanvas(tasks, includeNotes, includeDates, includePriority) {
+            // 创建临时HTML内容
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.top = '0';
+            tempDiv.style.width = '800px';
+            tempDiv.style.backgroundColor = 'white';
+            tempDiv.style.padding = '20px';
+            tempDiv.style.fontFamily = 'Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif';
+            tempDiv.style.fontSize = '14px';
+            tempDiv.style.lineHeight = '1.6';
+            tempDiv.style.color = '#333';
+            
+            // 生成HTML内容
+            let htmlContent = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 20px;">
+                    <h1 style="color: #2563eb; font-size: 28px; margin: 0 0 10px 0; font-weight: bold;">象限时光任务列表</h1>
+                    <p style="color: #666; font-size: 16px; margin: 5px 0;">导出时间: ${new Date().toLocaleString()}</p>
+                    <p style="color: #666; font-size: 16px; margin: 5px 0;">任务总数: ${tasks.length}</p>
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 20px;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: white;">
+                            <th style="border: 1px solid #ddd; padding: 12px 8px; text-align: center; width: 60px; font-weight: bold;">序号</th>
+                            <th style="border: 1px solid #ddd; padding: 12px 8px; text-align: left; font-weight: bold;">任务标题</th>
+                            <th style="border: 1px solid #ddd; padding: 12px 8px; text-align: center; width: 100px; font-weight: bold;">优先级</th>
+                            <th style="border: 1px solid #ddd; padding: 12px 8px; text-align: center; width: 80px; font-weight: bold;">状态</th>
+            `;
+            
+            if (includeDates) {
+                htmlContent += `<th style="border: 1px solid #ddd; padding: 12px 8px; text-align: center; width: 140px; font-weight: bold;">创建时间</th>`;
+            }
+            if (includeNotes) {
+                htmlContent += `<th style="border: 1px solid #ddd; padding: 12px 8px; text-align: left; font-weight: bold;">备注</th>`;
+            }
+            
+            htmlContent += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // 添加任务数据
+            tasks.forEach((task, index) => {
+                const priorityText = getPriorityText(task.priority);
+                const statusText = task.completed ? '✅ 已完成' : '⏳ 待完成';
+                const dateText = task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知';
+                const noteText = task.note || task.notes || '';
+                const rowClass = index % 2 === 0 ? 'background-color: #f8f9fa;' : 'background-color: white;';
+                
+                htmlContent += `
+                    <tr style="${rowClass}">
+                        <td style="border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-weight: bold;">${index + 1}</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 8px; font-weight: 500;">${task.title || '无标题'}</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-weight: 500;">${priorityText}</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-weight: 500;">${statusText}</td>
+                `;
+                
+                if (includeDates) {
+                    htmlContent += `<td style="border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-size: 11px;">${dateText}</td>`;
+                }
+                if (includeNotes) {
+                    htmlContent += `<td style="border: 1px solid #ddd; padding: 10px 8px; font-size: 11px;">${noteText}</td>`;
+                }
+                
+                htmlContent += `</tr>`;
+            });
+            
+            htmlContent += `
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="color: #333; margin: 0 0 15px 0; font-size: 16px;">📊 统计信息</h3>
+            `;
+            
+            const completedCount = tasks.filter(t => t.completed).length;
+            const pendingCount = tasks.length - completedCount;
+            const completionRate = tasks.length > 0 ? Math.round(completedCount / tasks.length * 100) : 0;
+            
+            htmlContent += `
+                    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 150px;">
+                            <div style="color: #28a745; font-size: 24px; font-weight: bold;">${completedCount}</div>
+                            <div style="color: #666; font-size: 14px;">已完成任务</div>
+                        </div>
+                        <div style="flex: 1; min-width: 150px;">
+                            <div style="color: #ffc107; font-size: 24px; font-weight: bold;">${pendingCount}</div>
+                            <div style="color: #666; font-size: 14px;">待完成任务</div>
+                        </div>
+                        <div style="flex: 1; min-width: 150px;">
+                            <div style="color: #2563eb; font-size: 24px; font-weight: bold;">${completionRate}%</div>
+                            <div style="color: #666; font-size: 14px;">完成率</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            renderSafeExportMarkup(tempDiv, htmlContent);
+            document.body.appendChild(tempDiv);
+            
+            // 使用html2canvas生成图片
+            html2canvas(tempDiv, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                allowTaint: true
+            }).then(canvas => {
+                // 移除临时元素
+                document.body.removeChild(tempDiv);
+                
+                // 创建PDF
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210; // A4宽度
+                const pageHeight = 295; // A4高度
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // 保存文件
+                const fileName = `象限时光任务列表_${new Date().toISOString().slice(0, 10)}.pdf`;
+                pdf.save(fileName);
+                console.log('PDF导出成功，文件名:', fileName);
+            }).catch(error => {
+                console.error('html2canvas生成失败:', error);
+                document.body.removeChild(tempDiv);
+                throw new Error('PDF生成失败: ' + error.message);
+            });
+        }
+        
+        // 获取优先级文本
+        function getPriorityText(priority) {
+            if (typeof priority === 'number') {
+                switch (priority) {
+                    case 1: return '重要且紧急';
+                    case 2: return '重要不紧急';
+                    case 3: return '不重要但紧急';
+                    case 4: return '不重要不紧急';
+                    default: return '中';
+                }
+            }
+            return priority || '中';
+        }
+        
+        // 安全的文本处理函数
+        function safeText(value) {
+            if (value === null || value === undefined) {
+                return '';
+            }
+            return String(value);
+        }
+        
+        // 动态加载PDF库并导出
+        function loadPDFLibraryAndExport(tasks, includeNotes, includeDates, includePriority) {
+            console.log('尝试动态加载PDF相关库...');
+            
+            let loadedCount = 0;
+            const totalLibraries = 2;
+            
+            function checkAllLoaded() {
+                loadedCount++;
+                if (loadedCount >= totalLibraries) {
+                    console.log('所有PDF库加载成功，开始导出...');
+                    setTimeout(() => {
+                        exportToPDF(tasks, includeNotes, includeDates, includePriority);
+                    }, 200);
+                }
+            }
+            
+            // 加载jsPDF
+            const jsPDFScript = document.createElement('script');
+            jsPDFScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            jsPDFScript.onload = function() {
+                console.log('jsPDF库加载成功');
+                checkAllLoaded();
+            };
+            jsPDFScript.onerror = function() {
+                console.error('jsPDF库加载失败');
+                showNotification('PDF库加载失败，请刷新页面重试', 'error');
+            };
+            document.head.appendChild(jsPDFScript);
+            
+            // 加载html2canvas
+            const html2canvasScript = document.createElement('script');
+            html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            html2canvasScript.onload = function() {
+                console.log('html2canvas库加载成功');
+                checkAllLoaded();
+            };
+            html2canvasScript.onerror = function() {
+                console.error('html2canvas库加载失败');
+                showNotification('PDF库加载失败，请刷新页面重试', 'error');
+            };
+            document.head.appendChild(html2canvasScript);
+        }
+        
+        function exportToHTML(tasks, includeNotes, includeDates, includePriority, fileExtension = 'html') {
+            let html = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n';
+            html += '<meta charset="UTF-8">\n';
+            html += '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n';
+            html += '<title>象限时光任务列表</title>\n';
+            html += '<style>\n';
+            html += '* { margin: 0; padding: 0; box-sizing: border-box; }\n';
+            html += 'body { \n';
+            html += '    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;\n';
+            html += '    background: #f8f9fa;\n';
+            html += '    padding: 20px;\n';
+            html += '    color: #333;\n';
+            html += '    line-height: 1.6;\n';
+            html += '}\n';
+            html += '.container {\n';
+            html += '    max-width: 800px;\n';
+            html += '    margin: 0 auto;\n';
+            html += '    background: white;\n';
+            html += '    border-radius: 8px;\n';
+            html += '    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);\n';
+            html += '    overflow: hidden;\n';
+            html += '}\n';
+            html += '.header {\n';
+            html += '    background: #007bff;\n';
+            html += '    color: white;\n';
+            html += '    padding: 30px;\n';
+            html += '    text-align: center;\n';
+            html += '}\n';
+            html += '.header h1 {\n';
+            html += '    font-size: 2rem;\n';
+            html += '    font-weight: 600;\n';
+            html += '    margin-bottom: 10px;\n';
+            html += '}\n';
+            html += '.content {\n';
+            html += '    padding: 30px;\n';
+            html += '}\n';
+            html += 'table {\n';
+            html += '    width: 100%;\n';
+            html += '    border-collapse: collapse;\n';
+            html += '    font-size: 0.95rem;\n';
+            html += '}\n';
+            html += 'th {\n';
+            html += '    background: #007bff;\n';
+            html += '    color: white;\n';
+            html += '    padding: 15px;\n';
+            html += '    text-align: left;\n';
+            html += '    font-weight: 600;\n';
+            html += '}\n';
+            html += 'td {\n';
+            html += '    padding: 15px;\n';
+            html += '    border-bottom: 1px solid #f0f0f0;\n';
+            html += '    vertical-align: top;\n';
+            html += '}\n';
+            html += 'tr:hover {\n';
+            html += '    background-color: #f8f9ff;\n';
+            html += '}\n';
+            html += '</style>\n';
+            html += '</head>\n';
+            html += '<body>\n';
+            html += '<div class="container">\n';
+            html += '<div class="header">\n';
+            html += '<h1>📋 象限时光任务列表</h1>\n';
+            html += '<div class="subtitle">导出时间: ' + new Date().toLocaleString() + '</div>\n';
+            html += '</div>\n';
+            html += '<div class="content">\n';
+            
+            // 添加统计信息
+            html += '<div style="margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">\n';
+            html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; text-align: center; border-left: 4px solid #007bff;">\n';
+            html += '<div style="font-size: 1.5rem; font-weight: bold; color: #007bff;">' + tasks.length + '</div>\n';
+            html += '<div style="font-size: 0.9rem; color: #666;">总任务数</div>\n';
+            html += '</div>\n';
+            html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; text-align: center; border-left: 4px solid #28a745;">\n';
+            html += '<div style="font-size: 1.5rem; font-weight: bold; color: #28a745;">' + tasks.filter(t => t.completed).length + '</div>\n';
+            html += '<div style="font-size: 0.9rem; color: #666;">已完成</div>\n';
+            html += '</div>\n';
+            html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; text-align: center; border-left: 4px solid #ffc107;">\n';
+            html += '<div style="font-size: 1.5rem; font-weight: bold; color: #ffc107;">' + tasks.filter(t => !t.completed).length + '</div>\n';
+            html += '<div style="font-size: 0.9rem; color: #666;">待完成</div>\n';
+            html += '</div>\n';
+            html += '</div>\n';
+            
+            // 添加任务表格
+            html += '<table>\n';
+            html += '<thead><tr><th>序号</th><th>任务标题</th><th>优先级</th><th>状态</th>';
+            if (includeDates) html += '<th>创建时间</th>';
+            if (includeNotes) html += '<th>备注</th>';
+            html += '</tr></thead>\n<tbody>\n';
+            
+            tasks.forEach((task, index) => {
+                html += '<tr>';
+                html += `<td><strong>${index + 1}</strong></td>`;
+                html += `<td>${task.title || '无标题'}</td>`;
+                html += `<td>${task.priority || '中'}</td>`;
+                html += `<td>${task.completed ? '✅ 已完成' : '⏳ 待完成'}</td>`;
+                if (includeDates) {
+                    const dateStr = task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知';
+                    html += `<td>${dateStr}</td>`;
+                }
+                if (includeNotes) {
+                    html += `<td>${task.note || task.notes || ''}</td>`;
+                }
+                html += '</tr>\n';
+            });
+            
+            html += '</tbody></table>\n';
+            html += '</div>\n';
+            html += '</div>\n';
+            html += '</body>\n';
+            html += '</html>';
+            
+            const fileName = fileExtension === 'doc' ? 
+                `象限时光任务列表_${new Date().toISOString().slice(0, 10)}.doc` : 
+                `象限时光任务列表_${new Date().toISOString().slice(0, 10)}.html`;
+            const mimeType = fileExtension === 'doc' ? 'application/msword' : 'text/html';
+            
+            downloadFile(html, fileName, mimeType);
+        }
+        
+        function exportToMarkdown(tasks, includeNotes, includeDates, includePriority) {
+            let md = '# 📋 象限时光任务列表\n\n';
+            md += '> **Quadrant Time Management System**  \n';
+            md += `> 导出时间: ${new Date().toLocaleString()}\n\n`;
+            
+            // 统计信息
+            const completedCount = tasks.filter(t => t.completed).length;
+            const pendingCount = tasks.filter(t => !t.completed).length;
+            
+            md += '## 📊 任务统计\n\n';
+            md += '| 项目 | 数量 | 百分比 |\n';
+            md += '|------|------|--------|\n';
+            md += `| 📝 总任务数 | ${tasks.length} | 100% |\n`;
+            md += `| ✅ 已完成 | ${completedCount} | ${tasks.length > 0 ? Math.round(completedCount / tasks.length * 100) : 0}% |\n`;
+            md += `| ⏳ 待完成 | ${pendingCount} | ${tasks.length > 0 ? Math.round(pendingCount / tasks.length * 100) : 0}% |\n\n`;
+            
+            // 任务列表
+            md += '## 📋 任务列表\n\n';
+            md += '| 序号 | 任务标题 | 优先级 | 状态';
+            if (includeDates) md += ' | 创建时间';
+            if (includeNotes) md += ' | 备注';
+            md += ' |\n';
+            md += '|------|----------|--------|------';
+            if (includeDates) md += '|----------';
+            if (includeNotes) md += '|------';
+            md += '|\n';
+            
+            tasks.forEach((task, index) => {
+                md += `| ${index + 1} | ${task.title || '无标题'} | ${task.priority || '中'} | ${task.completed ? '✅ 已完成' : '⏳ 待完成'}`;
+                if (includeDates) {
+                    md += ` | ${task.createdAt ? new Date(task.createdAt).toLocaleString() : '未知'}`;
+                }
+                if (includeNotes) {
+                    md += ` | ${task.note || task.notes || ''}`;
+                }
+                md += ' |\n';
+            });
+            
+            md += '\n---\n\n';
+            md += `*此文档由象限时光任务管理系统自动生成于 ${new Date().toLocaleString()}*\n`;
+            
+            const fileName = `象限时光任务列表_${new Date().toISOString().slice(0, 10)}.md`;
+            downloadFile(md, fileName, 'text/markdown');
+        }
+        
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // 自动隐藏
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 刷新数据函数
+        function refreshData() {
+            console.log('手动刷新数据...');
+            
+            // 调试信息
+            const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+            console.log('Current session data state checked.');
+            
+            if (sessionData) {
+                try {
+                    const session = JSON.parse(sessionData);
+                    console.log('解析后的会话:', session);
+                    console.log('用户信息:', session.user);
+                } catch (error) {
+                    console.error('解析会话失败:', error);
+                }
+            }
+            
+            // 检查所有可能的存储键
+            console.log('检查所有任务存储键:');
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('tasks')) {
+                    console.log('找到任务键:', key);
+                    const data = localStorage.getItem(key);
+                    try {
+                        const tasks = JSON.parse(data);
+                        console.log('任务数据:', tasks.length, '个任务');
+                    } catch (e) {
+                        console.log('无效的任务数据');
+                    }
+                }
+            }
+            
+            loadTasks();
+            updateStats();
+            updatePreview();
+            showNotification('数据已刷新', 'success');
+        }
+        
+        function goBack() {
+            try {
+                console.log('尝试返回...');
+                if (window.history.length > 1) {
+                    console.log('使用浏览器历史返回');
+                    window.history.back();
+                } else {
+                    console.log('直接跳转到主页');
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('返回失败:', error);
+                console.log('使用备用方案跳转');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

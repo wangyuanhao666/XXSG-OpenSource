@@ -1,0 +1,353 @@
+/**
+ * 四象限视图模式样式
+ * 只添加列表模式样式，保持原有网格模式不变
+ * @version 1.1.0
+ * @date 2025-12-29
+ */
+
+/* ==========================================================================
+   列表模式（List Mode）- 一排横排4个竖向卡片
+   只在添加 list-mode 类时生效
+   ========================================================================== */
+
+.quadrant-view.list-mode {
+    /* 4列等宽，自动适应容器宽度，无需横向滚动 */
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    gap: 0.75rem !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 70vh;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* 列表模式下的象限调整 */
+.quadrant-view.list-mode .quadrant {
+    min-height: 500px;
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 列表模式下任务容器自适应高度 */
+.quadrant-view.list-mode .quadrant .quadrant-tasks {
+    height: auto;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+}
+
+/* 自定义横向滚动条 - Webkit浏览器 */
+.quadrant-view.list-mode::-webkit-scrollbar {
+    height: 10px;
+}
+
+.quadrant-view.list-mode::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 2px;
+}
+
+.quadrant-view.list-mode::-webkit-scrollbar-thumb {
+    background-color: var(--neutral-400, #cbd5e1);
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.quadrant-view.list-mode::-webkit-scrollbar-thumb:hover {
+    background-color: var(--neutral-500, #94a3b8);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+/* ==========================================================================
+   响应式设计 - 列表模式
+   ========================================================================== */
+
+/* 大屏幕 - 稍大的间隙 */
+@media (min-width: 1400px) {
+    .quadrant-view.list-mode {
+        gap: 1rem !important;
+    }
+}
+
+/* 中等屏幕 */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .quadrant-view.list-mode {
+        gap: 0.75rem !important;
+    }
+}
+
+/* 平板端 - 从4列改为2列，保证可读性 */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .quadrant-view.list-mode {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+
+    .quadrant-view.list-mode .quadrant {
+        min-height: 400px !important;
+    }
+
+    .quadrant-view.list-mode .quadrant .quadrant-tasks {
+        max-height: 400px !important;
+    }
+}
+
+/* 移动端（< 768px）- 单列竖排 */
+@media (max-width: 767px) {
+    .quadrant-view.list-mode {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+        gap: 1rem !important;
+    }
+
+    .quadrant-view.list-mode .quadrant {
+        min-height: 400px !important;
+        width: 100% !important;
+    }
+
+    .quadrant-view.list-mode .quadrant .quadrant-tasks {
+        max-height: 400px !important;
+    }
+}
+
+/* ==========================================================================
+   列表模式卡片hover效果
+   ========================================================================== */
+
+/* 列表模式下的象限卡片hover效果 - 仅阴影变化，无上浮动画 */
+.quadrant-view.list-mode .quadrant:hover {
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+    /* 取消上浮动画 */
+    transform: none;
+}
+
+/*
+ * 四象限视图内部工具栏 - 位于象限内容右上角
+ */
+.quadrant-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px auto 4px;
+}
+
+.quadrant-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface, #ffffff);
+    border: 1px solid var(--border-light, #e2e8f0);
+    border-radius: var(--radius-lg, 10px);
+    padding: 4px 4px;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* 工具栏按钮 - 紧凑风格 */
+.quadrant-toolbar .toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-sans, system-ui);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary, #475569);
+    background: transparent;
+    white-space: nowrap;
+    height: 30px;
+}
+
+.quadrant-toolbar .toolbar-btn:hover {
+    background: var(--neutral-100, #f1f5f9);
+    color: var(--text-primary, #0f172a);
+}
+
+.quadrant-toolbar .toolbar-btn:active {
+    background: var(--neutral-200, #e2e8f0);
+    transform: scale(0.97);
+}
+
+.quadrant-toolbar .toolbar-btn .material-icons {
+    font-size: 17px;
+    color: var(--accent-blue-500, #3b82f6);
+    transition: transform 0.2s ease;
+}
+
+.quadrant-toolbar .toolbar-btn:hover .material-icons {
+    transform: scale(1.1);
+}
+
+.quadrant-toolbar .toolbar-btn .toolbar-btn-label {
+    font-size: 0.78rem;
+    line-height: 1;
+}
+
+/* 暗色模式 */
+body.dark-mode .quadrant-toolbar-actions {
+    background: var(--neutral-800, #1e293b);
+    border-color: var(--neutral-700, #334155);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .quadrant-toolbar .toolbar-btn {
+    color: var(--neutral-300, #cbd5e1);
+}
+
+body.dark-mode .quadrant-toolbar .toolbar-btn:hover {
+    background: var(--neutral-700, #334155);
+    color: var(--neutral-100, #f1f5f9);
+}
+
+body.dark-mode .quadrant-toolbar .toolbar-btn:active {
+    background: var(--neutral-600, #475569);
+}
+
+body.dark-mode .quadrant-toolbar .toolbar-btn .material-icons {
+    color: var(--accent-blue-400, #60a5fa);
+}
+
+/* 使象限视图容器成为工具栏的定位参考 */
+.quadrant-view {
+    position: relative;
+    transition: all var(--transition-normal, 0.3s);
+}
+
+.quadrant {
+    transition: all var(--transition-normal, 0.3s);
+}
+
+/* Final dark-mode quadrant polish.
+   Keep this at the end to override older style.css rules that keep quadrant cards white. */
+body.dark-mode #quadrant-view {
+    color-scheme: dark;
+}
+
+body.dark-mode #quadrant-view .quadrant {
+    background:
+        linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.96)) !important;
+    border-color: rgba(148, 163, 184, 0.22) !important;
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+body.dark-mode #quadrant-view .quadrant:hover {
+    background:
+        linear-gradient(180deg, rgba(36, 50, 72, 0.98), rgba(17, 24, 39, 0.98)) !important;
+    border-color: rgba(203, 213, 225, 0.3) !important;
+    box-shadow:
+        0 20px 46px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+body.dark-mode #quadrant-view .quadrant h3 {
+    color: #e5edf7 !important;
+    border-bottom-color: rgba(148, 163, 184, 0.18) !important;
+    text-shadow: none !important;
+}
+
+body.dark-mode #quadrant-view .quadrant h3 .title-text {
+    color: #e5edf7 !important;
+    opacity: 1 !important;
+}
+
+body.dark-mode #quadrant-view .quadrant-dot {
+    box-shadow: 0 0 14px currentColor, 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.45);
+    border-radius: 999px;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks .task-item {
+    background: rgba(15, 23, 42, 0.38) !important;
+    border: 1px solid rgba(148, 163, 184, 0.15) !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    color: #e2e8f0 !important;
+    padding: 7px 8px !important;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks .task-item:hover {
+    background: rgba(30, 41, 59, 0.72) !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks .task-item .task-title {
+    color: #f8fafc !important;
+    font-weight: 560 !important;
+    opacity: 1 !important;
+}
+
+body.dark-mode #quadrant-view .quadrant-tasks .task-item:hover .task-title {
+    color: #ffffff !important;
+}
+
+body.dark-mode #quadrant-view .task-meta,
+body.dark-mode #quadrant-view .task-date,
+body.dark-mode #quadrant-view .task-start,
+body.dark-mode #quadrant-view .task-end {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode #quadrant-view .task-date,
+body.dark-mode #quadrant-view .task-start,
+body.dark-mode #quadrant-view .task-end {
+    background: rgba(15, 23, 42, 0.52) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+body.dark-mode #quadrant-view .copy-task,
+body.dark-mode #quadrant-view .pin-task,
+body.dark-mode #quadrant-view .delete-task {
+    opacity: 0.88;
+}
+
+body.dark-mode #quadrant-view #q1 {
+    border-color: rgba(248, 113, 113, 0.65) !important;
+}
+
+body.dark-mode #quadrant-view #q2 {
+    border-color: rgba(251, 191, 36, 0.65) !important;
+}
+
+body.dark-mode #quadrant-view #q3 {
+    border-color: rgba(96, 165, 250, 0.65) !important;
+}
+
+body.dark-mode #quadrant-view #q4 {
+    border-color: rgba(74, 222, 128, 0.65) !important;
+}

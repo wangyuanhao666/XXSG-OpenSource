@@ -1,0 +1,1051 @@
+/**
+ * 时间管理可视化看板样式
+ * Time Tracker Pro Styles
+ * 版本: 1.3.0 - 简约精致版本
+ */
+
+/* ==================== 容器布局 ==================== */
+.time-tracker-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    /* 现代渐变背景 - 温暖舒适的色调 */
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.15) 0%,
+        rgba(168, 85, 247, 0.15) 50%,
+        rgba(236, 72, 153, 0.15) 100%);
+    border-radius: 24px;
+    /* 移除黑色边框和阴影 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 移除背景装饰动画元素 - 保持页面简约 */
+
+/* ==================== 页面头部 ==================== */
+.time-tracker-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    /* 优雅的渐变背景 */
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.2) 0%,
+        rgba(168, 85, 247, 0.2) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.badge-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.time-tracker-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    /* 🔧 移除黑色阴影，使用紫色光晕 */
+    text-shadow: 0 0 30px rgba(168, 85, 247, 0.5), 0 0 60px rgba(168, 85, 247, 0.3);
+}
+
+.title-icon {
+    font-size: 2.5rem;
+    /* 移除黑色阴影 */
+    filter: none;
+}
+
+.title-gradient {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: brightness(1.1);
+}
+
+.time-tracker-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== 日期控制区 ==================== */
+.time-tracker-date-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    /* 玻璃态效果 */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.date-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    box-sizing: border-box;
+}
+
+.date-nav-btn:hover {
+    background: linear-gradient(135deg, #7c3aed, #7c3aed);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+}
+
+/* ✅ 日期显示样式 - 精确控制高度 */
+.current-date-display {
+    height: 40px; /* ✅ 固定高度 */
+    padding: 0 1.5rem; /* ✅ 只设置左右padding，高度由height控制 */
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 40px; /* ✅ 行高等于高度，实现垂直居中 */
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border-radius: 12px;
+    min-width: 220px;
+    display: inline-block; /* ✅ 改为inline-block */
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+    box-sizing: border-box;
+}
+
+.add-record-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 40px; /* ✅ 固定高度 */
+    padding: 0 1.5rem; /* ✅ 只设置左右padding */
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1; /* ✅ 行高为1，让父元素控制 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+    box-sizing: border-box;
+}
+
+.add-record-btn .btn-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.add-record-btn .btn-text {
+    line-height: 1.2;
+}
+
+.add-record-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(168, 85, 247, 0.5);
+    background: linear-gradient(135deg, #7c3aed, #7c3aed);
+}
+
+/* ==================== 主体内容区 ==================== */
+.time-tracker-main {
+    display: grid;
+    grid-template-columns: 1fr; /* ✅ 改为单列布局，每个功能独占一行 */
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+    /* ✅ 确保卡片对齐 */
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .time-tracker-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==================== 卡片通用样式 ==================== */
+.time-record-card,
+.category-manage-card,
+.chart-card,
+.goal-tracker-card {
+    position: relative;
+    /* 优雅的玻璃态效果 */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.time-record-card:hover,
+.category-manage-card:hover,
+.chart-card:hover,
+.goal-tracker-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.25);
+    transform: translateY(-2px);
+}
+
+/* 🔧 移除闪烁动画 */
+.card-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: none;
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+}
+
+.card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* ✅ 简约黑色标题，无阴影无背景 */
+    letter-spacing: 0.3px;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background: none;
+    text-shadow: none;
+}
+
+/* ==================== 时间记录列表 ==================== */
+.time-records-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.time-record-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.time-record-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(168, 85, 247, 0.3);
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.25);
+}
+
+.record-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.record-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.record-name {
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.25rem;
+    /* ✅ 黑色文字，无阴影 */
+    text-shadow: none;
+}
+
+.record-category {
+    font-size: 0.85rem;
+    color: #4a4a4a;
+    font-weight: 500;
+    /* ✅ 深灰色文字 */
+    text-shadow: none;
+}
+
+.record-duration {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 1.15rem;
+    /* ✅ 黑色文字，无阴影 */
+    text-shadow: none;
+}
+
+.record-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.record-action-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: rgba(239, 68, 68, 0.15);
+    border-radius: 8px;
+    color: #ef4444;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.record-action-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ==================== 时间汇总 ==================== */
+.time-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+}
+
+.summary-label {
+    color: #4a4a4a;
+    font-weight: 500;
+    /* ✅ 深灰色文字，无阴影 */
+    text-shadow: none;
+}
+
+.summary-value {
+    font-weight: 700;
+    color: #1a1a1a;
+    /* ✅ 黑色文字，简约背景 */
+    text-shadow: none;
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.1),
+        rgba(168, 85, 247, 0.1));
+    padding: 0.3rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* ==================== 类别列表 ==================== */
+.categories-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.category-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+}
+
+.category-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.category-name {
+    flex: 1;
+    color: #1a1a1a;
+    font-weight: 600;
+    /* ✅ 黑色文字，无阴影 */
+    text-shadow: none;
+}
+
+.category-delete-btn {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    background: rgba(239, 68, 68, 0.15);
+    border-radius: 6px;
+    color: #ef4444;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    font-weight: 600;
+}
+
+.category-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.add-category-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(99, 102, 241, 0.08);
+    border: 2px dashed rgba(99, 102, 241, 0.3);
+    border-radius: 10px;
+    color: #2563eb;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* ✅ 紫色文字，无阴影 */
+    text-shadow: none;
+}
+
+.add-category-btn:hover {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+    text-shadow: none;
+}
+
+/* ==================== 图表区域 ==================== */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chart-tab {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 8px;
+    color: #1a1a1a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    /* ✅ 黑色文字，无阴影 */
+    text-shadow: none;
+}
+
+.chart-tab:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: #1a1a1a;
+    border-color: rgba(99, 102, 241, 0.3);
+    text-shadow: none;
+}
+
+.chart-tab.active {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #ffffff;
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.chart-container {
+    position: relative;
+    height: 250px;
+    margin-bottom: 1rem;
+}
+
+.pie-chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#time-distribution-chart,
+#trend-chart {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.chart-legend {
+    /* ✅ 移除高度限制和滚动条，让图例自然展示 */
+    overflow: visible;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* ✅ 防止内容溢出 */
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.legend-info {
+    flex: 1;
+    /* ✅ 不设置display，让HTML的内联样式生效 */
+    min-width: 0; /* ✅ 允许内容缩小 */
+}
+
+.legend-name {
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    font-weight: 600;
+    text-shadow: none;
+    white-space: nowrap; /* ✅ 防止换行 */
+}
+
+.legend-percentage {
+    font-size: 0.85rem;
+    color: #1a1a1a;
+    font-weight: 700;
+    text-shadow: none;
+    white-space: nowrap; /* ✅ 防止换行 */
+    flex-shrink: 0; /* ✅ 防止被压缩 */
+}
+
+.legend-progress {
+    display: none !important; /* ✅ 强制隐藏进度条装饰 */
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.legend-progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* ==================== 目标追踪 ==================== */
+.goal-tracker-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.add-goal-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(34, 211, 153, 0.2));
+    border-radius: 8px;
+    color: #10b981;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.add-goal-btn:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(34, 211, 153, 0.3));
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+.goals-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.goal-item {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.goal-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.goal-name {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1.05rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.goal-delete-btn {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    background: rgba(239, 68, 68, 0.15);
+    border-radius: 6px;
+    color: #ef4444;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    font-weight: 600;
+}
+
+.goal-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.goal-progress {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.goal-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.goal-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* ==================== 模态框样式 - 简约精致设计 ==================== */
+.time-tracker-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000 !important;
+    padding: 2rem;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.time-tracker-modal .modal-content {
+    /* ✅ 简约白色背景 */
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 模态框标题 */
+.time-tracker-modal h2,
+.time-tracker-modal h3 {
+    color: #1a1a1a;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* 模态框头部 */
+.time-tracker-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+/* 模态框关闭按钮 */
+.time-tracker-modal .modal-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.time-tracker-modal .modal-close:hover {
+    color: #ef4444;
+    transform: scale(1.1);
+}
+
+.time-tracker-modal .modal-close:active {
+    transform: scale(0.95);
+}
+
+/* 表单组 */
+.time-tracker-modal .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.time-tracker-modal label {
+    display: block;
+    color: #4a4a4a;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+}
+
+/* 输入框和选择框 */
+.time-tracker-modal input,
+.time-tracker-modal select,
+.time-tracker-modal textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    color: #1a1a1a;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.time-tracker-modal input:focus,
+.time-tracker-modal select:focus,
+.time-tracker-modal textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.time-tracker-modal input::placeholder,
+.time-tracker-modal textarea::placeholder {
+    color: #9ca3af;
+}
+
+/* 按钮组 */
+.time-tracker-modal .modal-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.time-tracker-modal .modal-btn {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+/* 主要按钮 */
+.time-tracker-modal .modal-btn.primary {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.time-tracker-modal .modal-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.time-tracker-modal .modal-btn.primary:active {
+    transform: translateY(0);
+}
+
+/* 次要按钮 */
+.time-tracker-modal .modal-btn.secondary {
+    background: #f3f4f6;
+    color: #4a4a4a;
+    border: 2px solid #e5e7eb;
+}
+
+.time-tracker-modal .modal-btn.secondary:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+/* 关闭按钮 */
+.time-tracker-modal .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 10px;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.25rem;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.time-tracker-modal .close-btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+.time-tracker-modal .close-btn:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* ==================== 滚动条样式 ==================== */
+.time-records-list::-webkit-scrollbar,
+.categories-list::-webkit-scrollbar,
+.goals-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.time-records-list::-webkit-scrollbar-track,
+.categories-list::-webkit-scrollbar-track,
+.goals-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.time-records-list::-webkit-scrollbar-thumb,
+.categories-list::-webkit-scrollbar-thumb,
+.goals-list::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.3);
+    border-radius: 3px;
+}
+
+.time-records-list::-webkit-scrollbar-thumb:hover,
+.categories-list::-webkit-scrollbar-thumb:hover,
+.goals-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.5);
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 768px) {
+    .time-tracker-container {
+        padding: 1rem;
+    }
+
+    .time-tracker-title {
+        font-size: 1.75rem;
+    }
+
+    .title-icon {
+        font-size: 1.75rem;
+    }
+
+    .time-tracker-date-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-selector {
+        justify-content: center;
+    }
+
+    .add-record-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .current-date-display {
+        min-width: auto;
+        flex: 1;
+    }
+
+    .time-tracker-modal {
+        padding: 1rem;
+    }
+
+    .time-tracker-modal .modal-content {
+        padding: 1.5rem;
+    }
+}
+
+/* ==================== 动画定义 ==================== */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* ==================== 通知样式 ==================== */
+.time-tracker-notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.time-tracker-notification.success {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.time-tracker-notification.error {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+}

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习惯打卡 - 养成更好的自己</title>
+    <link rel="stylesheet" href="habit-tracker.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 顶部导航 -->
+        <header class="navbar">
+            <button class="back-home-btn" id="back-home-btn" title="返回更多功能">
+                <span>← 返回</span>
+            </button>
+            <div class="nav-brand">
+                <span class="brand-icon">✨</span>
+                <span class="brand-text">习惯打卡</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" data-page="calendar">📅 日历</button>
+                <button class="nav-btn" data-page="stats">📊 统计</button>
+                <button class="nav-btn" data-page="settings">⚙️ 设置</button>
+            </div>
+        </header>
+
+        <!-- 主页面 -->
+        <main class="main-page" id="mainPage">
+            <div class="container">
+                <!-- 欢迎卡片 -->
+                <div class="welcome-card">
+                    <h1 class="page-title">习惯养成打卡</h1>
+                    <p class="page-subtitle">每日坚持，成就更好的自己</p>
+                </div>
+
+                <!-- 今日进度 -->
+                <div class="today-progress">
+                    <div class="progress-header">
+                        <h2>今日进度</h2>
+                        <span class="progress-date" id="todayDate"></span>
+                    </div>
+                    <div class="progress-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="completedCount">0</span>
+                            <span class="stat-label">已完成</span>
+                        </div>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span class="progress-percent" id="progressPercent">0%</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="totalCount">0</span>
+                            <span class="stat-label">总计</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速操作 -->
+                <div class="quick-actions">
+                    <button class="action-btn primary" id="addHabitBtn">
+                        <span class="btn-icon">➕</span>
+                        <span>添加习惯</span>
+                    </button>
+                    <div class="filter-dropdown">
+                        <button class="action-btn" id="filterBtn">
+                            <span class="btn-icon">🔍</span>
+                            <span>筛选</span>
+                        </button>
+                        <div class="filter-menu" id="filterMenu">
+                            <div class="filter-option" data-filter="all">✓ 全部</div>
+                            <div class="filter-option" data-filter="health">🏃 健康</div>
+                            <div class="filter-option" data-filter="study">📚 学习</div>
+                            <div class="filter-option" data-filter="work">💼 工作</div>
+                            <div class="filter-option" data-filter="life">🍳 生活</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 习惯列表 -->
+                <div class="habits-container">
+                    <h2 class="section-title">我的习惯</h2>
+                    <div class="habits-list" id="habitsList">
+                        <!-- 习惯卡片将通过JS生成 -->
+                    </div>
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">📝</div>
+                        <p class="empty-title">还没有习惯</p>
+                        <p class="empty-desc">点击上方"添加习惯"按钮开始吧</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 日历页面 -->
+        <div class="page" id="calendarPage">
+            <div class="page-header">
+                <button class="back-btn" data-back="main">← 返回</button>
+                <h1>打卡日历</h1>
+            </div>
+            <div class="container">
+                <!-- 习惯选择器 -->
+                <div class="calendar-habit-selector">
+                    <label>查看习惯：</label>
+                    <select id="calendarHabitFilter">
+                        <option value="all">所有习惯</option>
+                    </select>
+                </div>
+
+                <!-- 月份导航 -->
+                <div class="calendar-controls">
+                    <button class="month-nav" id="prevMonth">◀</button>
+                    <h2 class="current-month" id="currentMonth"></h2>
+                    <button class="month-nav" id="nextMonth">▶</button>
+                </div>
+
+                <!-- 日历网格 -->
+                <div class="calendar-wrapper">
+                    <div class="calendar-weekdays">
+                        <div class="weekday">日</div>
+                        <div class="weekday">一</div>
+                        <div class="weekday">二</div>
+                        <div class="weekday">三</div>
+                        <div class="weekday">四</div>
+                        <div class="weekday">五</div>
+                        <div class="weekday">六</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+
+                <!-- 日历统计 -->
+                <div class="calendar-stats" id="calendarStats">
+                    <div class="calendar-stat-item">
+                        <span class="stat-label">本月打卡：</span>
+                        <span class="stat-value" id="monthCheckins">0</span>
+                    </div>
+                    <div class="calendar-stat-item">
+                        <span class="stat-label">完成率：</span>
+                        <span class="stat-value" id="monthRate">0%</span>
+                    </div>
+                    <div class="calendar-stat-item">
+                        <span class="stat-label">连续打卡：</span>
+                        <span class="stat-value" id="currentStreak">0天</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计页面 -->
+        <div class="page" id="statsPage">
+            <div class="page-header">
+                <button class="back-btn" data-back="main">← 返回</button>
+                <h1>数据统计</h1>
+            </div>
+            <div class="container">
+                <!-- 总体统计卡片 -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-number" id="totalHabits">0</div>
+                        <div class="stat-label">总习惯</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-number" id="totalCheckins">0</div>
+                        <div class="stat-label">总打卡</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-number" id="longestStreak">0</div>
+                        <div class="stat-label">最长连续</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-number" id="completionRate">0%</div>
+                        <div class="stat-label">本月完成率</div>
+                    </div>
+                </div>
+
+                <!-- 成就徽章 -->
+                <div class="achievement-section">
+                    <h3 class="section-title">🏆 成就徽章</h3>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- 通过JS生成 -->
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="charts-row">
+                    <!-- 趋势图 -->
+                    <div class="chart-container">
+                        <h3>📈 最近30天趋势</h3>
+                        <canvas id="trendChart" width="600" height="300"></canvas>
+                    </div>
+
+                    <!-- 分类统计 -->
+                    <div class="chart-container">
+                        <h3>🍰 分类占比</h3>
+                        <canvas id="categoryChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- 习惯排行榜 -->
+                <div class="ranking-section">
+                    <h3 class="section-title">🏅 习惯排行榜</h3>
+                    <div class="ranking-list" id="rankingList">
+                        <!-- 通过JS生成 -->
+                    </div>
+                </div>
+
+                <!-- 详细数据表格 -->
+                <div class="data-table-section">
+                    <h3 class="section-title">📋 详细数据</h3>
+                    <div class="data-table" id="dataTable">
+                        <!-- 通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div class="page" id="settingsPage">
+            <div class="page-header">
+                <button class="back-btn" data-back="main">← 返回</button>
+                <h1>设置</h1>
+            </div>
+            <div class="container">
+                <!-- 主题设置 -->
+                <div class="settings-section">
+                    <h3>🎨 主题设置</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">选择主题色</div>
+                            <div class="setting-desc">选择你喜欢的主题颜色风格</div>
+                        </div>
+                        <div class="theme-colors" id="themeColors">
+                            <div class="theme-color active" data-theme="indigo" style="background: linear-gradient(135deg, #2563eb, #3b82f6);" title="默认紫"></div>
+                            <div class="theme-color" data-theme="blue" style="background: linear-gradient(135deg, #4299e1, #2b6cb0);" title="海洋蓝"></div>
+                            <div class="theme-color" data-theme="green" style="background: linear-gradient(135deg, #48bb78, #38a169);" title="清新绿"></div>
+                            <div class="theme-color" data-theme="orange" style="background: linear-gradient(135deg, #f6ad55, #ed8936);" title="阳光橙"></div>
+                            <div class="theme-color" data-theme="pink" style="background: linear-gradient(135deg, #fc8181, #f56565);" title="浪漫粉"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 显示设置 -->
+                <div class="settings-section">
+                    <h3>🖥️ 显示设置</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">启用动画效果</div>
+                            <div class="setting-desc">开启后界面会有平滑的动画过渡</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animationToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">紧凑布局</div>
+                            <div class="setting-desc">减少卡片间距，显示更多内容</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="compactToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 提醒设置 -->
+                <div class="settings-section">
+                    <h3>🔔 提醒设置</h3>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">每日提醒</div>
+                            <div class="setting-desc">每天定时提醒你打卡</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="reminderToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item" id="reminderTimeItem" style="display: none;">
+                        <div class="setting-info">
+                            <div class="setting-label">提醒时间</div>
+                            <div class="setting-desc">设置每天提醒的具体时间</div>
+                        </div>
+                        <input type="time" id="reminderTime" value="20:00" class="time-input">
+                    </div>
+                </div>
+
+                <!-- 数据管理 -->
+                <div class="settings-section">
+                    <h3>💾 数据管理</h3>
+                    <button class="settings-btn" id="exportBtn">📄 导出数据</button>
+                    <button class="settings-btn" id="importBtn">📅 导入数据</button>
+                    <input type="file" id="importFile" accept=".json" style="display:none">
+                    <button class="settings-btn" id="backupBtn">💾 创建备份</button>
+                    <button class="settings-btn danger" id="clearBtn">🗑️ 清空数据</button>
+                </div>
+
+                <!-- 关于应用 -->
+                <div class="settings-section">
+                    <h3>ℹ️ 关于应用</h3>
+                    <div class="about-info">
+                        <div class="about-item">
+                            <span class="about-label">应用名称</span>
+                            <span class="about-value">习惯打卡</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">版本号</span>
+                            <span class="about-value">v2.0.0</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">总习惯数</span>
+                            <span class="about-value" id="aboutTotalHabits">0</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">总打卡数</span>
+                            <span class="about-value" id="aboutTotalCheckins">0</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">使用天数</span>
+                            <span class="about-value" id="aboutUsageDays">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加/编辑习惯模态框 -->
+        <div class="modal" id="habitModal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">添加习惯</h3>
+                    <button class="modal-close" id="closeModal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>习惯名称</label>
+                        <input type="text" id="habitName" placeholder="例如：每天跑步30分钟" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>选择图标</label>
+                        <div class="icon-picker" id="iconPicker">
+                            <div class="icon-option" data-icon="🏃">🏃</div>
+                            <div class="icon-option" data-icon="📚">📚</div>
+                            <div class="icon-option" data-icon="💧">💧</div>
+                            <div class="icon-option" data-icon="🍎">🍎</div>
+                            <div class="icon-option" data-icon="💤">💤</div>
+                            <div class="icon-option" data-icon="🏋️">🏋️</div>
+                            <div class="icon-option" data-icon="📝">📝</div>
+                            <div class="icon-option" data-icon="🎯">🎯</div>
+                            <div class="icon-option" data-icon="🚴">🚴</div>
+                            <div class="icon-option" data-icon="🎨">🎨</div>
+                            <div class="icon-option" data-icon="💼">💼</div>
+                            <div class="icon-option" data-icon="🧘">🧘</div>
+                            <div class="icon-option" data-icon="☕">☕</div>
+                            <div class="icon-option" data-icon="💪">💪</div>
+                            <div class="icon-option" data-icon="🧑‍💻">🧑‍💻</div>
+                            <div class="icon-option" data-icon="🎵">🎵</div>
+                            <div class="icon-option" data-icon="🌱">🌱</div>
+                            <div class="icon-option" data-icon="❤️">❤️</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>分类</label>
+                        <select id="habitCategory">
+                            <option value="health">健康</option>
+                            <option value="study">学习</option>
+                            <option value="work">工作</option>
+                            <option value="life">生活</option>
+                            <option value="custom">✨ 自定义</option>
+                        </select>
+                    </div>
+                    <div class="form-group custom-category-input" id="customCategoryGroup" style="display: none;">
+                        <label>自定义分类名称</label>
+                        <input type="text" id="customCategoryName" placeholder="例如：社交、理财、娱乐..." maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label>备注（可选）</label>
+                        <textarea id="habitNote" placeholder="记录一些想法..." rows="3" maxlength="100"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary" id="cancelBtn">取消</button>
+                    <button class="btn primary" id="saveBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="habit-tracker.js"></script>
+    <script>
+        document.getElementById('back-home-btn')?.addEventListener('click', fastBackToMoreFeatures);
+    </script>
+</body>
+</html>

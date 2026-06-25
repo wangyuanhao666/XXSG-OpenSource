@@ -1,0 +1,47 @@
+# Development diagnostics and one-off repair scripts
+debug-*.js
+diagnose-*.js
+fix-*.js
+fix-*.ps1
+fix-*.md
+quick-*.js
+quick_*.html
+trace-*.js
+cleanup-*.bat
+cleanup-*.js
+check-admin.js
+simple-test.js
+verify-*.js
+one-click-fix.js
+permanent-fix.js
+direct-save-*.js
+force-save-*.js
+save-from-input.js
+add-*.js
+add-*.ps1
+
+# Local API helper scripts are not part of the static Vercel bundle
+api-server.js
+start_api_bg.bat
+start_server.bat
+start_server.ps1
+tasks-data.json
+
+# Backups, temporary files, and generated smoke artifacts
+*.backup
+*.backup2
+style_temp.css
+test-results/
+logs/
+备份*/
+nul
+
+# Commercial release exclusions
+api-examples.js
+auto-sync-setup.html
+enable-api-sync.html
+export-tasks-api.html
+permission-debug.html
+view_comparison.html
+.claude/
+.cursor/

@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据同步 - 象限时光</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .data-sync-page-wrapper {
+            width: 100%;
+            max-width: 800px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .data-sync-page {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .data-sync-header {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .data-sync-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .data-sync-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .data-sync-content {
+            padding: 2rem;
+        }
+        
+        .sync-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .sync-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .sync-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sync-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .sync-section p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .sync-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .import-btn {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+        }
+        
+        .import-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(23, 162, 184, 0.3);
+        }
+        
+        .sync-btn {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+        
+        .sync-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .sync-tips {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 4px solid #2196f3;
+            margin-top: 2rem;
+        }
+        
+        .sync-tips h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sync-tips ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .sync-tips li {
+            color: #424242;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .data-sync-content {
+                padding: 1rem;
+            }
+            
+            .sync-actions {
+                gap: 1rem;
+            }
+            
+            .sync-section {
+                padding: 1.5rem;
+                min-height: 180px;
+            }
+            
+            .data-sync-header {
+                padding: 1.5rem;
+            }
+            
+            .data-sync-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .sync-section h3 {
+                font-size: 1.1rem;
+            }
+            
+            .sync-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="data-sync-page-wrapper">
+    <div class="data-sync-page">
+        <div class="data-sync-header">
+        <button class="close-btn" data-sync-action="login">&times;</button>
+            <h1>🔄 跨浏览器数据同步</h1>
+            <p>解决不同浏览器之间用户数据不共享的问题</p>
+        </div>
+        
+        <div class="data-sync-content">
+            <div class="sync-actions">
+                <div class="sync-section">
+                    <h3>📤 导出数据</h3>
+                    <p>将当前浏览器的用户数据导出为文件，可在其他浏览器中导入</p>
+                <button class="sync-btn export-btn" data-sync-action="export">
+                        <span>📥</span>
+                        导出数据
+                    </button>
+                </div>
+                
+                <div class="sync-section">
+                    <h3>📥 导入数据</h3>
+                    <p>从其他浏览器导出的数据文件中导入用户数据</p>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                <button class="sync-btn import-btn" data-sync-action="choose-import">
+                        <span>📤</span>
+                        选择文件导入
+                    </button>
+                </div>
+                
+                <div class="sync-section">
+                    <h3>🔄 自动同步</h3>
+                    <p>尝试从其他浏览器自动同步数据（需要同时打开多个浏览器）</p>
+                <button class="sync-btn sync-btn" data-sync-action="auto-sync">
+                        <span>🔄</span>
+                        自动同步
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sync-tips">
+                <h3>💡 使用说明</h3>
+                <ul>
+                    <li>在Edge浏览器中创建用户后，点击"导出数据"下载文件</li>
+                    <li>在Chrome浏览器中点击"选择文件导入"，选择刚才下载的文件</li>
+                    <li>导入成功后，用户就可以在Chrome中正常登录了</li>
+                    <li>建议定期导出数据作为备份</li>
+                    <li>自动同步功能需要同时打开多个浏览器窗口</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="login.html" class="back-btn">
+                    <span>←</span>
+                    返回登录页面
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="js/indexeddb-storage.js?v=20260619-1"></script>
+    <script>
+        document.addEventListener('click', function (event) {
+            const button = event.target.closest('[data-sync-action]');
+            if (!button) return;
+
+            const action = button.dataset.syncAction;
+            if (action === 'login') {
+                window.location.href = 'login.html';
+            } else if (action === 'export') {
+                exportUserData();
+            } else if (action === 'choose-import') {
+                document.getElementById('import-file')?.click();
+            } else if (action === 'auto-sync') {
+                autoSyncData();
+            }
+        });
+
+        document.getElementById('import-file')?.addEventListener('change', function () {
+            importUserData(this);
+        });
+
+        const DEFAULT_USER_PERMISSIONS = [
+            'add-task',
+            'quadrant-view',
+            'fortune',
+            'pomodoro',
+            'habit-tracker',
+            'countdown',
+            'time-tracker',
+            'calendar',
+            'dashboard',
+            'review',
+            'templates'
+        ];
+        // 导出用户数据 - 完整版本，包含所有用户数据
+        function exportUserData() {
+            console.log('🚀 exportUserData 函数被调用 (data-sync.html)');
+            try {
+                console.log('📤 开始导出数据...');
+                
+                // 获取当前登录用户信息
+                const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        currentUser = session.user || session;
+                        console.log('✅ 找到登录用户:', currentUser.username, 'ID:', currentUser.id);
+                    } catch (e) {
+                        console.error('❌ 解析用户会话失败:', e);
+                    }
+                } else {
+                    console.warn('⚠️ 未找到登录会话，将尝试导出所有用户数据');
+                }
+                
+                // 构建导出数据对象
+                const data = {
+                    version: '2.0', // 数据格式版本
+                    exportTime: new Date().toISOString(),
+                    exportUser: currentUser ? {
+                        id: currentUser.id,
+                        username: currentUser.username,
+                        email: currentUser.email
+                    } : null,
+                    
+                    // 用户数据
+                    users: JSON.parse(localStorage.getItem('users') || '[]'),
+                    
+                    // 当前登录用户的任务数据
+                    userTasks: null,
+                    
+                    // 当前登录用户的头像数据
+                    userAvatar: null,
+                    calendarAvatar: null,
+                    
+                    // 当前登录用户的个人设置
+                        userSettings: {},
+                        
+                        // 所有用户的任务数据
+                        allUserTasks: {},
+                    
+                    // 系统配置
+                    adminPassword: localStorage.getItem('adminPassword'),
+                    aiConfig: localStorage.getItem('aiConfig') || localStorage.getItem('aiFortuneEnabled'),
+                    
+                    // 其他用户相关数据
+                    userBehaviorData: localStorage.getItem('userBehaviorData'),
+                    smartReminders: localStorage.getItem('smartReminders'),
+                    aiScheduleData: localStorage.getItem('aiScheduleData'),
+                    aiTaskDecompositionData: localStorage.getItem('aiTaskDecompositionData'),
+                    decompositionHistory: localStorage.getItem('decompositionHistory'),
+                    reminderSettings: localStorage.getItem('reminderSettings'),
+                    scheduleSettings: localStorage.getItem('scheduleSettings'),
+                    decompositionSettings: localStorage.getItem('decompositionSettings'),
+                    aiHealthData: localStorage.getItem('aiHealthData'),
+                    notifiedTasks: localStorage.getItem('notifiedTasks')
+                };
+                
+                const usersList = Array.isArray(data.users) ? data.users : [];
+                const allUserTasks = {};
+                
+                const collectTasksForUser = (user) => {
+                    if (!user) return null;
+                    const possibleKeys = new Set();
+                    if (user.id) possibleKeys.add(`tasks_${user.id}`);
+                    if (user.username) possibleKeys.add(`tasks_${user.username}`);
+                    if (user.email) possibleKeys.add(`tasks_${user.email}`);
+                    if (user.phone) possibleKeys.add(`tasks_${user.phone}`);
+                    
+                    for (const key of possibleKeys) {
+                        const tasksData = localStorage.getItem(key);
+                        if (tasksData) {
+                            try {
+                                const tasks = JSON.parse(tasksData);
+                                if (Array.isArray(tasks) && tasks.length > 0) {
+                                    console.log(`📦 捕获用户 ${user.username || user.id} 的任务数据 (键名: ${key}):`, tasks.length);
+                                    return tasks;
+                                }
+                            } catch (err) {
+                                console.warn(`⚠️ 解析任务数据失败 (键名: ${key}):`, err);
+                            }
+                        }
+                    }
+                    return null;
+                };
+                
+                // 如果当前有登录用户，导出该用户的特定数据
+                if (currentUser && currentUser.id) {
+                    const userId = currentUser.id;
+                    console.log('🔍 开始导出用户ID为', userId, '的数据...');
+                    
+                    // 导出任务数据 - 尝试多个可能的键名
+                    const possibleTaskKeys = [
+                        `tasks_${userId}`,
+                        `tasks_${currentUser.username}`,
+                        'tasks'
+                    ];
+                    
+                    let tasksFound = false;
+                    for (const tasksKey of possibleTaskKeys) {
+                        const tasksData = localStorage.getItem(tasksKey);
+                        if (tasksData) {
+                            try {
+                                const tasks = JSON.parse(tasksData);
+                                if (Array.isArray(tasks) && tasks.length > 0) {
+                                    data.userTasks = tasks;
+                                    console.log(`✅ 已导出用户 ${currentUser.username} 的任务数据 (键名: ${tasksKey}):`, tasks.length, '个任务');
+                                    tasksFound = true;
+                                    break;
+                                }
+                            } catch (e) {
+                                console.warn(`解析任务数据失败 (键名: ${tasksKey}):`, e);
+                            }
+                        }
+                    }
+                    
+                    if (!tasksFound) {
+                        console.warn('⚠️ 未找到用户任务数据');
+                    }
+                    
+                    if (tasksFound && Array.isArray(data.userTasks)) {
+                        allUserTasks[userId] = data.userTasks;
+                    }
+                    
+                    // 导出头像数据 - 尝试多种匹配方式
+                    const userAvatarData = localStorage.getItem('userAvatar');
+                    if (userAvatarData) {
+                        try {
+                            const avatarData = JSON.parse(userAvatarData);
+                            // 匹配用户ID或用户名
+                            if (avatarData.userId === userId || 
+                                avatarData.userId === currentUser.username ||
+                                avatarData.userId === currentUser.id ||
+                                !avatarData.userId) { // 如果没有userId字段，也导出（可能是旧数据）
+                                data.userAvatar = avatarData;
+                                // 确保包含用户ID信息
+                                if (!data.userAvatar.userId) {
+                                    data.userAvatar.userId = userId;
+                                }
+                                console.log('✅ 已导出用户头像数据:', data.userAvatar);
+                            } else {
+                                console.warn('⚠️ 头像数据不属于当前用户，跳过导出');
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ 解析头像数据失败:', e);
+                        }
+                    } else {
+                        console.warn('⚠️ 未找到用户头像数据');
+                    }
+                    
+                    // 导出日历头像
+                    const calendarAvatar = localStorage.getItem('calendar-profile-avatar');
+                    if (calendarAvatar) {
+                        data.calendarAvatar = calendarAvatar;
+                        console.log('✅ 已导出日历头像');
+                    } else {
+                        console.warn('⚠️ 未找到日历头像数据');
+                    }
+                    
+                    // 导出用户特定设置
+                    data.userSettings = {
+                        theme: localStorage.getItem('theme'),
+                        language: localStorage.getItem('language'),
+                        sortMode: localStorage.getItem('sort_mode')
+                    };
+                    console.log('✅ 已导出用户设置:', data.userSettings);
+                } else {
+                    // 如果没有登录用户，尝试导出所有任务数据（兼容旧数据）
+                    console.warn('⚠️ 未登录状态，尝试导出默认任务数据');
+                    const defaultTasks = localStorage.getItem('tasks');
+                    if (defaultTasks) {
+                        try {
+                            data.userTasks = JSON.parse(defaultTasks);
+                            console.log('✅ 已导出默认任务数据:', data.userTasks.length, '个任务');
+                            allUserTasks.__default__ = data.userTasks;
+                        } catch (e) {
+                            console.warn('⚠️ 解析默认任务数据失败:', e);
+                        }
+                    }
+                    
+                    // 尝试导出头像（如果没有用户ID限制）
+                    const userAvatarData = localStorage.getItem('userAvatar');
+                    if (userAvatarData) {
+                        try {
+                            data.userAvatar = JSON.parse(userAvatarData);
+                            console.log('✅ 已导出头像数据（未登录状态）');
+                        } catch (e) {
+                            console.warn('⚠️ 解析头像数据失败:', e);
+                        }
+                    }
+                    
+                    // 导出日历头像
+                    const calendarAvatar = localStorage.getItem('calendar-profile-avatar');
+                    if (calendarAvatar) {
+                        data.calendarAvatar = calendarAvatar;
+                        console.log('✅ 已导出日历头像（未登录状态）');
+                    }
+                }
+                
+                // 收集其他用户的任务数据
+                usersList.forEach(user => {
+                    if (!user || !user.id) return;
+                    if (user.id === (currentUser && currentUser.id)) return;
+                    const tasks = collectTasksForUser(user);
+                    if (tasks && tasks.length) {
+                        allUserTasks[user.id] = tasks;
+                    }
+                });
+                
+                const legacyTasksKeys = Object.keys(localStorage).filter(key => key.startsWith('tasks_'));
+                legacyTasksKeys.forEach(key => {
+                    const suffix = key.replace('tasks_', '');
+                    if (suffix && !allUserTasks[suffix]) {
+                        const raw = localStorage.getItem(key);
+                        if (raw) {
+                            try {
+                                const parsed = JSON.parse(raw);
+                                if (Array.isArray(parsed) && parsed.length) {
+                                    allUserTasks[suffix] = parsed;
+                                    console.log(`📦 捕获遗留任务数据键 ${key}:`, parsed.length);
+                                }
+                            } catch (err) {
+                                console.warn(`⚠️ 解析遗留任务数据失败 (键名: ${key}):`, err);
+                            }
+                        }
+                    }
+                });
+                
+                if (Object.keys(allUserTasks).length > 0) {
+                    data.allUserTasks = allUserTasks;
+                }
+                
+                // 验证导出数据
+                const exportSummary = {
+                    users: data.users.length,
+                    tasks: data.userTasks ? data.userTasks.length : 0,
+                    hasAvatar: !!data.userAvatar,
+                    hasCalendarAvatar: !!data.calendarAvatar,
+                    hasSettings: Object.keys(data.userSettings).length > 0
+                };
+                console.log('📊 导出数据摘要:', exportSummary);
+                
+                // 如果没有任何用户数据，给出警告
+                if (exportSummary.tasks === 0 && !exportSummary.hasAvatar && !exportSummary.hasCalendarAvatar) {
+                    console.warn('⚠️ 警告：导出数据中未包含任何任务或头像数据！');
+                    console.warn('⚠️ 请确保：1) 已登录账号 2) 有任务或头像数据');
+                }
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                const timestamp = new Date().toISOString().split('T')[0];
+                const username = currentUser ? currentUser.username : 'all';
+                a.download = `quadrant_time_data_${username}_${timestamp}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                console.log('✅ 数据导出成功！');
+                console.log('📦 导出文件包含:', exportSummary);
+                showNotification('数据导出成功！请保存文件并在其他浏览器中导入', 'success');
+            } catch (error) {
+                console.error('❌ 导出数据失败:', error);
+                console.error('❌ 错误堆栈:', error.stack);
+                showNotification('导出数据失败: ' + error.message, 'error');
+            }
+        }
+        
+        // 导入用户数据 - 完整版本，恢复所有用户数据
+        function importUserData(input) {
+            console.log('🚀 importUserData 函数被调用 (data-sync.html)');
+            const file = input.files ? input.files[0] : input;
+            if (file) {
+                console.log('📁 选择的文件:', file.name, '大小:', file.size, '字节');
+                const reader = new FileReader();
+                
+                const getSessionUser = (() => {
+                    let cachedUser = null;
+                    let checked = false;
+                    return () => {
+                        if (checked) return cachedUser;
+                        checked = true;
+                        const sessionStr = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                        if (sessionStr) {
+                            try {
+                                const session = JSON.parse(sessionStr);
+                                cachedUser = session.user || session;
+                                console.log('🔍 当前登录用户（缓存）:', cachedUser?.username || cachedUser?.id || '未知');
+                            } catch (err) {
+                                console.error('❌ 解析用户会话失败:', err);
+                            }
+                        } else {
+                            console.warn('⚠️ 当前没有登录用户');
+                        }
+                        return cachedUser;
+                    };
+                })();
+                
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        console.log('📥 开始导入数据，版本:', data.version || '1.0');
+                        const currentUser = getSessionUser();
+                        
+                        // 合并用户数据，确保导入的ID/权限生效
+                        const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                        const cloudUsers = Array.isArray(data.users) ? data.users : [];
+                        
+                        const buildUserKey = (user) => user?.username || user?.email || user?.id || null;
+                        const userMap = new Map();
+                        
+                        localUsers.forEach(user => {
+                            const key = buildUserKey(user);
+                            if (key) {
+                                userMap.set(key, { ...user });
+                            }
+                        });
+                        
+                        cloudUsers.forEach(user => {
+                            if (!user) return;
+                            const key = buildUserKey(user);
+                            if (!key) return;
+                            
+                            const existing = userMap.get(key);
+                        const mergedPermissions = Array.isArray(user.permissions) && user.permissions.length > 0
+                                ? user.permissions
+                                : (existing?.permissions || []);
+                        const finalPermissions = mergedPermissions.length > 0 ? mergedPermissions : DEFAULT_USER_PERMISSIONS.slice();
+                            
+                            const mergedUser = {
+                                ...(existing || {}),
+                                ...user,
+                                id: user.id || existing?.id || `imported_${Date.now()}`,
+                                username: user.username || existing?.username,
+                                email: user.email || existing?.email || '',
+                                phone: user.phone || existing?.phone || '',
+                                password: user.password || existing?.password || '',
+                                permissions: finalPermissions,
+                                createdAt: user.createdAt || existing?.createdAt || new Date().toISOString(),
+                                createdBy: user.createdBy || existing?.createdBy || 'import'
+                            };
+                            
+                            userMap.set(key, mergedUser);
+                            if (existing) {
+                                console.log('🔄 已更新用户数据:', mergedUser.username || mergedUser.email || mergedUser.id);
+                            } else {
+                                console.log('➕ 已新增用户数据:', mergedUser.username || mergedUser.email || mergedUser.id);
+                            }
+                        });
+                        
+                        const mergedUsers = Array.from(userMap.values());
+                        localStorage.setItem('users', JSON.stringify(mergedUsers));
+                        console.log('✅ 已合并用户数据，当前用户总数:', mergedUsers.length);
+                        
+                        // 导入任务数据
+                        let importedTasksCount = 0;
+                        let importedUserId = null;
+                        const importedUserIds = new Set();
+                        
+                        const findUserByIdentifier = (identifier) => {
+                            if (!identifier) return null;
+                            return mergedUsers.find(user =>
+                                user.id === identifier ||
+                                user.username === identifier ||
+                                user.email === identifier
+                            ) || null;
+                        };
+                        
+                        const buildTaskStorageKeys = (identifier, userMeta) => {
+                            const keys = new Set();
+                            if (identifier && identifier !== '__default__') {
+                                keys.add(`tasks_${identifier}`);
+                            }
+                            if (userMeta) {
+                                if (userMeta.id) keys.add(`tasks_${userMeta.id}`);
+                                if (userMeta.username) keys.add(`tasks_${userMeta.username}`);
+                                if (userMeta.email) keys.add(`tasks_${userMeta.email}`);
+                            }
+                            if (identifier === '__default__' || (!identifier && !userMeta)) {
+                                keys.add('tasks');
+                            }
+                            return Array.from(keys);
+                        };
+                        
+                        const saveTasksForUser = (identifier, tasks, sourceKey = '') => {
+                            if (!Array.isArray(tasks)) return;
+                            const userMeta = findUserByIdentifier(identifier);
+                            const storageKeys = buildTaskStorageKeys(identifier, userMeta);
+                            const payload = JSON.stringify(tasks);
+                            
+                            storageKeys.forEach(key => {
+                                localStorage.setItem(key, payload);
+                            });
+                            
+                            importedTasksCount += tasks.length;
+                            if (userMeta && userMeta.id) {
+                                importedUserIds.add(userMeta.id);
+                            } else if (identifier && identifier !== '__default__') {
+                                importedUserIds.add(identifier);
+                            }
+                            
+                            console.log(`✅ 已导入任务数据 (键名: ${storageKeys.join(', ')}${sourceKey ? `，来源: ${sourceKey}` : ''}):`, tasks.length, '个任务');
+                            
+                            storageKeys.forEach(key => {
+                                const verify = localStorage.getItem(key);
+                                if (verify) {
+                                    try {
+                                        const parsed = JSON.parse(verify);
+                                        console.log('✅ 验证：任务数据已成功保存，数量:', parsed.length, '（键名:', key, '）');
+                                    } catch (err) {
+                                        console.error('❌ 验证时解析任务数据失败 (键名:', key, '):', err);
+                                    }
+                                } else {
+                                    console.error('❌ 验证失败：任务数据未成功保存！(键名:', key, ')');
+                                }
+                            });
+                        };
+                        
+                        if (data.allUserTasks && typeof data.allUserTasks === 'object') {
+                            Object.entries(data.allUserTasks).forEach(([key, tasks]) => {
+                                if (!Array.isArray(tasks)) return;
+                                if (key === '__default__') {
+                                   saveTasksForUser('__default__', tasks, 'allUserTasks');
+                                } else {
+                                   saveTasksForUser(key, tasks, 'allUserTasks');
+                                }
+                            });
+                        }
+                        
+                        if (importedTasksCount === 0 && data.userTasks && Array.isArray(data.userTasks)) {
+                            // 兼容旧格式：只有当前用户任务
+                            console.log('🔍 当前登录用户:', currentUser ? currentUser.username || currentUser.id : '无');
+                            let userId = null;
+                            if (currentUser && currentUser.id) {
+                                userId = currentUser.id;
+                                console.log('✅ 使用当前登录用户ID:', userId);
+                            } else if (data.exportUser && data.exportUser.id) {
+                                userId = data.exportUser.id;
+                                console.log('✅ 使用导出时的用户ID:', userId, '用户名:', data.exportUser.username);
+                            }
+                            
+                            if (userId) {
+                                saveTasksForUser(userId, data.userTasks, 'legacy');
+                                importedUserId = userId;
+                                importedUserIds.add(userId);
+                                
+                                if (data.exportUser) {
+                                    const userInfoKey = `imported_user_${userId}`;
+                                    localStorage.setItem(userInfoKey, JSON.stringify({
+                                        userId: userId,
+                                        username: data.exportUser.username,
+                                        email: data.exportUser.email,
+                                        importedAt: new Date().toISOString()
+                                    }));
+                                    console.log('✅ 已保存导入用户信息到:', userInfoKey);
+                                }
+                            } else {
+                                saveTasksForUser('__default__', data.userTasks, 'legacy');
+                                console.log('💡 提示：请在登录后重新导入数据，或使用导出时的账号登录');
+                            }
+                        }
+                        
+                        if (!importedUserId) {
+                            if (currentUser && importedUserIds.has(currentUser.id)) {
+                                importedUserId = currentUser.id;
+                            } else if (data.exportUser && data.exportUser.id && importedUserIds.has(data.exportUser.id)) {
+                                importedUserId = data.exportUser.id;
+                            } else if (importedUserIds.size > 0) {
+                                importedUserId = Array.from(importedUserIds)[0];
+                            }
+                        }
+                        
+                        if (importedTasksCount === 0) {
+                            console.warn('⚠️ 导入数据中未包含任务数据或格式不正确');
+                        }
+                        
+                        // 导入头像数据
+                        let importedAvatar = false;
+                        if (data.userAvatar) {
+                            try {
+                                if (currentUser && currentUser.id) {
+                                    data.userAvatar.userId = currentUser.id;
+                                    console.log('✅ 已更新头像用户ID为:', currentUser.id);
+                                } else if (importedUserId) {
+                                    // 如果没有登录用户，使用导入任务时的用户ID
+                                    data.userAvatar.userId = importedUserId;
+                                    console.log('✅ 已设置头像用户ID为:', importedUserId);
+                                }
+                                
+                                localStorage.setItem('userAvatar', JSON.stringify(data.userAvatar));
+                                importedAvatar = true;
+                                console.log('✅ 已导入用户头像数据:', data.userAvatar);
+                                
+                                // 验证头像数据是否成功保存
+                                const verifyAvatar = localStorage.getItem('userAvatar');
+                                if (verifyAvatar) {
+                                    console.log('✅ 验证：头像数据已成功保存');
+                                } else {
+                                    console.error('❌ 验证失败：头像数据未成功保存！');
+                                }
+                            } catch (e) {
+                                console.error('❌ 导入头像数据失败:', e);
+                            }
+                        } else {
+                            console.warn('⚠️ 导入数据中未包含用户头像数据');
+                        }
+                        
+                        // 导入日历头像
+                        let importedCalendarAvatar = false;
+                        if (data.calendarAvatar) {
+                            localStorage.setItem('calendar-profile-avatar', data.calendarAvatar);
+                            importedCalendarAvatar = true;
+                            console.log('✅ 已导入日历头像');
+                            
+                            // 验证日历头像是否成功保存
+                            const verifyCalendarAvatar = localStorage.getItem('calendar-profile-avatar');
+                            if (verifyCalendarAvatar) {
+                                console.log('✅ 验证：日历头像已成功保存');
+                            } else {
+                                console.error('❌ 验证失败：日历头像未成功保存！');
+                            }
+                        } else {
+                            console.warn('⚠️ 导入数据中未包含日历头像数据');
+                        }
+                        
+                        // 导入用户设置
+                        if (data.userSettings) {
+                            if (data.userSettings.theme) {
+                                localStorage.setItem('theme', data.userSettings.theme);
+                            }
+                            if (data.userSettings.language) {
+                                localStorage.setItem('language', data.userSettings.language);
+                            }
+                            if (data.userSettings.sortMode) {
+                                localStorage.setItem('sort_mode', data.userSettings.sortMode);
+                            }
+                            console.log('✅ 已导入用户设置');
+                        }
+                        
+                        // 同步其他数据
+                        if (data.adminPassword && !localStorage.getItem('adminPassword')) {
+                            localStorage.setItem('adminPassword', data.adminPassword);
+                        }
+                        
+                        if (data.aiConfig) {
+                            if (data.version === '2.0' && typeof data.aiConfig === 'string') {
+                                try {
+                                    const aiConfig = JSON.parse(data.aiConfig);
+                                    localStorage.setItem('aiConfig', JSON.stringify(aiConfig));
+                                } catch (e) {
+                                    localStorage.setItem('aiConfig', data.aiConfig);
+                                }
+                            } else {
+                                localStorage.setItem('aiConfig', data.aiConfig);
+                            }
+                            console.log('✅ 已导入AI配置');
+                        }
+                        
+                        // 导入其他用户相关数据
+                        const dataKeys = [
+                            'userBehaviorData',
+                            'smartReminders',
+                            'aiScheduleData',
+                            'aiTaskDecompositionData',
+                            'decompositionHistory',
+                            'reminderSettings',
+                            'scheduleSettings',
+                            'decompositionSettings',
+                            'aiHealthData',
+                            'notifiedTasks'
+                        ];
+                        
+                        dataKeys.forEach(key => {
+                            if (data[key]) {
+                                localStorage.setItem(key, data[key]);
+                                console.log(`✅ 已导入 ${key}`);
+                            }
+                        });
+                        
+                        // 生成导入摘要
+                        const importSummary = {
+                            tasks: importedTasksCount,
+                            avatar: importedAvatar,
+                            calendarAvatar: importedCalendarAvatar,
+                            userId: importedUserId || (data.exportUser ? data.exportUser.id : null),
+                            username: data.exportUser ? data.exportUser.username : null
+                        };
+                        
+                        console.log('📊 导入数据摘要:', importSummary);
+                        console.log('📋 导入的任务存储键名:', importedUserId ? `tasks_${importedUserId}` : 'tasks (默认)');
+                        console.log('📋 导入的用户ID:', importedUserId || '无');
+                        console.log('📋 导出时的用户名:', data.exportUser ? data.exportUser.username : '未知');
+                        
+                        // 如果导入了数据但没有登录，给出提示
+                        if (importSummary.tasks > 0 && !currentUser) {
+                            console.log('💡 重要提示：已导入数据，但当前未登录');
+                            console.log('💡 请使用导出时的账号登录查看数据');
+                            if (importSummary.username) {
+                                console.log(`💡 导出时的用户名: ${importSummary.username}`);
+                        }
+                        }
+                        
+                        // 构建导入成功消息
+                        let successMessage = '数据导入成功！';
+                        const details = [];
+                        if (importSummary.tasks > 0) {
+                            details.push(`${importSummary.tasks} 个任务`);
+                        }
+                        if (importSummary.avatar) {
+                            details.push('用户头像');
+                        }
+                        if (importSummary.calendarAvatar) {
+                            details.push('日历头像');
+                        }
+                        if (details.length > 0) {
+                            successMessage += ' 已导入：' + details.join('、');
+                        } else {
+                            successMessage += ' 但未找到可导入的数据，请检查导出文件是否包含任务或头像数据。';
+                        }
+                        
+                        if (importSummary.username) {
+                            successMessage += ` 请使用账号 "${importSummary.username}" 登录查看数据。`;
+                        }
+                        
+                        showNotification(successMessage, 'success');
+                    } catch (error) {
+                        console.error('❌ 导入数据失败:', error);
+                        console.error('❌ 错误堆栈:', error.stack);
+                        showNotification('数据格式错误，导入失败: ' + error.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                console.error('❌ 未选择文件');
+                showNotification('请选择要导入的文件', 'error');
+            }
+        }
+        
+        // 自动同步数据
+        function autoSyncData() {
+            try {
+                const data = {
+                    users: JSON.parse(localStorage.getItem('users') || '[]'),
+                    adminPassword: localStorage.getItem('adminPassword'),
+                    aiConfig: localStorage.getItem('aiFortuneEnabled'),
+                    syncTime: new Date().toISOString()
+                };
+                
+                localStorage.setItem('quadrant_time_sync_data', JSON.stringify(data));
+                showNotification('数据已同步到其他浏览器，请在其他浏览器中刷新页面', 'success');
+            } catch (error) {
+                console.error('自动同步失败:', error);
+                showNotification('自动同步失败', 'error');
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease-out;
+                max-width: 400px;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+        
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(100%);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <div class="legal-footer" style="text-align:center;padding:1.5rem 1rem 1rem;font-size:0.78rem;color:#9ca3af;">
+        <a href="privacy.html" target="_blank" style="color:#6b7280;text-decoration:none;">隐私政策</a>
+        <span style="margin:0 0.5rem;color:#d1d5db;">|</span>
+        <a href="terms.html" target="_blank" style="color:#6b7280;text-decoration:none;">服务条款</a>
+        <span style="margin:0 0.5rem;color:#d1d5db;">|</span>
+        <span>数据存储在本地浏览器</span>
+    </div>
+</body>
+</html>

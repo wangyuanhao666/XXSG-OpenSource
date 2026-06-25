@@ -1,0 +1,524 @@
+/* ======================
+   功能视图样式 - 番茄专注、倒数纪念日、时间管理可视化看板
+   ====================== */
+
+/* 番茄专注页面样式 */
+.pomodoro-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+    background: transparent;
+}
+
+/* 背景装饰 */
+.pomodoro-bg-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.pomodoro-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 25s infinite ease-in-out;
+}
+
+.pomodoro-shape.shape-1 {
+    width: 500px;
+    height: 500px;
+    top: -150px;
+    right: -150px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(238, 90, 82, 0.15));
+    animation-delay: 0s;
+}
+
+.pomodoro-shape.shape-2 {
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    left: -100px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(220, 38, 38, 0.12));
+    animation-delay: 8s;
+}
+
+.pomodoro-shape.shape-3 {
+    width: 350px;
+    height: 350px;
+    top: 50%;
+    left: 30%;
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.12), rgba(252, 165, 165, 0.12));
+    animation-delay: 16s;
+}
+
+/* 页面头部 */
+.pomodoro-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    z-index: 1;
+}
+
+.pomodoro-header .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(238, 90, 82, 0.15));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.pomodoro-header .badge-icon {
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+.pomodoro-header .badge-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.pomodoro-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.pomodoro-title .title-gradient {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 50%, #f44336 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+}
+
+.pomodoro-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    animation: fadeInUp 1s ease-out;
+}
+
+/* 主内容布局 - 单列居中，增加宽度以提升视觉效果 */
+.pomodoro-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* 计时器区域 */
+.pomodoro-timer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.timer-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.15);
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: fadeInUp 0.8s ease-out 0.1s backwards;
+}
+
+.timer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(255, 107, 107, 0.25);
+    border-color: rgba(255, 107, 107, 0.5);
+}
+
+.timer-card .card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.timer-card:hover .card-glow {
+    opacity: 1;
+    animation: rotate 6s linear infinite;
+}
+
+.timer-card .card-content {
+    position: relative;
+    padding: 3rem 2.5rem;
+    z-index: 1;
+}
+
+/* 模式选择器 */
+.timer-mode-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.mode-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 107, 107, 0.2);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 82, 0.2));
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+}
+
+.mode-btn:hover:not(.active) {
+    border-color: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+/* 计时器显示 */
+.timer-display {
+    position: relative;
+    width: 360px;
+    height: 360px;
+    margin: 0 auto 2.5rem;
+}
+
+.timer-circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.timer-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-bg {
+    fill: none;
+    stroke: rgba(255, 107, 107, 0.15);
+    stroke-width: 10;
+}
+
+.timer-progress {
+    fill: none;
+    stroke: #ff6b6b;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 565.48;
+    stroke-dashoffset: 565.48;
+    transition: stroke-dashoffset 1s linear;
+    filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.5));
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#timer-display {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+    letter-spacing: 0.05em;
+}
+
+/* 控制按钮 */
+.timer-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.control-btn.start {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.control-btn.pause {
+    background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+    color: white;
+}
+
+.control-btn.reset {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 动画 */
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(30px, -30px) rotate(90deg);
+    }
+    50% {
+        transform: translate(0, -60px) rotate(180deg);
+    }
+    75% {
+        transform: translate(-30px, -30px) rotate(270deg);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .pomodoro-container {
+        padding: 2rem 1rem;
+    }
+
+    .pomodoro-main {
+        max-width: 100%;
+    }
+
+    .pomodoro-title {
+        font-size: 2.5rem;
+    }
+
+    .timer-display {
+        width: 280px;
+        height: 280px;
+    }
+
+    #timer-display {
+        font-size: 3.5rem;
+    }
+
+    .timer-mode-selector {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 倒数纪念日页面样式 */
+.countdown-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.countdown-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    z-index: 1;
+}
+
+.countdown-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.countdown-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.countdown-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.countdown-event-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(67, 233, 123, 0.3);
+    box-shadow: 0 8px 32px rgba(67, 233, 123, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.countdown-event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(67, 233, 123, 0.25);
+}
+
+/* 时间管理可视化看板页面样式 */
+.time-tracker-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.time-tracker-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    z-index: 1;
+}
+
+.time-tracker-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #7c3aed 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.time-tracker-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.time-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.time-stat-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.time-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(168, 85, 247, 0.25);
+}
+
+.chart-container {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* 暗色模式适配 */
+body.dark-mode .timer-card,
+body.dark-mode .countdown-event-card,
+body.dark-mode .time-stat-card,
+body.dark-mode .chart-container {
+    background: rgba(26, 32, 44, 0.8);
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+body.dark-mode .mode-btn {
+    background: rgba(26, 32, 44, 0.8);
+    color: #a0aec0;
+}

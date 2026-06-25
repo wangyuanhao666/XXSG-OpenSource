@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 象限时光</title>
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg?v=20260526-1">
+    <link rel="stylesheet" href="style-blue.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/login-page.css?v=1.0.0">
+
+    <link rel="stylesheet" href="world-class-design-system.css?v=20260529-2">
+</head>
+
+<body>
+    <div class="login-page">
+        <!-- 背景装饰 -->
+        <div class="login-bg-decoration">
+            <div class="login-floating-shape login-shape-1"></div>
+            <div class="login-floating-shape login-shape-2"></div>
+            <div class="login-floating-shape login-shape-3"></div>
+            <div class="login-floating-shape login-shape-4"></div>
+            <div class="login-floating-shape login-shape-5"></div>
+        </div>
+
+        <div class="login-container">
+            <!-- 登录头部 -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="logo-text.svg?v=20260526-1" alt="象限时光" class="logo-image">
+                </div>
+                <div class="login-subtitle">让重要的事不再匆忙，让匆忙的事不再重要</div>
+            </div>
+
+            <!-- 登录方式切换 -->
+            <div class="login-tabs">
+                <div class="login-tab active" data-tab="account">账号登录</div>
+                <div class="login-tab" data-tab="admin">管理员后台登录</div>
+            </div>
+
+            <!-- 账号登录表单 -->
+            <form class="login-form active" id="account-form">
+                <div class="form-group">
+                    <label for="username">用户名或邮箱</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名或邮箱" autocomplete="username"
+                        required>
+                    <div class="error-message" id="username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码"
+                        autocomplete="current-password" required>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="remember-me" class="checkbox-label">
+                        <input type="checkbox" id="remember-me">
+                        <span class="checkbox-text">记住我</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="login-btn" id="account-login-btn">
+                    <span class="btn-text">登录</span>
+                </button>
+
+                <div class="login-footer">
+                    <div style="margin-bottom: 0.5rem;">
+                        <a href="forgot-password.html" id="forgot-password-link"
+                            style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">忘记密码？</a>
+                        <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                        <a href="data-sync.html" id="show-data-sync"
+                            style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">数据同步</a>
+                    </div>
+                    <div>
+                        还没有账号？<a href="#" id="show-admin-contact">联系管理员获取账号</a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 管理员登录表单 -->
+            <form class="login-form" id="admin-form">
+                <div class="form-group">
+                    <label for="admin-username">管理员账号</label>
+                    <input type="text" id="admin-username" name="admin-username" placeholder="请输入管理员账号"
+                        autocomplete="off" required>
+                    <div class="error-message" id="admin-username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-password">管理员密码</label>
+                    <input type="password" id="admin-password" name="admin-password" placeholder="请输入管理员密码"
+                        autocomplete="off" required>
+                    <div class="error-message" id="admin-password-error"></div>
+                </div>
+
+                <button type="submit" class="login-btn" id="admin-login-btn">
+                    <span class="btn-text">管理员后台登录</span>
+                </button>
+
+                <div class="login-footer">
+                    <a href="#" id="show-admin-contact-from-admin">联系管理员获取账号</a>
+                </div>
+            </form>
+
+
+
+            <!-- 忘记密码页面 - 直接显示 -->
+            <div id="forgot-password-page" class="forgot-password-page" style="display: none;">
+                <div class="forgot-password-container">
+                    <div class="forgot-password-header">
+                        <h2>🔐 忘记密码</h2>
+                        <button class="close-btn" id="forgot-password-close-btn" type="button">&times;</button>
+                    </div>
+                    <div class="forgot-password-content">
+                        <div class="forgot-password-simple">
+                            <div class="info-section">
+                                <h3>找回密码</h3>
+                                <p>请输入您的手机号码和邮箱地址，我们将帮您重置密码。</p>
+                            </div>
+
+                            <form id="forgot-password-form">
+                                <!-- 手机号和邮箱 - 两列布局 -->
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="reset-phone">手机号码</label>
+                                        <input type="tel" id="reset-phone" placeholder="请输入注册时的手机号码" autocomplete="tel"
+                                            required>
+                                        <div class="error-message" id="reset-phone-error"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="reset-email">邮箱地址</label>
+                                        <input type="email" id="reset-email" placeholder="请输入注册时的邮箱地址"
+                                            autocomplete="email" required>
+                                        <div class="error-message" id="reset-email-error"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 新密码 - 单列布局 -->
+                                <div class="form-group single">
+                                    <label for="new-password-reset">新密码</label>
+                                    <input type="password" id="new-password-reset" placeholder="请输入新密码（至少6位）"
+                                        autocomplete="new-password" required>
+                                    <div class="error-message" id="new-password-reset-error"></div>
+                                </div>
+
+                                <!-- 确认新密码 - 单列布局 -->
+                                <div class="form-group single">
+                                    <label for="confirm-password-reset">确认新密码</label>
+                                    <input type="password" id="confirm-password-reset" placeholder="请再次输入新密码"
+                                        autocomplete="new-password" required>
+                                    <div class="error-message" id="confirm-password-reset-error"></div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="forgot-password-actions">
+                            <button class="primary" id="forgot-password-reset-btn" type="button">重置密码</button>
+                            <button class="secondary" id="forgot-password-cancel-btn" type="button">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 管理员联系方式页面（静态HTML，避免JS克隆导致ID丢失） -->
+            <div class="admin-contact-container" style="display: none;">
+                <div class="admin-contact-card">
+                    <h2>📞 联系管理员</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>邮箱联系</h3>
+                                <p>admin@quadrant-time.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <div class="contact-details">
+                                <h3>电话联系</h3>
+                                <p>400-123-4567</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">💬</div>
+                            <div class="contact-details">
+                                <h3>在线客服</h3>
+                                <p>工作日 9:00-18:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button id="close-admin-contact-btn" class="btn-secondary" onclick="closeAdminContact()">🔙 返回登录页</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 注册表单 -->
+            <form class="login-form" id="register-form">
+                <div class="admin-notice">
+                    <div class="notice-icon">🔐</div>
+                    <div class="notice-content">
+                        <h4>管理员创建模式</h4>
+                        <p>用户账号由管理员统一创建和管理，确保系统安全。</p>
+                        <p>如需创建账号，请联系管理员或点击右下角"管理员"按钮。</p>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="login-footer">
+                    <div>
+                        已有账号？<a href="#" id="show-login">立即登录</a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 加载状态 -->
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>正在处理，请稍候...</p>
+            </div>
+        </div>
+
+        <!-- 管理员入口按钮已移除，现在使用标签页方式 -->
+    </div>
+
+    <script src="js/indexeddb-storage.js?v=20260619-1"></script>
+    <script src="js/user-storage.js?v=1.0.0"></script>
+    <script src="js/session-storage.js?v=1.0.0"></script>
+    <script src="js/admin-storage.js?v=1.0.0"></script>
+    <script src="js/task-storage.js?v=1.0.0"></script>
+    <script src="js/settings-storage.js?v=1.0.0"></script>
+    <script src="js/data-sync-storage.js?v=1.0.0"></script>
+    <script src="js/login-page.js?v=20260619-9"></script>
+
+    <!-- 安全模块 -->
+    <script src="src/core/security.js?v=1.0.0"></script>
+    <script src="src/core/secure-storage.js?v=1.0.0"></script>
+    <script src="src/core/security-fix.js?v=1.0.2"></script>
+    <script src="src/core/security-migration.js?v=1.0.1"></script>
+
+    <!-- 日志管理系统 -->
+    <script src="src/core/logger.js?v=1.0.0"></script>
+
+    <script src="i18n-auto.js?v=1.0.6"></script>
+
+    <div class="legal-footer">
+        <a href="privacy.html" target="_blank">隐私政策</a>
+        <span class="sep">|</span>
+        <a href="terms.html" target="_blank">服务条款</a>
+        <span class="sep">|</span>
+        <span>数据存储在本地浏览器</span>
+    </div>
+
+    <style>
+        .legal-footer {
+            text-align: center; padding: 1.5rem 1rem 1rem;
+            font-size: 0.78rem; color: #9ca3af;
+        }
+        .legal-footer a { color: #6b7280; text-decoration: none; }
+        .legal-footer a:hover { color: #2563eb; }
+        .legal-footer .sep { margin: 0 0.5rem; color: #d1d5db; }
+    </style>
+</body>
+
+</html>

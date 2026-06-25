@@ -1,0 +1,890 @@
+/**
+ * 顶级复盘UI改造 - Modern Clean Productivity 风格
+ * 参考 Notion/Linear 设计语言
+ * 支持深色模式和响应式布局
+ */
+
+/* ==================== 全局变量 ==================== */
+:root {
+    /* 主色调 - 翠绿色（顶级复盘专属色） */
+    --review-primary: #10b981;        /* Emerald-500 */
+    --review-primary-light: #34d399;  /* Emerald-400 */
+    --review-primary-dark: #059669;   /* Emerald-600 */
+
+    /* 背景色 - 柔和灰白 */
+    --review-bg-primary: #f8fafc;     /* Slate-50 */
+    --review-bg-card: #ffffff;        /* White */
+    --review-bg-input: #f1f5f9;       /* Slate-100 */
+
+    /* 边框色 */
+    --review-border: #e2e8f0;         /* Slate-200 */
+    --review-border-hover: #cbd5e1;   /* Slate-300 */
+
+    /* 文字色 */
+    --review-text-primary: #1e293b;   /* Slate-900 */
+    --review-text-secondary: #64748b; /* Slate-500 */
+    --review-text-muted: #94a3b8;     /* Slate-400 */
+
+    /* 阴影 */
+    --review-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --review-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --review-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* 圆角 */
+    --review-radius-sm: 0.375rem;     /* 6px */
+    --review-radius-md: 0.5rem;       /* 8px */
+    --review-radius-lg: 0.75rem;      /* 12px */
+    --review-radius-xl: 1rem;         /* 16px */
+
+    /* 过渡 */
+    --review-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 深色模式变量 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --review-primary: #34d399;        /* Emerald-400 */
+        --review-primary-light: #6ee7b7;  /* Emerald-300 */
+        --review-primary-dark: #10b981;   /* Emerald-500 */
+
+        --review-bg-primary: #020617;     /* Slate-950 */
+        --review-bg-card: #0f172a;        /* Slate-900 */
+        --review-bg-input: #1e293b;       /* Slate-800 */
+
+        --review-border: #1e293b;         /* Slate-800 */
+        --review-border-hover: #334155;   /* Slate-700 */
+
+        --review-text-primary: #f1f5f9;   /* Slate-100 */
+        --review-text-secondary: #94a3b8; /* Slate-400 */
+        --review-text-muted: #64748b;     /* Slate-500 */
+
+        --review-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+        --review-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+        --review-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+    }
+}
+
+/* ==================== 容器布局 ==================== */
+#review-view {
+    background: var(--review-bg-primary);
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.review-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==================== 复盘类型选择器 ==================== */
+.review-type-selector {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+}
+
+.review-type-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1.25rem !important;
+    background: var(--review-bg-card) !important;
+    border: 1px solid var(--review-border) !important;
+    border-radius: var(--review-radius-lg) !important;
+    color: var(--review-text-secondary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: var(--review-transition) !important;
+    box-shadow: var(--review-shadow-sm) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.review-type-btn:hover {
+    border-color: var(--review-border-hover) !important;
+    color: var(--review-text-primary) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--review-shadow-md) !important;
+    background: var(--review-bg-card) !important;
+}
+
+.review-type-btn.active {
+    background: var(--review-primary) !important;
+    border-color: var(--review-primary) !important;
+    color: white !important;
+    box-shadow: var(--review-shadow-md) !important;
+}
+
+.review-type-btn .material-icons {
+    font-size: 1.25rem;
+}
+
+/* ==================== 日期选择器 ==================== */
+.review-date-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: var(--review-bg-card);
+    border: 1px solid var(--review-border);
+    border-radius: var(--review-radius-xl);
+    box-shadow: var(--review-shadow-sm);
+    flex-wrap: wrap;
+}
+
+.date-nav-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 44px !important;
+    background: var(--review-bg-input) !important;
+    border: 1px solid var(--review-border) !important;
+    border-radius: var(--review-radius-md) !important;
+    color: var(--review-text-primary) !important;
+    cursor: pointer !important;
+    transition: var(--review-transition) !important;
+    flex-shrink: 0 !important;
+}
+
+.date-nav-btn:hover {
+    background: var(--review-primary) !important;
+    border-color: var(--review-primary) !important;
+    color: white !important;
+    transform: scale(1.05) !important;
+}
+
+.date-nav-btn:active {
+    transform: scale(0.95) !important;
+}
+
+.review-date-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 200px;
+}
+
+#review-date-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--review-text-primary);
+}
+
+#review-date-weekday {
+    font-size: 0.875rem;
+    color: var(--review-text-secondary);
+}
+
+.today-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.625rem 1rem !important;
+    background: var(--review-bg-input) !important;
+    border: 1px solid var(--review-border) !important;
+    border-radius: var(--review-radius-md) !important;
+    color: var(--review-text-secondary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: var(--review-transition) !important;
+}
+
+.today-btn:hover {
+    background: var(--review-primary) !important;
+    border-color: var(--review-primary) !important;
+    color: white !important;
+}
+
+/* ==================== 复盘内容区域 ==================== */
+.review-content {
+    margin-top: 1rem;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-rows: auto;
+    align-items: start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* 响应式：手机端单栏 */
+@media (max-width: 768px) {
+    .review-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    #review-view {
+        padding: 0.5rem;
+    }
+
+    .review-type-selector {
+        gap: 0.375rem;
+        margin-bottom: 1rem;
+    }
+
+    .review-type-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+    }
+
+    .review-date-selector {
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+    }
+
+    #review-date-text {
+        font-size: 1.125rem;
+    }
+}
+
+/* ==================== 复盘卡片 ==================== */
+#review-view .review-card {
+    background: var(--review-bg-card) !important;
+    border: 1px solid var(--review-border) !important;
+    border-radius: var(--review-radius-xl) !important;
+    padding: 1.5rem !important;
+    transition: var(--review-transition) !important;
+    box-shadow: var(--review-shadow-sm) !important;
+    height: auto !important; /* ✅ 改为 auto，允许内容撑开 */
+    min-height: 280px !important; /* 最小高度 */
+    max-height: none !important; /* ✅ 移除最大高度限制 */
+    display: block !important; /* ✅ 不使用 flex，避免干扰 textarea resize */
+    margin-bottom: 1.5rem !important;
+    overflow: visible !important; /* ✅ 允许 resize 句柄显示 */
+}
+
+#review-view .review-card:hover {
+    border-color: var(--review-primary) !important;
+    box-shadow: var(--review-shadow-md) !important;
+    /* ✅ 移除 transform，避免干扰 textarea resize 操作 */
+    transform: none !important;
+}
+
+#review-view .review-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.75rem !important;
+    border-bottom: 1px solid var(--review-border) !important;
+    flex-shrink: 0 !important;
+}
+
+/* 心情卡片的header：标题+图标在左，取消按钮在右 */
+#review-view .review-card.mood-rating .cancel-mood-btn {
+    margin-left: auto !important;
+}
+
+#review-view .review-card-header .material-icons {
+    font-size: 1.5rem !important;
+    color: var(--review-primary) !important;
+    background: transparent !important;
+    padding: 0.5rem !important;
+    border-radius: var(--review-radius-md) !important;
+    transition: var(--review-transition) !important;
+}
+
+#review-view .review-card:hover .review-card-header .material-icons {
+    background: color-mix(in srgb, var(--review-primary) 10%, transparent) !important;
+    transform: scale(1.05);
+}
+
+#review-view .review-card-header h3 {
+    margin: 0 !important;
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    color: var(--review-primary) !important;
+    text-align: left !important;
+}
+
+/* 确保卡片内容区域不干扰 textarea resize */
+#review-view .review-card:not(.mood-rating) .review-card-content {
+    /* ❌ 不使用 flex 布局，它会阻止子元素 resize */
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important; /* ✅ 关键：允许 resize 句柄显示 */
+    /* ✅ 不设置 flex、不设置高度，让 textarea 自由 resize */
+}
+
+#review-view .review-card:not(.mood-rating) .review-card-content textarea {
+    width: 100% !important;
+    height: 140px !important;
+    min-height: 90px !important;
+    max-height: none !important;
+    max-width: none !important;
+    min-width: 200px !important;
+    resize: none !important;
+    overflow: auto !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+/* ==================== 输入框区域 ==================== */
+#review-view .review-card-content {
+    position: relative !important;
+    width: 100% !important;
+}
+
+#review-view .review-card-content textarea {
+    /* ✅ 只设置基础样式，不设置布局相关的属性 */
+    padding: 0.75rem !important;
+    background: transparent !important;
+    border: 1px solid var(--review-border) !important;
+    border-radius: var(--review-radius-md) !important;
+    color: var(--review-text-primary) !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+    /* ✅ 移除 transition，避免干扰 resize 功能 */
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+    /* ✅ 不设置 resize、overflow、height等，由特定样式控制 */
+}
+
+#review-view .review-card-content textarea:focus {
+    outline: none !important;
+    border-color: var(--review-primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--review-primary) 10%, transparent) !important;
+    background: var(--review-bg-input) !important;
+}
+
+#review-view .review-card-content textarea::placeholder {
+    color: var(--review-text-muted) !important;
+    font-style: normal !important;
+    opacity: 0.7 !important;
+}
+
+/* ==================== 心情选择器 ==================== */
+#review-view .review-card.mood-rating {
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--review-primary) 3%, transparent) 0%,
+        rgba(139, 92, 246, 0.03) 100%) !important;
+    /* 与其他卡片完全一致的高度设置 */
+    height: 280px !important; /* 强制固定高度 */
+    min-height: 280px !important;
+    max-height: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* 优化心情卡片内容区域 */
+#review-view .review-card.mood-rating .review-card-content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    padding: 0.75rem 0.5rem !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+}
+
+/* 默认状态：表情网格网格靠左排列 */
+#review-view .mood-grid {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    grid-template-rows: auto !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    justify-items: center !important;
+    transition: all 0.3s ease !important;
+}
+
+#review-view .mood-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.375rem !important;
+}
+
+#review-view .mood-btn {
+    width: 48px !important; /* 恢复原始大小 */
+    height: 48px !important;
+    font-size: 1.5rem !important; /* 恢复原始字体 */
+    background: var(--review-bg-input) !important;
+    border: 2px solid var(--review-border) !important;
+    border-radius: var(--review-radius-lg) !important;
+    cursor: pointer !important;
+    transition: var(--review-transition) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 选中状态后的布局调整 */
+#review-view .review-card.mood-rating.has-selection .review-card-content {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+#review-view .review-card.mood-rating.has-selection .mood-grid {
+    grid-template-columns: repeat(3, 1fr) !important; /* 改为3列 */
+    grid-template-rows: repeat(2, 1fr) !important; /* 2排 */
+    gap: 0.5rem !important;
+    flex: 1 !important;
+}
+
+#review-view .review-card.mood-rating.has-selection .mood-btn {
+    width: 44px !important; /* 缩小一点 */
+    height: 44px !important;
+    font-size: 1.375rem !important;
+}
+
+#review-view .review-card.mood-rating.has-selection .mood-text {
+    font-size: 0.625rem !important; /* 缩小文字 */
+}
+
+#review-view .mood-btn:hover {
+    border-color: var(--review-primary) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: var(--review-shadow-sm) !important;
+}
+
+#review-view .mood-btn:active {
+    transform: translateY(-1px) scale(0.98) !important;
+}
+
+/* 选中状态：弹跳动画 */
+#review-view .mood-btn.selected {
+    background: color-mix(in srgb, var(--review-primary) 10%, transparent) !important;
+    border-color: var(--review-primary) !important;
+    animation: moodBounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes moodBounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#review-view .mood-text {
+    font-size: 0.6875rem !important;
+    color: var(--review-text-secondary) !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+}
+
+#review-view .mood-btn.selected + .mood-text {
+    color: var(--review-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* ==================== 评分区域 ==================== */
+/* 默认隐藏评分区域 */
+#review-view .rating-section {
+    display: none !important; /* 默认隐藏 */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* 选中后显示评分区域在右侧 */
+#review-view .review-card.mood-rating.has-selection .rating-section {
+    display: flex !important; /* 显示 */
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+    border-left: 1px solid var(--review-border) !important; /* 左侧分隔线 */
+    padding-left: 1rem !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    min-width: 180px !important;
+}
+
+#review-view .rating-display-compact {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 0.5rem !important;
+    background: var(--review-bg-input) !important;
+    border-radius: var(--review-radius-md) !important;
+    width: 100% !important;
+    overflow: visible !important; /* ✅ 确保星星不被裁剪 */
+}
+
+#review-view .rating-label {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: var(--review-text-primary) !important;
+    text-align: center !important;
+}
+
+#review-view .rating-stars {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 2px !important; /* ✅ 稍微增加星星间距 */
+    justify-content: center !important;
+    align-items: center !important; /* ✅ 垂直居中 */
+    max-width: 100% !important; /* ✅ 移除宽度限制，允许星星正常显示 */
+    width: 100% !important; /* ✅ 占满容器宽度 */
+    overflow: visible !important; /* ✅ 确保星星不被裁剪 */
+}
+
+#review-view .star {
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: var(--review-transition) !important;
+    opacity: 0.3 !important;
+    line-height: 1 !important;
+}
+
+#review-view .star:hover,
+#review-view .star.active {
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+}
+
+#review-view #rating-display {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--review-primary) !important;
+    text-align: center !important;
+    margin-top: 0.5rem !important; /* ✅ 与星星之间增加间距 */
+}
+
+/* ==================== 底部操作栏 ==================== */
+.review-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--review-bg-card);
+    border-top: 1px solid var(--review-border);
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* 移动端：Sticky Footer */
+@media (max-width: 768px) {
+    .review-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        margin: 0 -0.5rem;
+        padding: 1rem 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid var(--review-border);
+        box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .review-actions {
+            background: rgba(15, 23, 42, 0.9);
+        }
+    }
+}
+
+.review-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--review-radius-lg);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--review-transition);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    border: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* 移除旧样式的渐变背景和伪元素 */
+.review-btn::before,
+.review-btn::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* 主按钮：保存 - 靛蓝色背景 */
+.review-btn-primary {
+    background: var(--review-primary) !important;
+    color: white !important;
+    box-shadow: var(--review-shadow-md) !important;
+}
+
+.review-btn-primary:hover {
+    background: var(--review-primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--review-shadow-lg) !important;
+}
+
+.review-btn-primary:active {
+    transform: translateY(0);
+}
+
+/* 次要按钮：导出、历史记录 - 灰色背景 */
+.review-btn-secondary {
+    background: var(--review-bg-input) !important;
+    color: var(--review-text-primary) !important;
+    border: 1px solid var(--review-border) !important;
+}
+
+.review-btn-secondary:hover {
+    background: var(--review-bg-card) !important;
+    border-color: var(--review-border-hover) !important;
+}
+
+/* 危险按钮：清空 - 橘色背景 */
+.review-btn-danger {
+    background: #f97316 !important; /* Orange-500 */
+    color: white !important;
+    border: 1px solid #ea580c !important; /* Orange-600 */
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3) !important;
+}
+
+.review-btn-danger:hover {
+    background: #ea580c !important; /* Orange-600 */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4) !important;
+}
+
+.review-btn-danger:active {
+    transform: translateY(0);
+}
+
+/* ==================== 空状态 ==================== */
+.review-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.review-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.review-empty-text {
+    font-size: 1.125rem;
+    color: var(--review-text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* ==================== 动画 ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-template {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* ==================== 滚动条美化 ==================== */
+.review-card-content textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review-card-content textarea::-webkit-scrollbar-track {
+    background: var(--review-bg-input);
+    border-radius: var(--review-radius-sm);
+}
+
+.review-card-content textarea::-webkit-scrollbar-thumb {
+    background: var(--review-border);
+    border-radius: var(--review-radius-sm);
+}
+
+.review-card-content textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--review-border-hover);
+}
+
+/* ==================== 工具提示 ==================== */
+.review-tooltip {
+    position: relative;
+}
+
+.review-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 0.5rem 0.75rem;
+    background: var(--review-text-primary);
+    color: var(--review-bg-card);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border-radius: var(--review-radius-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--review-transition);
+}
+
+.review-tooltip:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+/* ==================== 取消心情按钮 ==================== */
+.cancel-mood-btn {
+    margin-left: auto;
+    padding: 0.375rem 0.75rem;
+    background: transparent;
+    color: var(--review-text-muted);
+    border: 1px solid var(--review-border);
+    border-radius: var(--review-radius-sm);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--review-transition);
+}
+
+.cancel-mood-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* ==================== 响应式优化 ==================== */
+@media (max-width: 480px) {
+    /* 移动端恢复纵向布局 */
+    #review-view .review-card.mood-rating .review-card-content {
+        flex-direction: column !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    #review-view .mood-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: auto !important;
+        gap: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    #review-view .mood-btn {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 1.375rem !important;
+    }
+
+    #review-view .mood-text {
+        font-size: 0.625rem !important;
+    }
+
+    /* 移动端评分区域 */
+    #review-view .rating-section {
+        border-left: none !important;
+        border-top: 1px solid var(--review-border) !important;
+        padding-left: 0 !important;
+        padding-top: 0.5rem !important;
+        width: 100% !important;
+        min-width: auto !important;
+    }
+
+    #review-view .review-card {
+        padding: 1rem !important;
+        height: 260px !important; /* 移动端固定高度 */
+        min-height: 260px !important;
+        max-height: 260px !important;
+    }
+
+    #review-view .review-card-content textarea {
+        height: 130px !important;
+        min-height: 90px !important;
+        padding: 0.75rem !important;
+        resize: none !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+        display: block !important;
+    }
+
+    #review-view .review-card.mood-rating {
+        height: 280px !important; /* 心情卡片稍高以容纳横向布局 */
+        min-height: 280px !important;
+        max-height: 280px !important;
+    }
+}
+
+/* ==================== 终极修复：强制启用 Textarea Resize ==================== */
+/* 使用最高优先级的选择器，包括 ID 选择器 */
+#review-view #daily-achievements,
+#review-view #daily-reflections,
+#review-view #daily-learnings,
+#review-view #daily-gratitude,
+#review-view #daily-tomorrow-plan,
+#review-view #weekly-goals,
+#review-view #weekly-efficiency,
+#review-view #weekly-time,
+#review-view #weekly-highlights,
+#review-view #weekly-improvements,
+#review-view #weekly-relationships,
+#review-view #weekly-achievements,
+#review-view #weekly-reflections,
+#review-view #weekly-learnings,
+#review-view #weekly-gratitude,
+#review-view #weekly-tomorrow-plan,
+#review-view #monthly-goals,
+#review-view #monthly-growth,
+#review-view #monthly-analytics,
+#review-view #monthly-lessons,
+#review-view #monthly-improvements,
+#review-view #monthly-next-plan,
+#review-view #monthly-achievements,
+#review-view #monthly-reflections,
+#review-view #monthly-learnings,
+#review-view #monthly-gratitude,
+#review-view #monthly-tomorrow-plan,
+#review-view #yearly-achievements,
+#review-view #yearly-growth,
+#review-view #yearly-skills,
+#review-view #yearly-memories,
+#review-view #yearly-challenges,
+#review-view #yearly-next-goals,
+#review-view #yearly-reflections,
+#review-view #yearly-learnings,
+#review-view #yearly-gratitude,
+#review-view #yearly-tomorrow-plan {
+    resize: none !important;
+    height: 140px !important;
+    min-height: 90px !important;
+    max-height: none !important;
+    max-width: none !important;
+    min-width: 200px !important;
+    overflow: auto !important;
+    display: inline-block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0.75rem !important;
+    margin: 0 !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+    transition: none !important;
+}

@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恢复数据 - 象限时光</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .restore-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .restore-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .restore-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #e53e3e, #c53030, #e53e3e);
+            z-index: 1;
+        }
+        
+        .restore-header {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .restore-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+        }
+        
+        .restore-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0 0 1.5rem 0;
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.3);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        /* 最高优先级覆盖外部CSS */
+        .restore-page .restore-header h1,
+        .restore-container .restore-header h1,
+        .restore-page h1,
+        .restore-container h1 {
+            color: #ffffff !important;
+            background: rgba(0,0,0,0.3) !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            background-clip: unset !important;
+            padding: 1rem 2rem !important;
+            border-radius: 12px !important;
+            display: inline-block !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8) !important;
+        }
+        
+        .restore-header p {
+            font-size: 1.3rem;
+            color: #ffffff !important;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            opacity: 0.95;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            min-width: 48px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-2px);
+        }
+        
+        .restore-content {
+            padding: 2rem;
+        }
+        
+        .warning-section {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border: 3px solid #ff6b6b;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 32px rgba(255, 107, 107, 0.2);
+        }
+        
+        .warning-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            animation: warningPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.2; }
+            50% { transform: scale(1.05) rotate(90deg); opacity: 0.1; }
+        }
+        
+        .warning-icon {
+            font-size: 3.5rem;
+            color: #e53e3e;
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 2;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .warning-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #c53030;
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .warning-text {
+            color: #742a2a;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .restore-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 0 0.5rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 2rem 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e53e3e, #c53030);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #e53e3e;
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.6rem;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .restore-form {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .form-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #e53e3e;
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.05) 0%, rgba(197, 48, 48, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #c53030;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            transform: scale(1.02);
+            box-shadow: 0 16px 40px rgba(229, 62, 62, 0.2);
+        }
+        
+        .upload-area:hover::before {
+            opacity: 1;
+        }
+        
+        .upload-area.dragover {
+            border-color: #c53030;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(229, 62, 62, 0.3);
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            color: #e53e3e;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            animation: uploadFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes uploadFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .upload-hint {
+            color: #6c757d;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-info {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .file-info.show {
+            display: block;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-size {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .preview-section {
+            margin-top: 2rem;
+        }
+        
+        .preview-content {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+        
+        .restore-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.8rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            box-shadow: 0 8px 32px rgba(229, 62, 62, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 16px 48px rgba(229, 62, 62, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #e53e3e;
+            border: 2px solid #e53e3e;
+            box-shadow: 0 8px 32px rgba(229, 62, 62, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 16px 48px rgba(229, 62, 62, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border: 2px solid #68d391;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            color: #38a169;
+            margin-bottom: 1rem;
+        }
+        
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2f855a;
+                margin-bottom: 1rem;
+            }
+            
+        .success-text {
+            color: #22543d;
+            line-height: 1.6;
+        }
+        
+        /* 周期管理样式 */
+        .cycle-management {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cycle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cycle-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cycle-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .cycle-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .cycle-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .cycle-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cycle-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .cycle-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        /* 备份管理样式 */
+        .backup-management {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        
+        .backup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .backup-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .backup-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .backup-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .backup-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .backup-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+        
+        .backup-item.expired {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        }
+        
+        .backup-item.expiring {
+            border-color: #ffa726;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        }
+        
+        .backup-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .backup-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .backup-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .backup-details h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .backup-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .backup-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .backup-status.valid {
+            color: #4caf50;
+        }
+        
+        .backup-status.expiring {
+            color: #ff9800;
+        }
+        
+        .backup-status.expired {
+            color: #f44336;
+        }
+        
+        .backup-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+        }
+        
+        .backup-stat-item {
+            text-align: center;
+        }
+        
+        .backup-stat-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.25rem;
+        }
+        
+        .backup-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .backup-actions-item {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .backup-action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .backup-action-btn.download {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+        
+        .backup-action-btn.restore {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+        
+        .backup-action-btn.delete {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        .backup-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .restore-page {
+                padding: 1rem 0.5rem;
+            }
+            
+            .restore-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .restore-header h1 {
+                font-size: 2.5rem;
+                color: #ffffff !important;
+                background: rgba(0,0,0,0.3) !important;
+                -webkit-background-clip: unset !important;
+                -webkit-text-fill-color: #ffffff !important;
+                background-clip: unset !important;
+                padding: 0.8rem 1.5rem !important;
+                border-radius: 12px !important;
+                display: inline-block !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.8) !important;
+            }
+            
+            .back-btn {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            
+            .restore-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .warning-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .warning-icon {
+                font-size: 3rem;
+            }
+            
+            .warning-title {
+                font-size: 1.5rem;
+            }
+            
+            .restore-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .cycle-details {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .cycle-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .backup-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .backup-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .upload-area {
+                padding: 3rem 2rem;
+            }
+            
+            .upload-icon {
+                font-size: 3rem;
+            }
+            
+            .restore-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .restore-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="restore-page">
+    <div class="restore-container">
+            <div class="restore-header">
+            <button class="back-btn" data-restore-action="back" title="返回主页">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h1 style="color: #ffffff !important;">恢复数据</h1>
+                <p>从备份文件恢复您的任务数据</p>
+            </div>
+            
+            <div class="restore-content">
+                <div class="warning-section">
+                    <div class="warning-icon">
+                        <span class="material-icons">warning</span>
+                    </div>
+                    <div class="warning-title">⚠️ 重要警告</div>
+                    <div class="warning-text">
+                        恢复数据将覆盖当前的所有任务数据，此操作不可撤销！<br>
+                        请确保您已经备份了当前数据，或者确定要替换现有数据。
+                    </div>
+                </div>
+                
+                <!-- 当前数据统计 -->
+                <div class="restore-stats">
+                        <div class="stat-card">
+                        <div class="stat-number" id="current-tasks">0</div>
+                        <div class="stat-label">当前任务数</div>
+                        </div>
+                        <div class="stat-card">
+                        <div class="stat-number" id="current-completed">0</div>
+                        <div class="stat-label">已完成</div>
+                        </div>
+                        <div class="stat-card">
+                        <div class="stat-number" id="current-pending">0</div>
+                        <div class="stat-label">待完成</div>
+                        </div>
+                        <div class="stat-card">
+                        <div class="stat-number" id="current-pinned">0</div>
+                        <div class="stat-label">已置顶</div>
+                    </div>
+                </div>
+
+                <!-- 周期管理信息 -->
+                <div class="cycle-management">
+                    <div class="cycle-header">
+                        <h3>
+                            <span class="material-icons">schedule</span>
+                            备份周期管理
+                        </h3>
+                        <div class="cycle-info">
+                            <div class="cycle-status" id="cycle-status">
+                                <span class="material-icons">info</span>
+                                <span>正在加载周期信息...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cycle-details">
+                        <div class="cycle-item">
+                            <div class="cycle-label">当前周期</div>
+                            <div class="cycle-value" id="current-cycle">-</div>
+                        </div>
+                        <div class="cycle-item">
+                            <div class="cycle-label">下次清理</div>
+                            <div class="cycle-value" id="next-cleanup">-</div>
+                        </div>
+                        <div class="cycle-item">
+                            <div class="cycle-label">备份数量</div>
+                            <div class="cycle-value" id="backup-count">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 备份管理区域 -->
+                <div class="backup-management">
+                    <div class="backup-header">
+                        <h3>
+                            <span class="material-icons">backup</span>
+                            备份管理
+                        </h3>
+                        <div class="backup-actions">
+                    <button class="btn btn-secondary" data-restore-action="manual-backup">
+                                <span class="material-icons">add</span>
+                                创建备份
+                            </button>
+                    <button class="btn btn-secondary" data-restore-action="cleanup">
+                                <span class="material-icons">delete_sweep</span>
+                                清理过期
+                            </button>
+                    <button class="btn btn-secondary" data-restore-action="new-cycle">
+                                <span class="material-icons">refresh</span>
+                                开始新周期
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-list" id="backup-list">
+                        <!-- 备份列表将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <div class="restore-form">
+                    <div class="form-section">
+                        <h3>
+                            <span class="material-icons">cloud_upload</span>
+                            选择备份文件
+                        </h3>
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-icon">
+                                <span class="material-icons">cloud_upload</span>
+                    </div>
+                            <div class="upload-text">点击选择文件或拖拽文件到此处</div>
+                            <div class="upload-hint">支持 JSON、CSV、TXT 格式的备份文件</div>
+                            <input type="file" id="file-input" class="file-input" accept=".json,.csv,.txt">
+                            </div>
+                        
+                        <div class="file-info" id="file-info">
+                            <div class="file-name" id="file-name"></div>
+                            <div class="file-size" id="file-size"></div>
+                            </div>
+                            </div>
+                    
+                    <div class="form-section preview-section">
+                        <h3>
+                            <span class="material-icons">preview</span>
+                            数据预览
+                        </h3>
+                        <div class="preview-content" id="preview-content">
+                            请选择备份文件查看预览...
+                    </div>
+                </div>
+
+                    <div class="restore-actions">
+                    <button class="btn btn-secondary" data-restore-action="clear-file">
+                            <span class="material-icons">clear</span>
+                            清除文件
+                        </button>
+                    <button class="btn btn-primary" data-restore-action="restore" id="restore-btn" disabled>
+                            <span class="material-icons">restore</span>
+                            开始恢复
+                        </button>
+                    </div>
+                        </div>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>正在恢复数据，请稍候...</p>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    <div class="success-icon">
+                        <span class="material-icons">check_circle</span>
+                            </div>
+                    <div class="success-title">✅ 恢复成功</div>
+                    <div class="success-text">
+                        数据已成功恢复到系统中！<br>
+                        您可以返回主页查看恢复的任务数据。
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n-auto.js?v=1.0.6"></script>
+    <script>
+        let currentTasks = [];
+        let selectedFile = null;
+        let fileData = null;
+        let backups = [];
+        
+        // 数据同步节流控制
+        let lastDataSyncTime = 0;
+        const DATA_SYNC_THROTTLE = 2000; // 2秒内最多同步一次
+        
+        document.addEventListener('click', function (event) {
+            const button = event.target.closest('[data-restore-action]');
+            if (!button) return;
+
+            const action = button.dataset.restoreAction;
+            const backupId = button.dataset.backupId;
+            if (action === 'back') goBack();
+            else if (action === 'manual-backup') createManualBackup();
+            else if (action === 'cleanup') cleanupExpiredBackups();
+            else if (action === 'new-cycle') startNewCycle();
+            else if (action === 'clear-file') clearFile();
+            else if (action === 'restore') restoreData();
+            else if (action === 'download-backup') downloadBackup(backupId);
+            else if (action === 'restore-backup') restoreFromBackup(backupId);
+            else if (action === 'delete-backup') deleteBackup(backupId);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentTasks();
+            updateStats();
+            initUploadArea();
+            initTheme();
+            loadBackups();
+            
+            // 确保备份数据与当前任务数据同步
+            ensureBackupDataSync();
+            
+            renderBackupList();
+            updateCycleInfo();
+            // 设置自动备份检查
+            checkAutoBackup();
+            
+            // 设置数据同步监听
+            setupDataSync();
+            
+            // 检查URL参数，如果有数据参数则自动填充
+            checkURLParameters();
+        });
+        
+        function loadCurrentTasks() {
+            try {
+                // 首先检查用户会话
+                const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                
+                if (userSession) {
+                    try {
+                        const parsedSession = JSON.parse(userSession);
+                        if (parsedSession.user) {
+                            currentUser = parsedSession.user;
+                            console.log('使用新格式用户数据');
+                        } else if (parsedSession.id) {
+                            currentUser = parsedSession;
+                            console.log('使用旧格式用户数据');
+                        }
+                        console.log('当前用户:', currentUser?.username);
+                    } catch (e) {
+                        console.error('解析用户会话失败:', e);
+                    }
+                }
+                
+                // 根据用户ID构建存储键
+                let storageKey = 'tasks';
+                if (currentUser && currentUser.id) {
+                    storageKey = `tasks_${currentUser.id}`;
+                    console.log('使用用户特定存储键:', storageKey);
+                } else {
+                    console.log('未找到用户会话，使用默认存储键: tasks');
+                }
+                
+                const tasksData = localStorage.getItem(storageKey);
+                if (tasksData) {
+                    currentTasks = JSON.parse(tasksData);
+                    console.log('已加载当前任务数据:', currentTasks.length, '个任务');
+        } else {
+                    currentTasks = [];
+                    console.log('未找到当前任务数据，存储键:', storageKey);
+                }
+            } catch (error) {
+                console.error('加载当前任务数据失败:', error);
+                currentTasks = [];
+            }
+        }
+        
+        function updateStats() {
+            const total = currentTasks.length;
+            const completed = currentTasks.filter(task => task.completed).length;
+            const pending = total - completed;
+            const pinned = currentTasks.filter(task => task.pinned).length;
+            
+            document.getElementById('current-tasks').textContent = total;
+            document.getElementById('current-completed').textContent = completed;
+            document.getElementById('current-pending').textContent = pending;
+            document.getElementById('current-pinned').textContent = pinned;
+        }
+        
+        function initUploadArea() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            
+            // 点击上传区域
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // 文件选择
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // 拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+        
+        function handleFile(file) {
+            selectedFile = file;
+            
+            // 显示文件信息
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.classList.add('show');
+            
+            // 读取文件内容
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    fileData = parseFileContent(content, file.name);
+                    updatePreview();
+                    document.getElementById('restore-btn').disabled = false;
+                } catch (error) {
+                    console.error('解析文件失败:', error);
+                    showNotification('文件格式不正确，请选择有效的备份文件', 'error');
+                    clearFile();
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function parseFileContent(content, fileName) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            
+            switch (extension) {
+                case 'json':
+                    return JSON.parse(content);
+                case 'csv':
+                    return parseCSV(content);
+                case 'txt':
+                    try {
+                        return JSON.parse(content);
+                    } catch {
+                        return parseTextFile(content);
+                    }
+                default:
+                    throw new Error('不支持的文件格式');
+            }
+        }
+        
+        function parseCSV(content) {
+            const lines = content.split('\n');
+            const tasks = [];
+            
+            // 跳过标题行
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line) {
+                    const columns = line.split(',');
+                    if (columns.length >= 3) {
+                        const task = {
+                            id: Date.now() + i,
+                            title: columns[0].replace(/"/g, ''),
+                            priority: columns[1] || 2,
+                            completed: columns[2] === '已完成',
+                            createdAt: new Date().toISOString(),
+                            notes: columns[3] ? columns[3].replace(/"/g, '') : ''
+                        };
+                        tasks.push(task);
+                    }
+                }
+            }
+            
+            return tasks;
+        }
+        
+        function parseTextFile(content) {
+            const lines = content.split('\n');
+            const tasks = [];
+            
+            lines.forEach((line, index) => {
+                const trimmedLine = line.trim();
+                if (trimmedLine) {
+                    const task = {
+                        id: Date.now() + index,
+                        title: trimmedLine,
+                        priority: 2,
+                        completed: false,
+                        createdAt: new Date().toISOString(),
+                        notes: ''
+                    };
+                    tasks.push(task);
+                }
+            });
+            
+            return tasks;
+        }
+        
+        function updatePreview() {
+            const previewContent = document.getElementById('preview-content');
+            
+            if (!fileData) {
+                previewContent.textContent = '请选择备份文件查看预览...';
+                return;
+            }
+
+            let preview = '';
+            if (Array.isArray(fileData)) {
+                preview = `备份文件包含 ${fileData.length} 个任务：\n\n`;
+                fileData.forEach((task, index) => {
+                    preview += `${index + 1}. ${task.title}\n`;
+                    preview += `   优先级: ${task.priority || '中'}\n`;
+                    preview += `   状态: ${task.completed ? '已完成' : '待完成'}\n`;
+                    if (task.notes) {
+                        preview += `   备注: ${task.notes}\n`;
+                    }
+                    preview += '\n';
+                });
+            } else if (fileData.tasks && Array.isArray(fileData.tasks)) {
+                preview = `备份文件包含 ${fileData.tasks.length} 个任务：\n\n`;
+                fileData.tasks.forEach((task, index) => {
+                    preview += `${index + 1}. ${task.title}\n`;
+                    preview += `   优先级: ${task.priority || '中'}\n`;
+                    preview += `   状态: ${task.completed ? '已完成' : '待完成'}\n`;
+                    if (task.notes) {
+                        preview += `   备注: ${task.notes}\n`;
+                    }
+                    preview += '\n';
+                });
+                } else {
+                preview = '无法解析备份文件内容';
+            }
+            
+            previewContent.textContent = preview;
+        }
+        
+        function clearFile() {
+            selectedFile = null;
+            fileData = null;
+            
+            document.getElementById('file-input').value = '';
+            document.getElementById('file-info').classList.remove('show');
+            document.getElementById('restore-btn').disabled = true;
+            document.getElementById('preview-content').textContent = '请选择备份文件查看预览...';
+        }
+        
+        function restoreData() {
+            if (!fileData) {
+                showNotification('请先选择备份文件', 'error');
+                return;
+            }
+            
+            const restoreBtn = document.getElementById('restore-btn');
+            const loading = document.getElementById('loading');
+            
+            restoreBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            setTimeout(() => {
+                try {
+                    let tasksToRestore = [];
+                    
+                    if (Array.isArray(fileData)) {
+                        tasksToRestore = fileData;
+                    } else if (fileData.tasks && Array.isArray(fileData.tasks)) {
+                        tasksToRestore = fileData.tasks;
+                    } else {
+                        throw new Error('备份文件格式不正确');
+                    }
+                    
+                    // 获取当前用户并构建正确的存储键
+                    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                    let currentUser = null;
+                    
+                    if (userSession) {
+                        try {
+                            const parsedSession = JSON.parse(userSession);
+                            if (parsedSession.user) {
+                                currentUser = parsedSession.user;
+                            } else if (parsedSession.id) {
+                                currentUser = parsedSession;
+                            }
+                        } catch (e) {
+                            console.error('解析用户会话失败:', e);
+                        }
+                    }
+                    
+                    // 根据用户ID构建存储键
+                    let storageKey = 'tasks';
+                    if (currentUser && currentUser.id) {
+                        storageKey = `tasks_${currentUser.id}`;
+                    }
+                    
+                    // 保存恢复的数据
+                    localStorage.setItem(storageKey, JSON.stringify(tasksToRestore));
+                    console.log('数据已恢复到存储键:', storageKey);
+                    
+                    // 更新当前任务数据
+                    currentTasks = tasksToRestore;
+                    updateStats();
+                    
+                    // 显示成功消息
+                    loading.style.display = 'none';
+                    document.getElementById('success-message').classList.add('show');
+                    
+                    showNotification('数据恢复成功！', 'success');
+                    
+                    } catch (error) {
+                        console.error('恢复数据失败:', error);
+                    showNotification('恢复数据失败，请检查文件格式', 'error');
+                } finally {
+                    restoreBtn.disabled = false;
+                    loading.style.display = 'none';
+                }
+            }, 1500);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+        
+        function goBack() {
+            try {
+                console.log('尝试返回...');
+                // 尝试多种返回方式
+                if (window.history.length > 1) {
+                    console.log('使用浏览器历史返回');
+                    window.history.back();
+                } else {
+                    console.log('直接跳转到主页');
+                        window.location.href = 'index.html';
+                }
+                    } catch (error) {
+                console.error('返回失败:', error);
+                // 备用方案
+                console.log('使用备用方案跳转');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 确保页面加载完成后强制设置标题颜色
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.querySelector('.back-btn');
+            const titleH1 = document.querySelector('.restore-header h1');
+            
+            if (backBtn) {
+                // 移除内联事件，使用addEventListener
+                backBtn.removeAttribute('onclick');
+                backBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('返回按钮被点击');
+                    goBack();
+                });
+                
+                // 添加键盘支持
+                backBtn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        goBack();
+                    }
+                });
+                
+                console.log('返回按钮事件已绑定');
+            } else {
+                console.error('未找到返回按钮');
+            }
+            
+            // 强制设置标题颜色
+            if (titleH1) {
+                titleH1.style.color = '#ffffff';
+                titleH1.style.webkitTextFillColor = '#ffffff';
+                titleH1.style.background = 'rgba(0,0,0,0.3)';
+                titleH1.style.webkitBackgroundClip = 'unset';
+                titleH1.style.backgroundClip = 'unset';
+                titleH1.style.padding = '1rem 2rem';
+                titleH1.style.borderRadius = '12px';
+                titleH1.style.display = 'inline-block';
+                titleH1.style.textShadow = '0 2px 4px rgba(0,0,0,0.8)';
+                console.log('标题颜色已强制设置为白色');
+            }
+        });
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+        
+        // ==================== 备份管理功能 ====================
+        
+        // 加载备份数据
+        function loadBackups() {
+            try {
+                // 获取当前用户
+                const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                
+                if (userSession) {
+                    try {
+                        currentUser = JSON.parse(userSession);
+                    } catch (e) {
+                        console.error('解析用户会话失败:', e);
+                    }
+                }
+                
+                // 根据用户ID构建备份存储键
+                let backupKey = 'taskBackups';
+                if (currentUser && currentUser.id) {
+                    backupKey = `taskBackups_${currentUser.id}`;
+                }
+                
+                const backupsData = localStorage.getItem(backupKey);
+                if (backupsData) {
+                    backups = JSON.parse(backupsData);
+                    console.log('已加载备份数据:', backups.length, '个备份，存储键:', backupKey);
+                } else {
+                    backups = [];
+                    console.log('未找到备份数据，存储键:', backupKey);
+                }
+            } catch (error) {
+                console.error('加载备份数据失败:', error);
+                backups = [];
+            }
+        }
+        
+        // 保存备份数据
+        function saveBackups() {
+            try {
+                // 获取当前用户
+                const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                
+                if (userSession) {
+                    try {
+                        currentUser = JSON.parse(userSession);
+                    } catch (e) {
+                        console.error('解析用户会话失败:', e);
+                    }
+                }
+                
+                // 根据用户ID构建备份存储键
+                let backupKey = 'taskBackups';
+                if (currentUser && currentUser.id) {
+                    backupKey = `taskBackups_${currentUser.id}`;
+                }
+                
+                localStorage.setItem(backupKey, JSON.stringify(backups));
+                console.log('备份数据已保存，存储键:', backupKey);
+            } catch (error) {
+                console.error('保存备份数据失败:', error);
+            }
+        }
+        
+        // 创建备份
+        function createBackup(isManual = false) {
+            if (!currentTasks || currentTasks.length === 0) {
+                showNotification('没有任务数据可以备份', 'warning');
+                return;
+            }
+            
+            const now = new Date();
+            const backup = {
+                id: 'backup_' + now.getTime(),
+                createdAt: now.toISOString(),
+                tasks: JSON.parse(JSON.stringify(currentTasks)), // 深拷贝
+                totalTasks: currentTasks.length,
+                completedTasks: currentTasks.filter(task => task.completed).length,
+                pendingTasks: currentTasks.filter(task => !task.completed).length,
+                pinnedTasks: currentTasks.filter(task => task.pinned).length,
+                isManual: isManual,
+                expiresAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7天后过期
+            };
+            
+            backups.unshift(backup); // 添加到开头
+            
+            // 限制备份数量（最多保留7个）
+            if (backups.length > 7) {
+                backups = backups.slice(0, 7);
+            }
+            
+            saveBackups();
+            renderBackupList();
+            updateCycleInfo();
+            
+            const message = isManual ? '手动备份创建成功！' : '自动备份创建成功！';
+            showNotification(message, 'success');
+        }
+        
+        // 智能更新备份数据
+        function smartUpdateBackup() {
+            if (!currentTasks || currentTasks.length === 0) return false;
+            
+            const now = new Date();
+            let backupUpdated = false;
+            
+            // 检查是否有最新的备份需要更新
+            if (backups.length > 0) {
+                const latestBackup = backups[0];
+                const backupTime = new Date(latestBackup.createdAt);
+                
+                // 如果最新备份是今天创建的，则更新它（包括手动和自动备份）
+                if (backupTime.toDateString() === now.toDateString()) {
+                    console.log('更新今日备份数据');
+                    
+                    // 更新备份数据
+                    latestBackup.tasks = JSON.parse(JSON.stringify(currentTasks));
+                    latestBackup.totalTasks = currentTasks.length;
+                    latestBackup.completedTasks = currentTasks.filter(task => task.completed).length;
+                    latestBackup.pendingTasks = currentTasks.filter(task => !task.completed).length;
+                    latestBackup.pinnedTasks = currentTasks.filter(task => task.pinned).length;
+                    latestBackup.updatedAt = now.toISOString();
+                    
+                    backupUpdated = true;
+                }
+            } else {
+                // 如果没有备份，自动创建一个
+                console.log('没有备份数据，自动创建备份');
+                createBackup(false);
+                backupUpdated = true;
+            }
+            
+            if (backupUpdated) {
+                // 保存更新
+                saveBackups();
+                renderBackupList();
+                updateCycleInfo();
+                console.log('备份数据已智能更新');
+            }
+            
+            return backupUpdated;
+        }
+        
+        // 手动创建备份
+        function createManualBackup() {
+            createBackup(true);
+        }
+        
+        // 检查自动备份和周期管理
+        function checkAutoBackup() {
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastBackupWeek = localStorage.getItem('lastAutoBackupWeek');
+            const lastBackupTime = localStorage.getItem('lastAutoBackupTime');
+            
+            console.log('当前周数:', currentWeek, '上次备份周数:', lastBackupWeek);
+            
+            // 检查是否需要开始新的备份周期（每周日23:59）
+            if (shouldStartNewCycle(now)) {
+                console.log('开始新的备份周期');
+                startNewBackupCycle();
+                return;
+            }
+            
+            // 检查是否需要创建自动备份
+            if (!lastBackupWeek || lastBackupWeek !== currentWeek.toString()) {
+                // 本周还没有创建自动备份
+                createBackup(false);
+                localStorage.setItem('lastAutoBackupWeek', currentWeek.toString());
+                localStorage.setItem('lastAutoBackupTime', now.toISOString());
+                console.log('创建本周自动备份');
+            }
+        }
+        
+        // 获取周数
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+        
+        // 检查是否应该开始新周期（每周日23:59）
+        function shouldStartNewCycle(now) {
+            const dayOfWeek = now.getDay(); // 0=周日, 1=周一, ..., 6=周六
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            
+            // 检查是否是周日23:59
+            if (dayOfWeek === 0 && hour === 23 && minute >= 59) {
+                return true;
+            }
+            
+            // 检查是否已经过了周日23:59，但还没有开始新周期
+            const lastCycleStart = localStorage.getItem('lastCycleStart');
+            if (lastCycleStart) {
+                const lastCycleDate = new Date(lastCycleStart);
+                const daysSinceLastCycle = Math.floor((now - lastCycleDate) / (1000 * 60 * 60 * 24));
+                return daysSinceLastCycle >= 7; // 超过7天，开始新周期
+            }
+            
+            return false;
+        }
+        
+        // 开始新的备份周期
+        function startNewBackupCycle() {
+            try {
+                // 清理所有旧备份
+                backups = [];
+                saveBackups();
+                
+                // 记录新周期开始时间
+                const now = new Date();
+                localStorage.setItem('lastCycleStart', now.toISOString());
+                localStorage.removeItem('lastAutoBackupWeek');
+                localStorage.removeItem('lastAutoBackupTime');
+                
+                // 创建新周期的第一个备份
+                if (currentTasks && currentTasks.length > 0) {
+                    createBackup(false);
+                    console.log('新周期备份已创建');
+                }
+                
+                // 更新UI
+                renderBackupList();
+                updateStats();
+                updateCycleInfo();
+                
+                showNotification('新的备份周期已开始，旧备份已清理', 'info');
+                
+            } catch (error) {
+                console.error('开始新备份周期失败:', error);
+                showNotification('开始新备份周期失败: ' + error.message, 'error');
+            }
+        }
+        
+        // 渲染备份列表
+        function renderBackupList() {
+            const backupList = document.getElementById('backup-list');
+            if (!backupList) return;
+            
+            if (backups.length === 0) {
+                backupList.replaceChildren(createEmptyBackupListMessage());
+                return;
+            }
+            
+            backupList.replaceChildren(...backups.map(backup => {
+                const createdAt = new Date(backup.createdAt);
+                const expiresAt = new Date(backup.expiresAt);
+                const now = new Date();
+                const daysLeft = Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24));
+                
+                let statusClass = 'valid';
+                let statusText = '有效';
+                let itemClass = '';
+                
+                if (daysLeft <= 0) {
+                    statusClass = 'expired';
+                    statusText = '已过期';
+                    itemClass = 'expired';
+                } else if (daysLeft <= 2) {
+                    statusClass = 'expiring';
+                    statusText = `即将过期 (${daysLeft}天)`;
+                    itemClass = 'expiring';
+                } else {
+                    statusText = `有效 (${daysLeft}天)`;
+                }
+                
+                return createBackupListItem(backup, {
+                    createdAt,
+                    itemClass,
+                    statusClass,
+                    statusText
+                });
+            }));
+        }
+
+        function createEmptyBackupListMessage() {
+            const message = document.createElement('div');
+            message.style.cssText = 'text-align: center; padding: 2rem; color: #666;';
+            const icon = document.createElement('span');
+            icon.className = 'material-icons';
+            icon.style.cssText = 'font-size: 48px; margin-bottom: 1rem; display: block;';
+            icon.textContent = 'backup';
+            const title = document.createElement('p');
+            title.textContent = '暂无备份数据';
+            const detail = document.createElement('p');
+            detail.style.cssText = 'font-size: 14px; margin-top: 0.5rem;';
+            detail.textContent = '系统会自动创建备份，您也可以手动创建';
+            message.append(icon, title, detail);
+            return message;
+        }
+
+        function createBackupListItem(backup, state) {
+            const item = document.createElement('div');
+            item.className = `backup-item ${state.itemClass}`.trim();
+
+            const header = document.createElement('div');
+            header.className = 'backup-item-header';
+            const info = document.createElement('div');
+            info.className = 'backup-info';
+            const iconWrap = document.createElement('div');
+            iconWrap.className = 'backup-icon';
+            iconWrap.appendChild(createMaterialIcon(backup.isManual ? 'backup' : 'schedule'));
+            const details = document.createElement('div');
+            details.className = 'backup-details';
+            const title = document.createElement('h4');
+            title.textContent = backup.isManual ? '手动备份' : '自动备份';
+            const meta = document.createElement('div');
+            meta.className = 'backup-meta';
+            meta.textContent = `创建时间: ${state.createdAt.toLocaleString()}`;
+            details.append(title, meta);
+            info.append(iconWrap, details);
+
+            const status = document.createElement('div');
+            status.className = `backup-status ${state.statusClass}`;
+            status.append(createMaterialIcon(state.statusClass === 'valid' ? 'check_circle' : state.statusClass === 'expiring' ? 'schedule' : 'error'), document.createTextNode(state.statusText));
+            header.append(info, status);
+
+            const stats = document.createElement('div');
+            stats.className = 'backup-stats';
+            [
+                [backup.totalTasks, '总任务'],
+                [backup.completedTasks, '已完成'],
+                [backup.pendingTasks, '待完成'],
+                [backup.pinnedTasks, '已置顶']
+            ].forEach(([value, label]) => stats.appendChild(createBackupStat(value, label)));
+
+            const actions = document.createElement('div');
+            actions.className = 'backup-actions-item';
+            actions.append(
+                createBackupActionButton('download', 'download-backup', backup.id, 'download', '下载'),
+                createBackupActionButton('restore', 'restore-backup', backup.id, 'restore', '恢复'),
+                createBackupActionButton('delete', 'delete-backup', backup.id, 'delete', '删除')
+            );
+
+            item.append(header, stats, actions);
+            return item;
+        }
+
+        function createBackupStat(value, label) {
+            const item = document.createElement('div');
+            item.className = 'backup-stat-item';
+            const number = document.createElement('div');
+            number.className = 'backup-stat-number';
+            number.textContent = String(value ?? 0);
+            const text = document.createElement('div');
+            text.className = 'backup-stat-label';
+            text.textContent = label;
+            item.append(number, text);
+            return item;
+        }
+
+        function createBackupActionButton(extraClass, action, backupId, iconName, label) {
+            const button = document.createElement('button');
+            button.className = `backup-action-btn ${extraClass}`;
+            button.dataset.restoreAction = action;
+            button.dataset.backupId = backupId;
+            button.append(createMaterialIcon(iconName), document.createTextNode(label));
+            return button;
+        }
+
+        function createMaterialIcon(name) {
+            const icon = document.createElement('span');
+            icon.className = 'material-icons';
+            icon.textContent = name;
+            return icon;
+        }
+        
+        // 下载备份
+        function downloadBackup(backupId) {
+            const backup = backups.find(b => b.id === backupId);
+            if (!backup) {
+                showNotification('备份不存在', 'error');
+                return;
+            }
+            
+            const backupData = {
+                version: '1.0',
+                createdAt: backup.createdAt,
+                tasks: backup.tasks,
+                metadata: {
+                    totalTasks: backup.totalTasks,
+                    completedTasks: backup.completedTasks,
+                    pendingTasks: backup.pendingTasks,
+                    pinnedTasks: backup.pinnedTasks,
+                    isManual: backup.isManual
+                }
+            };
+            
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `象限时光备份_${new Date(backup.createdAt).toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showNotification('备份下载成功！', 'success');
+        }
+        
+        // 从备份恢复
+        function restoreFromBackup(backupId) {
+            const backup = backups.find(b => b.id === backupId);
+            if (!backup) {
+                showNotification('备份不存在', 'error');
+                return;
+            }
+            
+            if (confirm(`确定要从备份恢复数据吗？\n\n备份时间: ${new Date(backup.createdAt).toLocaleString()}\n任务数量: ${backup.totalTasks}\n\n这将覆盖当前的所有任务数据！`)) {
+                try {
+                    // 获取当前用户并构建正确的存储键
+                    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                    let currentUser = null;
+                    
+                    if (userSession) {
+                        try {
+                            const parsedSession = JSON.parse(userSession);
+                            if (parsedSession.user) {
+                                currentUser = parsedSession.user;
+                            } else if (parsedSession.id) {
+                                currentUser = parsedSession;
+                            }
+                        } catch (e) {
+                            console.error('解析用户会话失败:', e);
+                        }
+                    }
+                    
+                    // 根据用户ID构建存储键
+                    let storageKey = 'tasks';
+                    if (currentUser && currentUser.id) {
+                        storageKey = `tasks_${currentUser.id}`;
+                    }
+                    
+                    // 恢复任务数据
+                    localStorage.setItem(storageKey, JSON.stringify(backup.tasks));
+                    console.log('从备份恢复数据到存储键:', storageKey);
+                    
+                    // 更新当前任务数据
+                    currentTasks = backup.tasks;
+                    updateStats();
+                    
+                    showNotification('数据恢复成功！', 'success');
+                    
+                    // 延迟跳转回主页
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('恢复数据失败:', error);
+                    showNotification('恢复数据失败: ' + error.message, 'error');
+                }
+            }
+        }
+        
+        // 删除备份
+        function deleteBackup(backupId) {
+            const backup = backups.find(b => b.id === backupId);
+            if (!backup) {
+                showNotification('备份不存在', 'error');
+                return;
+            }
+            
+            if (confirm(`确定要删除这个备份吗？\n\n备份时间: ${new Date(backup.createdAt).toLocaleString()}\n任务数量: ${backup.totalTasks}\n\n删除后无法恢复！`)) {
+                backups = backups.filter(b => b.id !== backupId);
+                saveBackups();
+                renderBackupList();
+                showNotification('备份已删除', 'success');
+            }
+        }
+        
+        // 清理过期备份
+        function cleanupExpiredBackups() {
+            const now = new Date();
+            const expiredBackups = backups.filter(backup => new Date(backup.expiresAt) <= now);
+            
+            if (expiredBackups.length === 0) {
+                showNotification('没有过期的备份需要清理', 'info');
+                return;
+            }
+            
+            if (confirm(`发现 ${expiredBackups.length} 个过期备份，确定要清理吗？\n\n清理后无法恢复！`)) {
+                backups = backups.filter(backup => new Date(backup.expiresAt) > now);
+                saveBackups();
+                renderBackupList();
+                updateCycleInfo();
+                showNotification(`已清理 ${expiredBackups.length} 个过期备份`, 'success');
+            }
+        }
+        
+        // 更新周期信息
+        function updateCycleInfo() {
+            const now = new Date();
+            const currentWeek = getWeekNumber(now);
+            const lastCycleStart = localStorage.getItem('lastCycleStart');
+            const backupCount = backups.length;
+            
+            // 更新当前周期
+            document.getElementById('current-cycle').textContent = `第${currentWeek}周`;
+            
+            // 基于备份计算下次清理时间
+            let nextCleanupTime = '';
+            if (backups.length > 0) {
+                // 找到最早过期的备份
+                const now = new Date();
+                let earliestExpireTime = null;
+                
+                backups.forEach(backup => {
+                    const expireTime = new Date(backup.expiresAt);
+                    if (expireTime > now) { // 只考虑未过期的备份
+                        if (!earliestExpireTime || expireTime < earliestExpireTime) {
+                            earliestExpireTime = expireTime;
+                        }
+                    }
+                });
+                
+                if (earliestExpireTime) {
+                    // 计算距离过期还有多少天
+                    const daysUntilExpire = Math.ceil((earliestExpireTime - now) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysUntilExpire <= 0) {
+                        nextCleanupTime = '立即清理';
+                    } else if (daysUntilExpire === 1) {
+                        nextCleanupTime = '明天清理';
+                    } else {
+                        nextCleanupTime = `${daysUntilExpire}天后清理`;
+                    }
+                    
+                    console.log('基于最早过期备份计算清理时间:', {
+                        最早过期时间: earliestExpireTime.toLocaleString(),
+                        距离过期天数: daysUntilExpire,
+                        下次清理: nextCleanupTime
+                    });
+                } else {
+                    // 如果所有备份都已过期，显示"立即清理"
+                    nextCleanupTime = '立即清理';
+                }
+            } else {
+                // 如果没有备份，使用下周日作为默认清理时间
+                const nextSunday = getNextSunday(now);
+                nextCleanupTime = nextSunday.toLocaleDateString();
+            }
+            
+            document.getElementById('next-cleanup').textContent = nextCleanupTime;
+            
+            // 更新备份数量
+            document.getElementById('backup-count').textContent = backupCount;
+            
+            // 更新周期状态
+            const cycleStatus = document.getElementById('cycle-status');
+            if (lastCycleStart) {
+                const lastCycleDate = new Date(lastCycleStart);
+                const daysSinceLastCycle = Math.floor((now - lastCycleDate) / (1000 * 60 * 60 * 24));
+                
+                if (daysSinceLastCycle >= 7) {
+                    setCycleStatus(cycleStatus, 'warning', '需要开始新周期');
+                } else {
+                    setCycleStatus(cycleStatus, 'check_circle', '周期运行正常');
+                }
+            } else {
+                setCycleStatus(cycleStatus, 'info', '首次使用，将创建新周期');
+            }
+        }
+
+        function setCycleStatus(container, iconName, text) {
+            if (!container) return;
+            const label = document.createElement('span');
+            label.textContent = text;
+            container.replaceChildren(createMaterialIcon(iconName), label);
+        }
+        
+        // 获取下周日
+        function getNextSunday(date) {
+            const nextSunday = new Date(date);
+            const daysUntilSunday = (7 - date.getDay()) % 7;
+            if (daysUntilSunday === 0) daysUntilSunday = 7;
+            nextSunday.setDate(date.getDate() + daysUntilSunday);
+            nextSunday.setHours(23, 59, 0, 0);
+            return nextSunday;
+        }
+        
+        // 手动开始新周期
+        function startNewCycle() {
+            if (confirm('确定要开始新的备份周期吗？\n\n这将清除所有现有备份并开始新的周期！\n\n此操作不可撤销！')) {
+                startNewBackupCycle();
+            }
+        }
+        
+        // 检查URL参数
+        function checkURLParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataParam = urlParams.get('data');
+            const timeParam = urlParams.get('time');
+            const langParam = urlParams.get('lang');
+            
+            if (dataParam) {
+                try {
+                    const backupTasks = JSON.parse(decodeURIComponent(dataParam));
+                    console.log('从URL参数加载备份数据:', backupTasks.length, '个任务');
+                    
+                    // 自动填充预览
+                    fileData = backupTasks;
+                    updatePreview();
+                    document.getElementById('restore-btn').disabled = false;
+                    
+                    // 显示成功消息
+                    showNotification('已从主页加载备份数据', 'success');
+                } catch (error) {
+                    console.error('解析URL参数失败:', error);
+                    showNotification('URL参数格式错误', 'error');
+                }
+            }
+        }
+        
+        // ==================== 智能数据同步功能 ====================
+        
+        // 设置数据同步监听
+        function setupDataSync() {
+            console.log('设置智能数据同步监听器');
+            
+            // 监听localStorage变化（跨标签页同步）
+            window.addEventListener('storage', function(e) {
+                if (e.key && (e.key.startsWith('tasks') || e.key === 'userSession' || e.key === 'isLoggedIn')) {
+                    console.log('检测到localStorage变化:', e.key);
+                    handleDataChange();
+                }
+            });
+            
+            // 定期检查数据更新（每3秒检查一次）
+            setInterval(function() {
+                checkForDataUpdates();
+            }, 3000);
+            
+            // 页面可见性变化时检查数据
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    console.log('页面重新可见，检查数据更新');
+                    handleDataChange();
+                }
+            });
+            
+            // 页面获得焦点时检查数据
+            window.addEventListener('focus', function() {
+                console.log('页面获得焦点，检查数据更新');
+                handleDataChange();
+            });
+        }
+        
+        // 检查数据更新
+        function checkForDataUpdates() {
+            try {
+                // 获取当前用户
+                const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                let currentUser = null;
+                
+                if (userSession) {
+                    try {
+                        const parsedSession = JSON.parse(userSession);
+                        if (parsedSession.user) {
+                            currentUser = parsedSession.user;
+                        } else if (parsedSession.id) {
+                            currentUser = parsedSession;
+                        }
+                    } catch (e) {
+                        console.error('解析用户会话失败:', e);
+                    }
+                }
+                
+                // 构建存储键
+                let storageKey = 'tasks';
+                if (currentUser && currentUser.id) {
+                    storageKey = `tasks_${currentUser.id}`;
+                }
+                
+                // 获取当前存储的任务数据
+                const currentData = localStorage.getItem(storageKey);
+                if (currentData) {
+                    try {
+                        const storedTasks = JSON.parse(currentData);
+                        
+                        // 检查数据是否发生变化
+                        if (JSON.stringify(storedTasks) !== JSON.stringify(currentTasks)) {
+                            console.log('检测到任务数据变化，更新显示');
+                            handleDataChange();
+                        }
+                    } catch (error) {
+                        console.error('解析任务数据失败:', error);
+                    }
+                }
+            } catch (error) {
+                console.error('检查数据更新失败:', error);
+            }
+        }
+        
+        // 处理数据变化（带节流控制）
+        function handleDataChange() {
+            const now = Date.now();
+            
+            // 节流控制：避免频繁更新
+            if (now - lastDataSyncTime < DATA_SYNC_THROTTLE) {
+                console.log('数据同步被节流，跳过本次更新');
+                return;
+            }
+            
+            lastDataSyncTime = now;
+            console.log('处理数据变化，重新加载和更新');
+            
+            // 重新加载当前任务数据
+            loadCurrentTasks();
+            
+            // 更新统计信息
+            updateStats();
+            
+            // 智能备份管理 - 确保备份数据始终反映最新状态
+            ensureBackupDataSync();
+            
+            console.log('数据同步完成，备份数据已实时更新');
+        }
+        
+        // 更新备份统计信息
+        function updateBackupStats() {
+            if (backups.length === 0) return;
+            
+            // 重新计算最新备份的统计数据
+            const latestBackup = backups[0];
+            if (latestBackup && latestBackup.tasks) {
+                const backupTasks = latestBackup.tasks;
+                const total = backupTasks.length;
+                const completed = backupTasks.filter(task => task.completed).length;
+                const pending = total - completed;
+                const pinned = backupTasks.filter(task => task.pinned).length;
+                
+                // 更新备份统计
+                latestBackup.totalTasks = total;
+                latestBackup.completedTasks = completed;
+                latestBackup.pendingTasks = pending;
+                latestBackup.pinnedTasks = pinned;
+                
+                // 保存更新后的备份数据
+                saveBackups();
+                
+                // 重新渲染备份列表
+                renderBackupList();
+                
+                console.log('备份统计数据已更新:', { total, completed, pending, pinned });
+            }
+        }
+        
+        // 智能备份管理 - 确保备份数据始终反映最新状态
+        function ensureBackupDataSync() {
+            if (!currentTasks || currentTasks.length === 0) {
+                console.log('没有任务数据，跳过备份同步');
+                return;
+            }
+            
+            const now = new Date();
+            let needsUpdate = false;
+            
+            // 检查是否需要创建或更新备份
+            if (backups.length === 0) {
+                // 没有备份，创建第一个备份
+                console.log('没有备份数据，创建初始备份');
+                createBackup(false);
+                needsUpdate = true;
+            } else {
+                const latestBackup = backups[0];
+                
+                // 检查备份数据是否与当前任务数据一致
+                const currentTaskHash = JSON.stringify(currentTasks.map(task => ({
+                    id: task.id,
+                    title: task.title,
+                    completed: task.completed,
+                    pinned: task.pinned,
+                    priority: task.priority
+                })));
+                
+                const backupTaskHash = JSON.stringify(latestBackup.tasks.map(task => ({
+                    id: task.id,
+                    title: task.title,
+                    completed: task.completed,
+                    pinned: task.pinned,
+                    priority: task.priority
+                })));
+                
+                if (currentTaskHash !== backupTaskHash) {
+                    console.log('检测到任务数据变化，更新备份');
+                    
+                    // 更新最新备份的数据
+                    latestBackup.tasks = JSON.parse(JSON.stringify(currentTasks));
+                    latestBackup.totalTasks = currentTasks.length;
+                    latestBackup.completedTasks = currentTasks.filter(task => task.completed).length;
+                    latestBackup.pendingTasks = currentTasks.filter(task => !task.completed).length;
+                    latestBackup.pinnedTasks = currentTasks.filter(task => task.pinned).length;
+                    latestBackup.updatedAt = now.toISOString();
+                    
+                    needsUpdate = true;
+                }
+            }
+            
+            if (needsUpdate) {
+                // 保存更新
+                saveBackups();
+                renderBackupList();
+                updateCycleInfo();
+                console.log('备份数据已同步到最新状态');
+            }
+        }
+        
+        // 强制同步备份数据（用于确保数据一致性）
+        function forceSyncBackupData() {
+            console.log('强制同步备份数据');
+            
+            // 重新加载当前任务数据
+            loadCurrentTasks();
+            
+            // 确保备份数据同步
+            ensureBackupDataSync();
+            
+            // 更新所有显示
+            updateStats();
+            renderBackupList();
+            updateCycleInfo();
+            
+            console.log('强制同步完成');
+        }
+    </script>
+</body>
+</html>

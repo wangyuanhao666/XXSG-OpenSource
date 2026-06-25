@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - 象限时光</title>
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, 'Noto Sans SC', sans-serif;
+            background: #f0f4ff;
+            color: #1e293b;
+            line-height: 1.8;
+            padding: 2rem 1rem;
+        }
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+        .updated { color: #94a3b8; font-size: 0.85rem; margin-bottom: 2rem; }
+        h2 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: #2563eb; }
+        p, li { color: #475569; font-size: 0.92rem; }
+        ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+        li { margin-bottom: 0.3rem; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            background: rgba(37,99,235,0.08); color: #2563eb;
+            border: 1px solid rgba(37,99,235,0.2);
+            padding: 0.4rem 0.9rem; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 500; cursor: pointer;
+            margin-bottom: 1.5rem; transition: all 0.2s;
+            text-decoration: none;
+        }
+        .back-link:hover { background: #2563eb; color: #fff; }
+        @media (max-width: 640px) {
+            .legal-container { padding: 1.5rem; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-container">
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <h1>隐私政策</h1>
+        <p class="updated">最后更新：2026 年 6 月 20 日</p>
+
+        <h2>1. 信息收集</h2>
+        <p>象限时光（以下简称"本应用"）作为一款本地优先（local-first）的生产力工具，采用以下数据收集原则：</p>
+        <ul>
+            <li><strong>最小化收集</strong>：本应用仅收集您主动输入的任务数据、习惯记录、番茄钟数据等生产力信息。</li>
+            <li><strong>本地存储</strong>：所有数据默认存储在您浏览器的 localStorage 和 IndexedDB 中，不上传至任何服务器。</li>
+            <li><strong>无数据共享</strong>：本应用不会将您的任何数据传输给第三方。</li>
+        </ul>
+
+        <h2>2. 数据存储与安全</h2>
+        <ul>
+            <li><strong>存储位置</strong>：您的数据存储在您设备的浏览器本地存储中。清除浏览器缓存或卸载应用可能导致数据丢失。</li>
+            <li><strong>备份建议</strong>：建议您定期使用应用内置的"导出备份"功能，将数据导出为 JSON 文件保存。</li>
+            <li><strong>数据加密</strong>：登录密码使用哈希算法处理，其他数据以明文形式存储在浏览器本地。</li>
+            <li><strong>服务端</strong>：本应用不设服务端数据库，您的数据不会离开您的设备。</li>
+        </ul>
+
+        <h2>3. 第三方服务</h2>
+        <ul>
+            <li><strong>AI 功能</strong>：若您启用了 AI 签语等智能功能，相关请求将直接发送至您配置的第三方 AI API（如 DeepSeek、OpenAI）。我们不会记录或存储这些请求的内容。</li>
+            <li><strong>外部字体和图标</strong>：本应用使用 Google Fonts、Font Awesome 等第三方 CDN 资源，可能涉及 IP 地址等标准网络信息的传递。</li>
+        </ul>
+
+        <h2>4. 用户权利</h2>
+        <p>您对您的数据拥有完全的控制权：</p>
+        <ul>
+            <li>您可以随时查看、修改或删除您的所有数据。</li>
+            <li>您可以使用"导出备份"功能获取您的完整数据副本。</li>
+            <li>您可以随时通过清除浏览器数据来删除所有本地数据。</li>
+        </ul>
+
+        <h2>5. 隐私政策更新</h2>
+        <p>本隐私政策可能会不时更新。重大变更时，我们会在应用内通知您。继续使用本应用即表示您同意更新后的政策。</p>
+
+        <h2>6. 联系我们</h2>
+        <p>如您对隐私政策有任何疑问，请联系管理员。</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 - 象限时光</title>
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg?v=20260526-1">
+    <link rel="stylesheet" href="style-blue.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/admin-page.css?v=1.0.0">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="admin-header">
+        <div class="header-left">
+            <div class="header-logo">🔧 象限时光</div>
+            <div class="header-breadcrumb">
+                <span>系统管理</span>
+                <span class="breadcrumb-separator">›</span>
+                <span>管理员后台</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="admin-badge">
+                <span class="material-icons" style="font-size: 1rem;">⚡</span>
+                <span>管理员</span>
+            </div>
+                <button class="logout-btn" data-admin-action="logout">
+                <span class="material-icons" style="font-size: 1rem;">🚪</span>
+                <span>退出登录</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="admin-background">        
+        <div class="admin-container">
+            <!-- 系统概览仪表盘 -->
+            <div class="dashboard-overview">
+                <h2 class="overview-title">
+                    <span class="material-icons">📊</span>
+                    系统概览
+                </h2>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="overview-value" id="total-users-count">0</div>
+                        <div class="overview-label">总用户数</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="vip-users-count">0</div>
+                        <div class="overview-label">VIP用户</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="system-uptime">0%</div>
+                        <div class="overview-label">系统运行</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="total-tasks">0</div>
+                        <div class="overview-label">任务总数</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 快捷操作区 -->
+            <div class="quick-actions">
+                <div class="quick-actions-title">
+                    <span class="material-icons">⚡</span>
+                    快捷操作
+                </div>
+                <div class="quick-actions-buttons">
+                    <button class="quick-action-btn" data-admin-action="quickCreateUser">
+                        <span class="material-icons" style="font-size: 1rem;">➕</span>
+                        创建用户
+                    </button>
+                    <button class="quick-action-btn" data-admin-action="quickViewStats">
+                        <span class="material-icons" style="font-size: 1rem;">📊</span>
+                        查看统计
+                    </button>
+                    <button class="quick-action-btn" data-admin-action="quickBackup">
+                        <span class="material-icons" style="font-size: 1rem;">💾</span>
+                        数据备份
+                    </button>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-card">
+                    <h3>
+                        <span class="icon">👥</span>
+                        用户管理
+                    </h3>
+                    <p>创建用户、分配权限、管理账户</p>
+                    <button class="admin-btn" data-admin-action="goToUserManagement">
+                        <span class="material-icons">people</span>
+                        进入用户管理
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <h3>
+                        <span class="icon">🤖</span>
+                        AI签语配置
+                    </h3>
+                    <p>配置API密钥，启用AI签语</p>
+                    <button class="admin-btn" data-admin-action="goToAIConfig">
+                        <span class="material-icons">smart_toy</span>
+                        配置AI功能
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <h3>
+                        <span class="icon">🔄</span>
+                        API同步设置
+                    </h3>
+                    <p>管理任务数据与外部API服务器的自动同步</p>
+                    <button class="admin-btn" data-admin-action="goToAPISyncConfig">
+                        <span class="material-icons">sync</span>
+                        进入API同步设置
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <h3>
+                        <span class="icon">🔐</span>
+                        密码管理
+                    </h3>
+                    <p>修改密码、安全策略</p>
+                    <button class="admin-btn" data-admin-action="goToPasswordManagement">
+                        <span class="material-icons">lock</span>
+                        管理密码
+                    </button>
+                </div>
+
+                <div class="admin-card">
+                    <h3>
+                        <span class="icon">📊</span>
+                        系统统计
+                    </h3>
+                    <p>用户活跃、使用统计</p>
+                    <button class="admin-btn" data-admin-action="goToSystemStats">
+                        <span class="material-icons">analytics</span>
+                        查看数据
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 权限定义 -->
+    <script src="js/indexeddb-storage.js?v=20260619-1"></script>
+    
+    <script src="js/user-storage.js?v=1.0.0"></script>
+    <script src="js/session-storage.js?v=1.0.0"></script>
+    <script src="js/admin-storage.js?v=1.0.0"></script>
+    <script src="js/task-storage.js?v=1.0.0"></script>
+    <script src="js/data-sync-storage.js?v=1.0.0"></script>
+    <script src="js/admin-page.js?v=1.0.0"></script>
+
+    <!-- 安全模块 -->
+    <script src="src/core/security.js?v=1.0.0"></script>
+    <script src="src/core/secure-storage.js?v=1.0.0"></script>
+    <script src="src/core/security-fix.js?v=1.0.2"></script>
+    <!-- 日志管理系统 -->
+    <script src="src/core/logger.js?v=1.0.0"></script>
+
+    <div class="legal-footer" style="text-align:center;padding:1.5rem 1rem 1rem;font-size:0.78rem;color:#9ca3af;">
+        <a href="privacy.html" target="_blank" style="color:#6b7280;text-decoration:none;">隐私政策</a>
+        <span style="margin:0 0.5rem;color:#d1d5db;">|</span>
+        <a href="terms.html" target="_blank" style="color:#6b7280;text-decoration:none;">服务条款</a>
+        <span style="margin:0 0.5rem;color:#d1d5db;">|</span>
+        <span>数据存储在本地浏览器</span>
+    </div>
+</body>
+</html>

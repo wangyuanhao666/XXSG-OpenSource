@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadrant Time — Project Intro & User Guide</title>
+    <link rel="stylesheet" href="help-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="help-container">
+        <header class="help-header">
+            <div class="help-header-inner">
+                <div class="help-header-content">
+                    <div class="help-logo">
+                        <span class="material-icons">dashboard_customize</span>
+                        <h1>Quadrant Time</h1>
+                    </div>
+                    <div class="help-subtitle">
+                        <i class="fas fa-quote-left"></i>
+                        Four grids see the world, one step determines the universe
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.85); font-size: 1.05rem; margin-bottom: 2rem;">
+                        Make important things less rushed, and rushed things less important.
+                    </p>
+                    <button class="back-btn" data-help-close>
+                        <span class="material-icons">arrow_back</span>
+                        Back to App
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="help-content">
+            <!-- Welcome -->
+            <section class="intro-section">
+                <h2><i class="fas fa-rocket"></i> Welcome to Quadrant Time</h2>
+                <p class="intro-text">
+                    <strong>Quadrant Time (XXSG)</strong> is a local-first PWA productivity tool built on the
+                    Eisenhower Matrix. It integrates quadrant-based task management, habit tracking, Pomodoro focus,
+                    calendar scheduling, and AI analysis — helping you prioritize what truly matters.
+                </p>
+                <p class="intro-text" style="margin-top: 1rem;">
+                    Data is stored locally in your browser. No registration required to start using it right away.
+                    Login is available for custom settings; AI features require your own API key.
+                </p>
+                <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                    <span class="tag">Local-First</span>
+                    <span class="tag" style="background: linear-gradient(135deg, #ec4899, #db2777);">Offline Capable</span>
+                    <span class="tag" style="background: linear-gradient(135deg, #34d399, #059669);">Your Data, Your Control</span>
+                    <span class="tag" style="background: linear-gradient(135deg, #f59e0b, #d97706);">PWA Installable</span>
+                </div>
+            </section>
+
+            <!-- Core Features -->
+            <section class="features-section">
+                <h2><i class="fas fa-star"></i> Core Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-th-large"></i></div>
+                        <h3>Quadrant Tasks</h3>
+                        <p>Automatically sort tasks by importance × urgency. Drag across quadrants to change priority. Set start/due dates, pin, subtasks, list & grid views.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                        <h3>⏰ Smart Reminders</h3>
+                        <p>Popup reminder 5 minutes before start time (configurable). Task card turns red (border + gradient + flashing title) when overdue. Stops after manual dismiss.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h3>Calendar</h3>
+                        <p>Monthly calendar with event CRUD. Sync quadrant tasks to calendar events. Filter by category/status/quadrant.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-calendar-check"></i></div>
+                        <h3>Habit Tracker</h3>
+                        <p>Custom habits with daily check-ins, streak tracking, achievement badges, and progress charts.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-stopwatch"></i></div>
+                        <h3>Pomodoro Timer</h3>
+                        <p>Standard 25 min work + 5 min break. Customizable durations, sound effects, and session history.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>Dashboard</h3>
+                        <p>Total tasks, completion rate, quadrant distribution, pie/bar/trend charts — all updated in real time.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h3>AI Analysis</h3>
+                        <p>Connect DeepSeek or OpenAI API (your own key). Auto-analyze task attributes, recommend quadrants, estimate time, generate daily fortunes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h3>Top Review</h3>
+                        <p>Daily / weekly / monthly / annual review system. Track your growth journey and lessons learned.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-hourglass-half"></i></div>
+                        <h3>Countdown Days</h3>
+                        <p>Track birthdays, anniversaries, and important events. Smart reminders so you never miss a date.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h3>Time Tracker</h3>
+                        <p>Log daily time allocation. Visualize with pie/bar/trend charts. Identify time drains and optimize your schedule.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mountain"></i></div>
+                        <h3>Nature Calendar</h3>
+                        <p>Plan your schedule in an immersive mountain-view atmosphere. Week view and task view toggles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                        <h3>Daily Fortune</h3>
+                        <p>Daily motivational quotes — traditional or AI-generated. Bring positive energy to your day.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
+                        <h3>Backup & Restore</h3>
+                        <p>Export/import JSON backups. Auto-backup before every write. Never lose data to a bad save.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-palette"></i></div>
+                        <h3>Theme Toggle</h3>
+                        <p>Light & dark themes with frosted-glass design. Easy on the eyes, beautiful everywhere.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Four Quadrants -->
+            <section class="quadrants-section">
+                <h2><i class="fas fa-compass"></i> The Four Quadrants</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: -2rem; margin-bottom: 2.5rem;">
+                    Eisenhower Matrix — classify tasks by importance and urgency
+                </p>
+                <div class="quadrants-grid">
+                    <div class="quadrant-card urgent-important">
+                        <div class="quadrant-header">
+                            <span class="quadrant-dot" style="background:#ef4444;"></span>
+                            <h3>Important & Urgent</h3>
+                        </div>
+                        <div class="quadrant-content">
+                            <p><strong>Crisis handling — Act now</strong></p>
+                            <p>Emergency meetings, urgent deadlines, sudden problems.</p>
+                            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Minimize this quadrant through better planning
+                            </p>
+                        </div>
+                    </div>
+                    <div class="quadrant-card important-not-urgent">
+                        <div class="quadrant-header">
+                            <span class="quadrant-dot" style="background:#f59e0b;"></span>
+                            <h3>Important & Not Urgent</h3>
+                        </div>
+                        <div class="quadrant-content">
+                            <p><strong>Growth & strategy — Focus here</strong></p>
+                            <p>Learning, health, long-term goals, relationships.</p>
+                            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+                                <i class="fas fa-lightbulb"></i>
+                                The most valuable quadrant — invest most of your time here
+                            </p>
+                        </div>
+                    </div>
+                    <div class="quadrant-card not-important-urgent">
+                        <div class="quadrant-header">
+                            <span class="quadrant-dot" style="background:#3b82f6;"></span>
+                            <h3>Not Important & Urgent</h3>
+                        </div>
+                        <div class="quadrant-content">
+                            <p><strong>Daily busywork — Delegate or batch</strong></p>
+                            <p>Some calls/emails, impromptu meetings, minor requests.</p>
+                            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+                                <i class="fas fa-users"></i>
+                                Delegate or batch-process to save core time
+                            </p>
+                        </div>
+                    </div>
+                    <div class="quadrant-card not-important-not-urgent">
+                        <div class="quadrant-header">
+                            <span class="quadrant-dot" style="background:#10b981;"></span>
+                            <h3>Not Important & Not Urgent</h3>
+                        </div>
+                        <div class="quadrant-content">
+                            <p><strong>Distractions — Limit</strong></p>
+                            <p>Endless scrolling, excessive entertainment, trivial chatter.</p>
+                            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+                                <i class="fas fa-smile"></i>
+                                Relaxation is fine — just don't let it dominate your day
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Guide -->
+            <section class="guide-section">
+                <h2><i class="fas fa-map"></i> Quick Start Guide</h2>
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Create a Task</h3>
+                            <p>In the "Add Task" tab, enter a title, choose priority (1–4 = four quadrants), and optionally set start/due dates. The system auto-categorizes it.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Quadrant View</h3>
+                            <p>Switch to "Four Quadrants" tab. Drag tasks across quadrants to change priority. Click a title to edit details.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Complete a Task</h3>
+                            <p>Click the circle button to toggle completion. Completed tasks hide from quadrants (visible in the dashboard).</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Edit & Detail</h3>
+                            <p>Click the task title to open a detail modal. Edit fields, add subtasks, duplicate, delete, or pin. Drag the modal to reposition it.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Reminders & Overdue</h3>
+                            <p>Tasks with start dates trigger a popup 5 minutes before. Overdue tasks show a red card with a red left border. Dismiss once, never bothered again.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>View Switching</h3>
+                            <p>Toggle between grid mode and list mode in the quadrant view. Use the expand button in any quadrant header for full-screen focus.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h3>Backup Data</h3>
+                            <p>Go to Settings or Data Sync page to export JSON. Restore by uploading a backup file. Always export before switching browsers.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h3>AI Setup</h3>
+                            <p>Settings → AI Service, enter your DeepSeek or OpenAI API Key and base URL, then enjoy smart analysis features.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="guide-section">
+                <h2><i class="fas fa-question-circle"></i> FAQ</h2>
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">Q1</div>
+                        <div class="step-content">
+                            <h3>Will I lose my data?</h3>
+                            <p><strong>A:</strong> Data is stored in browser localStorage. <strong>Clearing browser data, switching browsers, or reinstalling the OS will erase it.</strong> Always export JSON backups regularly.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q2</div>
+                        <div class="step-content">
+                            <h3>Can I sync across devices?</h3>
+                            <p><strong>A:</strong> Not yet — this is a local-first app. For now, export JSON on device A and import it on device B. A cloud sync backend is under consideration.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q3</div>
+                        <div class="step-content">
+                            <h3>How do I use AI features?</h3>
+                            <p><strong>A:</strong> Go to Settings → AI Service and enter your own DeepSeek or OpenAI API Key. Third-party API usage may incur fees from the respective platform.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q4</div>
+                        <div class="step-content">
+                            <h3>How to back up data?</h3>
+                            <p><strong>A:</strong> Settings → Export Data → JSON format. Restore via the Data Sync page. Export before any major operation.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q5</div>
+                        <div class="step-content">
+                            <h3>Offline capable?</h3>
+                            <p><strong>A:</strong> Core features (tasks, habits, Pomodoro, dashboard) work offline. AI features need a network connection. Install as PWA for the best offline experience.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q6</div>
+                        <div class="step-content">
+                            <h3>Popup reminders not showing?</h3>
+                            <p><strong>A:</strong> ① Check notification permission in Settings; ② The reminder polls every 2 seconds; browsers throttle background tabs; ③ Run <code>window.checkReminderSystemStatus()</code> in the console to diagnose.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q7</div>
+                        <div class="step-content">
+                            <h3>How to delete all data?</h3>
+                            <p><strong>A:</strong> Settings → Data Management → Clear All Data. ⚠️ <strong>This is irreversible</strong> — export a backup first.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About -->
+            <section class="intro-section">
+                <h2><i class="fas fa-heart"></i> About Quadrant Time</h2>
+                <p class="intro-text">
+                    Quadrant Time (XXSG) is a local-first productivity toolkit centered on the Eisenhower Matrix.
+                    It combines task management, habit tracking, Pomodoro focus, calendar scheduling, and AI analysis
+                    into one self-contained PWA.
+                </p>
+                <p class="intro-text" style="margin-top: 1rem;">
+                    Your data stays in your browser — fully under your control. No account required, no privacy worries.
+                </p>
+                <p class="intro-text" style="margin-top: 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-code"></i> Pure frontend, zero frameworks &nbsp;·&nbsp;
+                    <i class="fas fa-mobile-alt"></i> Responsive everywhere &nbsp;·&nbsp;
+                    <i class="fas fa-moon"></i> Light & dark themes
+                </p>
+                <div style="margin-top: 2rem;">
+                    <button data-help-close class="footer-btn" style="background: var(--gradient-primary); color: white; border: none; padding: 0.875rem 2rem; border-radius: 9999px; font-size: 1rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; margin: 0 auto;">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to App
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="help-footer">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> 2025–2026 Quadrant Time — Making time management simple</p>
+                <div class="footer-links">
+                    <button data-help-close class="footer-btn">
+                        <i class="fas fa-arrow-left"></i> Return to App
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('[data-help-close]')) {
+                window.close();
+            }
+        });
+
+        document.querySelectorAll('.feature-card, .quadrant-card, .step-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

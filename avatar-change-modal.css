@@ -1,0 +1,600 @@
+/* 头像更换模态框样式 */
+.avatar-change-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.avatar-change-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+.avatar-change-modal .modal-content {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 10001;
+    overflow: hidden;
+}
+
+.avatar-change-modal .modal-header {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.avatar-change-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.avatar-change-modal .modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.avatar-change-modal .modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar-change-modal .modal-body {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.avatar-change-modal .avatar-options {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.avatar-change-modal .option-section h4 {
+    color: #333;
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.avatar-change-modal .upload-area {
+    border: 2px dashed #2563eb;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9ff;
+}
+
+.avatar-change-modal .upload-area:hover {
+    border-color: #5a67d8;
+    background: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.avatar-change-modal .upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.avatar-change-modal .upload-text p {
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.avatar-change-modal .upload-text small {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.avatar-change-modal .preset-avatars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.avatar-change-modal .avatar-preset {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.avatar-change-modal .avatar-preset:hover {
+    border-color: #2563eb;
+    background: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.avatar-change-modal .avatar-preset.selected {
+    border-color: #2563eb;
+    background: #f0f4ff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-change-modal .preset-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #2563eb;
+    background: linear-gradient(135deg, #2563eb20 0%, #2563eb10 100%);
+    transition: all 0.3s ease;
+}
+
+.avatar-change-modal .preset-circle.male {
+    color: #4a90e2;
+    background: linear-gradient(135deg, #4a90e220 0%, #4a90e210 100%);
+}
+
+.avatar-change-modal .preset-circle.female {
+    color: #e91e63;
+    background: linear-gradient(135deg, #e91e6320 0%, #e91e6310 100%);
+}
+
+.avatar-change-modal .preset-circle.business {
+    color: #795548;
+    background: linear-gradient(135deg, #79554820 0%, #79554810 100%);
+}
+
+.avatar-change-modal .preset-circle.creative {
+    color: #9c27b0;
+    background: linear-gradient(135deg, #9c27b020 0%, #9c27b010 100%);
+}
+
+.avatar-change-modal .preset-circle.tech {
+    color: #607d8b;
+    background: linear-gradient(135deg, #607d8b20 0%, #607d8b10 100%);
+}
+
+.avatar-change-modal .avatar-preset span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+}
+
+.avatar-change-modal .current-avatar-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+}
+
+.avatar-change-modal .preview-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #2563eb;
+    background: linear-gradient(135deg, #2563eb20 0%, #2563eb10 100%);
+    border: 3px solid #2563eb;
+    overflow: hidden;
+}
+
+.avatar-change-modal .current-avatar-preview p {
+    margin: 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.avatar-change-modal .modal-footer {
+    padding: 1.5rem 2rem;
+    background: #f8f9fa;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.avatar-change-modal .btn-primary,
+.avatar-change-modal .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-change-modal .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+}
+
+.avatar-change-modal .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.avatar-change-modal .btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.avatar-change-modal .btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .avatar-change-modal {
+        padding: 0.5rem;
+    }
+    
+    .avatar-change-modal .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .avatar-change-modal .preset-avatars {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .avatar-change-modal .upload-area {
+        padding: 1.5rem;
+    }
+    
+    .avatar-change-modal .upload-icon {
+        font-size: 2.5rem;
+    }
+    
+    .avatar-change-modal .modal-footer {
+        padding: 1rem;
+    }
+    
+    .avatar-change-modal .btn-primary,
+    .avatar-change-modal .btn-secondary {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* 头像编辑器样式 */
+.avatar-editor-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.avatar-editor-modal .editor-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.avatar-editor-modal .editor-content {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 10002;
+    overflow: hidden;
+}
+
+.avatar-editor-modal .editor-header {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.avatar-editor-modal .editor-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.avatar-editor-modal .editor-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.avatar-editor-modal .editor-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar-editor-modal .editor-body {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.avatar-editor-modal .editor-canvas-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar-editor-modal #avatarCanvas {
+    border-radius: 50%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    background: #f0f0f0;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 1;
+    cursor: grab;
+    touch-action: none;
+}
+
+.avatar-editor-modal #avatarCanvas:active {
+    cursor: grabbing;
+}
+
+.avatar-editor-modal .editor-instructions {
+    text-align: center;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8ecff 100%);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 2px solid #2563eb30;
+}
+
+.avatar-editor-modal .editor-instructions p {
+    margin: 0.5rem 0;
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.avatar-editor-modal .editor-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.avatar-editor-modal .zoom-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.avatar-editor-modal .zoom-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-editor-modal .zoom-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.avatar-editor-modal .zoom-btn:active {
+    transform: scale(0.95);
+}
+
+.avatar-editor-modal .zoom-label {
+    min-width: 120px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+}
+
+.avatar-editor-modal .zoom-label #zoomLevel {
+    color: #2563eb;
+}
+
+.avatar-editor-modal .position-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-editor-modal .reset-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.avatar-editor-modal .reset-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+.avatar-editor-modal .editor-footer {
+    padding: 1.5rem 2rem;
+    background: #f8f9fa;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.avatar-editor-modal .btn-primary,
+.avatar-editor-modal .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.avatar-editor-modal .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+}
+
+.avatar-editor-modal .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.avatar-editor-modal .btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.avatar-editor-modal .btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* 编辑器响应式设计 */
+@media (max-width: 768px) {
+    .avatar-editor-modal {
+        padding: 0.5rem;
+    }
+    
+    .avatar-editor-modal .editor-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .avatar-editor-modal .editor-body {
+        padding: 1rem;
+    }
+    
+    .avatar-editor-modal #avatarCanvas {
+        max-width: 300px;
+    }
+    
+    .avatar-editor-modal .editor-instructions p {
+        font-size: 0.85rem;
+    }
+    
+    .avatar-editor-modal .zoom-controls {
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+    
+    .avatar-editor-modal .zoom-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .avatar-editor-modal .zoom-label {
+        min-width: 100px;
+        font-size: 0.9rem;
+    }
+    
+    .avatar-editor-modal .editor-footer {
+        padding: 1rem;
+    }
+    
+    .avatar-editor-modal .btn-primary,
+    .avatar-editor-modal .btn-secondary {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}

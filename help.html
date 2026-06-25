@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN" id="help-page">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>象限时光 — 项目介绍与使用说明</title>
+    <link rel="stylesheet" href="help-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
+    <noscript>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    </noscript>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+</head>
+<body>
+    <div class="help-container">
+        <!-- ========== 页头 ========== -->
+        <header class="help-header">
+            <div class="help-header-inner">
+                <div class="help-header-content">
+                    <div class="help-logo">
+                        <span class="material-icons">dashboard_customize</span>
+                        <h1>象限时光</h1>
+                    </div>
+                    <div class="help-subtitle">
+                        <i class="fas fa-quote-left"></i>
+                        四格见天地，一步定乾坤
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.85); font-size: 1.05rem; margin-bottom: 2rem;">
+                        让重要的事不再匆忙，让匆忙的事不再重要。
+                    </p>
+                    <button class="back-btn" data-help-close>
+                        <span class="material-icons">arrow_back</span>
+                        返回应用
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========== 主内容 ========== -->
+        <main class="help-main">
+
+            <!-- ── 项目介绍 ── -->
+            <section class="hero-section">
+                <div class="hero-text">
+                    <h2><i class="fas fa-rocket"></i> 欢迎使用象限时光</h2>
+                    <p>
+                        <strong>象限时光（XXSG）</strong> 是一个基于艾森豪威尔矩阵的本地优先（local-first）PWA 生产力工具。
+                        它把四象限时间管理、习惯打卡、番茄专注、日程管理、AI 分析整合在一起，
+                        帮你从混乱中找到秩序，把精力花在真正重要的事情上。
+                    </p>
+                    <p style="margin-top: 1rem;">
+                        数据默认存储在浏览器本地，无需注册即可使用。
+                        登录后可自定义设置，AI 功能需自行配置 API Key。
+                    </p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span class="tag" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">本地优先</span>
+                        <span class="tag" style="background: linear-gradient(135deg, #ec4899, #db2777);">离线可用</span>
+                        <span class="tag" style="background: linear-gradient(135deg, #34d399, #059669);">数据自主</span>
+                        <span class="tag" style="background: linear-gradient(135deg, #f59e0b, #d97706);">PWA 可安装</span>
+                    </div>
+                </div>
+                <div class="hero-image" style="display: flex; align-items: center; justify-content: center; min-height: 300px; background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #ec4899 100%); border-radius: 20px; box-shadow: 0 20px 40px rgba(79,70,229,0.3);">
+                    <span class="material-icons" style="font-size: 8rem; color: rgba(255,255,255,0.2); animation: float 3s ease-in-out infinite;">grid_view</span>
+                </div>
+            </section>
+
+            <!-- ── 核心功能概览 ── -->
+            <section class="feature-section">
+                <h2><i class="fas fa-star"></i> 核心功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-th-large"></i></div>
+                        <h3>四象限任务</h3>
+                        <p>按重要×紧急自动分类到四个象限，拖拽切换优先级，开始/截止时间管理，置顶、子任务、双视图（列表/网格）一应俱全。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                        <h3>⏰ 智能提醒系统</h3>
+                        <p>开始时间前 5 分钟弹窗提醒；时间一到任务卡片自动变红（左边框 + 渐变背景 + 红色标题闪动）；手动关闭后不再打扰。到期、过期均有提醒。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h3>日历日程</h3>
+                        <p>月视图管理日程事件，支持从四象限一键同步任务到日历，按分类/状态/象限筛选。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-calendar-check"></i></div>
+                        <h3>习惯打卡</h3>
+                        <p>自定义习惯类型、图标和备注，每日打卡记录连续天数和完成率，成就徽章激励，打卡趋势图表。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-stopwatch"></i></div>
+                        <h3>番茄专注</h3>
+                        <p>25 分钟工作 + 5 分钟休息的标准 Pomodoro，支持自定义时长、完成音效、历史记录统计。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>数据看板</h3>
+                        <p>总任务数、完成率、象限分布、趋势图表（饼图/柱状图/折线图），实时更新，一目了然。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h3>AI 智能分析</h3>
+                        <p>接入 DeepSeek / OpenAI API（需自行配置 Key），自动分析任务属性、推荐象限、估算时间、生成每日签语。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h3>顶级复盘</h3>
+                        <p>日/周/月/年四级复盘体系，记录成长历程，总结经验教训，形成持续改进的闭环。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-hourglass-half"></i></div>
+                        <h3>倒数纪念日</h3>
+                        <p>管理生日、纪念日、重要事件等多种类型的日期倒数，智能提醒不错过重要日子。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h3>时间看板</h3>
+                        <p>记录每日时间分配，饼图/柱状图/趋势图可视化分析，帮你发现时间黑洞，优化分配策略。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mountain"></i></div>
+                        <h3>自然日历</h3>
+                        <p>山景云海的沉浸式氛围中规划日程，支持周视图、任务视图切换，让日程管理成为享受。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                        <h3>每日一签</h3>
+                        <p>传统签语 + AI 智能生成两种模式，每日抽取幸运签，为一天带来正能量和灵感。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
+                        <h3>数据备份</h3>
+                        <p>支持 JSON 导出/导入，写入前自动备份旧数据到 localStorage，避免误操作丢失。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-palette"></i></div>
+                        <h3>主题切换</h3>
+                        <p>浅色/深色主题随意切换，毛玻璃效果 + 现代化设计语言，护眼又美观。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 四象限说明 ── -->
+            <section class="quadrant-section">
+                <h2><i class="fas fa-compass"></i> 四象限方法论</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: -2rem; margin-bottom: 2.5rem;">
+                    艾森豪威尔矩阵 — 按「重要性」和「紧急性」两个维度把任务分为四类
+                </p>
+                <div class="quadrant-grid">
+                    <div class="quadrant-card urgent-important">
+                        <div class="quadrant-header">
+                            <span class="quadrant-icon">🔴</span>
+                            <h3>重要且紧急</h3>
+                        </div>
+                        <p><strong>危机处理 · 立即行动</strong></p>
+                        <p>紧急会议、突发问题、截止日期迫近的任务。</p>
+                        <div class="quadrant-tip">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            尽量减少此类任务 — 通过提前规划把更多事情做到「重要不紧急」
+                        </div>
+                    </div>
+                    <div class="quadrant-card important-not-urgent">
+                        <div class="quadrant-header">
+                            <span class="quadrant-icon">🟡</span>
+                            <h3>重要不紧急</h3>
+                        </div>
+                        <p><strong>规划发展 · 重点投入</strong></p>
+                        <p>学习成长、健康管理、长期目标、关系维护。</p>
+                        <div class="quadrant-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            这是最值得投入时间的象限，决定未来的成就
+                        </div>
+                    </div>
+                    <div class="quadrant-card urgent-not-important">
+                        <div class="quadrant-header">
+                            <span class="quadrant-icon">🔵</span>
+                            <h3>不重要但紧急</h3>
+                        </div>
+                        <p><strong>日常事务 · 委托/批量</strong></p>
+                        <p>部分电话/邮件、临时会议、他人请求。</p>
+                        <div class="quadrant-tip">
+                            <i class="fas fa-users"></i>
+                            尽量委托他人或集中批量处理，不要占据核心时间
+                        </div>
+                    </div>
+                    <div class="quadrant-card not-urgent-not-important">
+                        <div class="quadrant-header">
+                            <span class="quadrant-icon">🟢</span>
+                            <h3>不重要不紧急</h3>
+                        </div>
+                        <p><strong>休闲娱乐 · 适度节制</strong></p>
+                        <p>无目的刷手机、闲聊、过度娱乐。</p>
+                        <div class="quadrant-tip">
+                            <i class="fas fa-smile"></i>
+                            适度放松有必要，但不要让它成为时间的主要去向
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 操作指南 ── -->
+            <section class="guide-section">
+                <h2><i class="fas fa-book-open"></i> 快速上手</h2>
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-plus-circle"></i> 创建任务</h3>
+                            <p>在「添加任务」标签页填写标题、选择优先级（1–4 对应四个象限）、设置开始/截止时间。保存后自动归类到对应象限。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-th-large"></i> 四象限视图</h3>
+                            <p>切换到「四象限视图」查看任务的全部分布。拖拽任务可以跨象限移动（改变优先级），点击标题编辑详情。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-check-circle"></i> 标记完成</h3>
+                            <p>点击任务左侧的圆圈按钮切换完成状态。完成的任务自动从象限中隐藏（可在看板中查看）。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-edit"></i> 编辑与详情</h3>
+                            <p>点击任务标题打开详情弹窗，可编辑所有字段、添加子任务、复制、删除、置顶。弹窗支持拖拽移动。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-bell"></i> 提醒与过期</h3>
+                            <p>设置了开始时间的任务，到期前 5 分钟弹窗提醒。时间已过的任务卡片变红色 + 红色边框。关闭后不再重复打扰。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-sync-alt"></i> 视图切换</h3>
+                            <p>四象限支持「网格模式」和「列表模式」一键切换。右上角按钮可展开单个象限全屏查看。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-database"></i> 数据导出/导入</h3>
+                            <p>在设置或数据同步页面可导出 JSON 备份，或从备份文件恢复数据。切换浏览器前务必先导出。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-robot"></i> AI 配置</h3>
+                            <p>进入设置 → AI 服务，填入 DeepSeek 或 OpenAI 的 API Key 和基础 URL，即可使用智能分析功能。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 提醒系统详解 ── -->
+            <section class="feature-section">
+                <h2><i class="fas fa-bell"></i> 提醒系统说明</h2>
+                <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fas fa-clock"></i></div>
+                        <h3>⏰ 开始时间提醒</h3>
+                        <p>任务设置了开始时间后：</p>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--text-secondary); line-height: 1.8;">
+                            <li>到期前 <strong>5 分钟</strong>（可配置）弹窗提醒</li>
+                            <li>时间已过的任务卡片自动变 <strong>红色</strong>（左边框 + 渐变背景 + 红色标题）</li>
+                            <li>手动关闭弹窗后不再重复弹出</li>
+                            <li>错过时间的任务，下次打开页面时也会触发一次</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-hourglass-end"></i></div>
+                        <h3>⏳ 截止时间提醒</h3>
+                        <p>任务设置了截止时间后：</p>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--text-secondary); line-height: 1.8;">
+                            <li>到期前 30 分钟内触发弹窗提醒</li>
+                            <li>已过期的截止时间文字变红色闪动</li>
+                            <li>支持浏览器桌面通知（需授权）</li>
+                            <li>提醒记录保留 7 天，7 天后自动清理</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><i class="fas fa-cog"></i></div>
+                        <h3>⚙️ 配置方式</h3>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--text-secondary); line-height: 1.8;">
+                            <li>提前提醒时间可在设置中调整</li>
+                            <li>通知权限在「通知设置」中申请</li>
+                            <li>音效/震动可在设置中开关</li>
+                            <li>浏览器控制台执行 <code>window.checkReminderSystemStatus()</code> 诊断</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 小技巧 ── -->
+            <section class="feature-section">
+                <h2><i class="fas fa-lightbulb"></i> 高效小技巧</h2>
+                <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #34d399, #059669);"><i class="fas fa-keyboard"></i></div>
+                        <h3>快捷操作</h3>
+                        <p>双击标题快速编辑；ESC 关闭弹窗/退出全屏；拖拽详情弹窗到舒适位置。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #f472b6, #db2777);"><i class="fas fa-globe"></i></div>
+                        <h3>中英文切换</h3>
+                        <p>右上角语言按钮一键切换中文/英文，所有界面跟随变化，设置自动保存。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);"><i class="fas fa-puzzle-piece"></i></div>
+                        <h3>多 Tab 同步</h3>
+                        <p>同时打开多个标签页时数据自动同步（通过 storage 事件），无需手动刷新。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #3b82f6, #4338ca);"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>安装到桌面</h3>
+                        <p>手机/电脑浏览器菜单选择「添加到主屏幕」，像原生 App 一样离线使用基础功能。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 最佳实践 ── -->
+            <section class="feature-section">
+                <h2><i class="fas fa-trophy"></i> 推荐工作流</h2>
+                <div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fas fa-sun"></i></div>
+                        <h3>每日</h3>
+                        <p>早晨查看四象限规划优先级 → 番茄钟专注执行核心任务 → 下班前复盘完成情况 → 顺便规划明日重要事项。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #3b82f6, #4338ca);"><i class="fas fa-calendar-week"></i></div>
+                        <h3>每周</h3>
+                        <p>周一制定周计划 → 周三检查进度 → 周五周复盘，回顾本周完成、不足，规划下周重点。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);"><i class="fas fa-calendar"></i></div>
+                        <h3>每月 / 每年</h3>
+                        <p>月度复盘分析目标完成率 → 年度复盘审视成长轨迹。数据看板提供客观依据，顶级复盘留下思考记录。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #34d399, #047857);"><i class="fas fa-seedling"></i></div>
+                        <h3>习惯养成</h3>
+                        <p>从一两个小习惯开始，每天打卡记录。连续天数的成就感是最好的驱动力，配合番茄钟形成「习惯 + 专注」双引擎。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 常见问题 ── -->
+            <section class="guide-section">
+                <h2><i class="fas fa-question-circle"></i> 常见问题</h2>
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">Q1</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-save"></i> 数据会丢失吗？</h3>
+                            <p><strong>A：</strong> 数据保存在浏览器 localStorage 中。<strong>清除浏览器数据、更换浏览器、重装系统</strong> 会导致数据丢失。务必定期导出 JSON 备份。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q2</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-cloud"></i> 支持多设备同步吗？</h3>
+                            <p><strong>A：</strong> 当前版本为本地优先（local-first），数据仅在浏览器本地。多设备同步需要 SaaS 后端（开发中）。目前可以通过导出 JSON → 另一设备导入的方式手动迁移。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q3</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-robot"></i> AI 功能怎么用？</h3>
+                            <p><strong>A：</strong> 设置 → AI 服务中填入 DeepSeek 或 OpenAI 的 API Key（需自行注册账号获取）。AI 分析调用第三方 API 会产生费用，由对应平台收取。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q4</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-download"></i> 如何备份数据？</h3>
+                            <p><strong>A：</strong> Settings → 数据导出 → 选择 JSON 格式下载到本地。恢复时在数据同步页面上传备份文件。建议每次重大操作前导出一次。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q5</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-wifi"></i> 支持离线使用吗？</h3>
+                            <p><strong>A：</strong> 基础功能（任务/习惯/番茄钟/看板）离线可用。AI 分析需要网络。安装 PWA 到桌面后离线体验更佳。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q6</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-bell"></i> 弹窗提醒不弹出？</h3>
+                            <p><strong>A：</strong> ① 检查「通知设置」是否开启了桌面通知权限；② 提醒系统每 2 秒轮询一次，页面在后台时浏览器会节流；③ 控制台执行 <code>window.checkReminderSystemStatus()</code> 诊断。</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">Q7</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-trash-alt"></i> 如何清除所有数据？</h3>
+                            <p><strong>A：</strong> 设置 → 数据管理 → 清空所有数据。⚠️ <strong>此操作不可恢复</strong>，请先导出备份。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 关于 ── -->
+            <section class="feature-section" style="text-align: center;">
+                <h2><i class="fas fa-heart"></i> 关于象限时光</h2>
+                <div style="max-width: 700px; margin: 0 auto; color: var(--text-secondary); line-height: 1.8;">
+                    <p>象限时光（XXSG）是一个本地优先的生产力工具集，以艾森豪威尔四象限为核心，集成了任务管理、习惯打卡、番茄专注、日历日程、AI 分析等功能。</p>
+                    <p style="margin-top: 1rem;">数据存储在浏览器本地，你对自己的数据拥有完全控制权。没有账号体系，无需担心隐私泄露。</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <i class="fas fa-code"></i> 纯前端实现，无框架依赖 &nbsp;·&nbsp;
+                        <i class="fas fa-mobile-alt"></i> 响应式设计，全平台适配 &nbsp;·&nbsp;
+                        <i class="fas fa-moon"></i> 浅色/深色主题
+                    </p>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button data-help-close class="footer-btn" style="background: var(--gradient-primary); color: white; border: none; padding: 0.875rem 2rem; border-radius: 9999px; font-size: 1rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <span class="material-icons" style="font-size: 1.2rem;">arrow_back</span>
+                        返回应用
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ========== 页脚 ========== -->
+        <footer class="help-footer">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> 2025–2026 象限时光 — 让时间管理回归简单</p>
+                <div class="footer-links">
+                    <button data-help-close class="footer-btn">
+                        <i class="fas fa-arrow-left"></i> 返回应用
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('[data-help-close]')) {
+                window.close();
+            }
+        });
+
+        document.querySelectorAll('.feature-card, .quadrant-card, .step-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = this.classList.contains('feature-card')
+                    ? 'translateY(-8px)'
+                    : this.classList.contains('step-card')
+                        ? 'translateX(8px)'
+                        : 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

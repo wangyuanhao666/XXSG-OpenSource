@@ -1,0 +1,58 @@
+/* 自定义 resize 手柄容器 */
+.review-textarea-wrapper {
+    position: relative !important;
+    width: 100% !important;
+}
+.review-textarea-wrapper textarea {
+    width: 100% !important;
+    min-height: 90px !important;
+    height: 140px !important;
+    overflow: auto !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    /* 禁用浏览器原生 resize，只保留自定义手柄 */
+    resize: none !important;
+}
+/* 自定义拖拽手柄 - 高可见性 */
+.custom-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: nwse-resize;
+    z-index: 10;
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 4px 0 0 0;
+}
+.custom-resize-handle::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 12px;
+    height: 12px;
+    border-right: 2.5px solid #3b82f6;
+    border-bottom: 2.5px solid #3b82f6;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+.custom-resize-handle:hover {
+    background: rgba(99, 102, 241, 0.15);
+}
+.custom-resize-handle:hover::after {
+    opacity: 1;
+}
+/* 拖拽时的高亮效果 */
+.custom-resize-handle.dragging::after {
+    border-color: #2563eb;
+    opacity: 1;
+}
+.custom-resize-handle.dragging {
+    background: rgba(99, 102, 241, 0.2);
+}
+#review-view .review-card-content { overflow: visible !important; }
+#review-view .review-card { overflow: visible !important; }
+#review-view .review-grid { overflow: visible !important; }
+#review-view .review-container { overflow: visible !important; }
+#review-view .review-content { overflow: visible !important; }
