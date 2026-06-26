@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地注册 - 象限时光 XXSG</title>
+    <meta name="description" content="在象限时光 XXSG 开源本地优先版本中创建当前浏览器可用的本地账号。">
+    <meta name="application-name" content="象限时光 XXSG">
+    <meta name="robots" content="index,follow">
+    <link rel="icon" type="image/svg+xml" href="logo-icon.svg?v=20260526-1">
+    <link rel="stylesheet" href="style-blue.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/login-page.css?v=1.0.1">
+    <link rel="stylesheet" href="world-class-design-system.css?v=20260529-2">
+</head>
+
+<body>
+    <div class="login-page register-mode">
+        <div class="login-bg-decoration">
+            <div class="login-floating-shape login-shape-1"></div>
+            <div class="login-floating-shape login-shape-2"></div>
+            <div class="login-floating-shape login-shape-3"></div>
+            <div class="login-floating-shape login-shape-4"></div>
+            <div class="login-floating-shape login-shape-5"></div>
+        </div>
+
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="logo-text.svg?v=20260526-1" alt="象限时光" class="logo-image">
+                </div>
+                <div class="login-subtitle">创建当前浏览器可用的本地账号</div>
+            </div>
+
+            <form class="login-form active" id="register-form">
+                <div class="admin-notice">
+                    <div class="notice-icon">🌱</div>
+                    <div class="notice-content">
+                        <h4>开源本地注册</h4>
+                        <p>账号会创建在当前浏览器本地存储中，不会上传到作者或 GitHub。</p>
+                        <p>如果你要多人公网使用，请先接入服务端认证和数据库。</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-username">用户名</label>
+                    <input type="text" id="reg-username" name="reg-username" placeholder="至少 3 个字符"
+                        autocomplete="username" required>
+                    <div class="error-message" id="reg-username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-email">邮箱（可选）</label>
+                    <input type="email" id="reg-email" name="reg-email" placeholder="用于找回或区分账号"
+                        autocomplete="email">
+                    <div class="error-message" id="reg-email-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-password">密码</label>
+                    <input type="password" id="reg-password" name="reg-password" placeholder="至少 6 位"
+                        autocomplete="new-password" required>
+                    <div class="error-message" id="reg-password-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-confirm-password">确认密码</label>
+                    <input type="password" id="reg-confirm-password" name="reg-confirm-password" placeholder="请再次输入密码"
+                        autocomplete="new-password" required>
+                    <div class="error-message" id="reg-confirm-password-error"></div>
+                </div>
+
+                <div class="register-status" id="register-status" role="status" aria-live="polite"></div>
+
+                <button type="submit" class="login-btn" id="register-submit-btn">
+                    <span class="btn-text">创建本地账号并登录</span>
+                </button>
+
+                <div class="login-footer">
+                    已有账号？<a href="login.html">返回登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/indexeddb-storage.js?v=20260619-1"></script>
+    <script src="js/user-storage.js?v=1.0.0"></script>
+    <script src="js/session-storage.js?v=1.0.0"></script>
+    <script src="src/core/security.js?v=1.0.0"></script>
+    <script src="js/register-page.js?v=1.0.0"></script>
+</body>
+
+</html>

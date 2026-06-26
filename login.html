@@ -81,7 +81,7 @@
                             style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">数据同步</a>
                     </div>
                     <div>
-                        还没有账号？<a href="#" id="show-register">本地注册 / 创建账号</a>
+                        还没有账号？<a href="register.html" id="local-register-link">本地注册 / 创建账号</a>
                     </div>
                 </div>
             </form>
@@ -203,56 +203,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 注册表单 -->
-            <form class="login-form" id="register-form">
-                <div class="admin-notice">
-                    <div class="notice-icon">🌱</div>
-                    <div class="notice-content">
-                        <h4>开源本地注册</h4>
-                        <p>账号会创建在当前浏览器本地存储中，不会上传到作者或 GitHub。</p>
-                        <p>如果你要多人公网使用，请先接入服务端认证和数据库。</p>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reg-username">用户名</label>
-                    <input type="text" id="reg-username" name="reg-username" placeholder="至少 3 个字符"
-                        autocomplete="username" required>
-                    <div class="error-message" id="reg-username-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reg-email">邮箱（可选）</label>
-                    <input type="email" id="reg-email" name="reg-email" placeholder="用于找回或区分账号"
-                        autocomplete="email">
-                    <div class="error-message" id="reg-email-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reg-password">密码</label>
-                    <input type="password" id="reg-password" name="reg-password" placeholder="至少 6 位"
-                        autocomplete="new-password" required>
-                    <div class="error-message" id="reg-password-error"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reg-confirm-password">确认密码</label>
-                    <input type="password" id="reg-confirm-password" name="reg-confirm-password" placeholder="请再次输入密码"
-                        autocomplete="new-password" required>
-                    <div class="error-message" id="reg-confirm-password-error"></div>
-                </div>
-
-                <button type="submit" class="login-btn" id="register-submit-btn">
-                    <span class="btn-text">创建本地账号并登录</span>
-                </button>
-
-                <div class="login-footer">
-                    <div>
-                        已有账号？<a href="#" id="show-login">立即登录</a>
-                    </div>
-                </div>
-            </form>
 
             <!-- 加载状态 -->
             <div class="loading" id="loading">

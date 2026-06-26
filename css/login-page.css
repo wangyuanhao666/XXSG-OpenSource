@@ -513,6 +513,10 @@
     display: none;
 }
 
+.login-form:not(.active) {
+    display: none !important;
+}
+
 .login-form.active {
     display: block;
 }
@@ -565,6 +569,23 @@
 #register-form .login-footer {
     margin-top: 0.3rem;
     font-size: 0.75rem;
+}
+
+.register-status {
+    min-height: 1.25rem;
+    margin: 0.5rem 0 0.75rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.register-status[data-status="success"] {
+    color: #16a34a;
+}
+
+.register-status[data-status="error"] {
+    color: #dc2626;
 }
 
 /* 忘记密码页面全新设计 */

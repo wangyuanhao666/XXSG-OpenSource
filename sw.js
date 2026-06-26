@@ -1,8 +1,9 @@
-const CACHE_VERSION = 'xxsg-v3.0.19';
+const CACHE_VERSION = 'xxsg-v3.0.20';
 const APP_SHELL = [
   './',
   './index.html',
   './login.html',
+  './register.html',
   './style-blue.css',
   './world-class-design-system.css',
   './feature-views-styles.css',
@@ -14,6 +15,7 @@ const APP_SHELL = [
   './manifest.json',
   './partials/app-feature-views.html',
   './js/user-storage.js',
+  './js/register-page.js',
   './js/session-storage.js',
   './js/admin-storage.js',
   './js/data-sync-storage.js',

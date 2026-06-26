@@ -10,12 +10,14 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 - GitHub Pages demo link in README.
 - Local self-registration flow for the open-source build.
+- Dedicated `register.html` page for local account creation.
 - Open-source first-use guidance on the login page.
 - SEO/social metadata for the main entry and login page.
 
 ### Changed
 
 - Replaced “contact administrator” onboarding with local-first account creation guidance.
+- Separated login and registration views so account login, admin login, and registration no longer appear together.
 - Clarified that ordinary users can create a browser-local account without contacting the project maintainer.
 - Aligned admin-created users and self-registered users to password-hash storage.
 

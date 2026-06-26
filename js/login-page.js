@@ -52,6 +52,35 @@ function createSanitizedLoginNodes(markup) {
     });return [...root.childNodes].map(node => document.importNode(node, true));
 }
 
+function setLoginView(view) {
+    const forms = {
+        account: document.getElementById('account-form'),
+        admin: document.getElementById('admin-form'),
+        register: document.getElementById('register-form')
+    };
+    const tabs = {
+        account: document.querySelector('[data-tab="account"]'),
+        admin: document.querySelector('[data-tab="admin"]')
+    };
+    const loginPage = document.querySelector('.login-page');
+
+    Object.entries(forms).forEach(([key, form]) => {
+        if (!form) return;
+        const isActive = key === view;
+        form.classList.toggle('active', isActive);
+        form.style.display = isActive ? 'block' : 'none';
+    });
+
+    Object.entries(tabs).forEach(([key, tab]) => {
+        if (!tab) return;
+        tab.classList.toggle('active', key === view);
+    });
+
+    if (loginPage) {
+        loginPage.classList.toggle('register-mode', view === 'register');
+    }
+}
+
 // 工具函数定义 - 必须在其他函数之前定义
 // 显示错误信息
 function showError(elementId, message) {
@@ -1567,19 +1596,8 @@ document.addEventListener('DOMContentLoaded', function () {
         adminTab.style.visibility = 'visible';
     }
 
-    // 确保默认显示账号登录表单，隐藏管理员表单
-    const accountForm = document.getElementById('account-form');
-    const adminForm = document.getElementById('admin-form');
-
-    if (accountForm) {
-        accountForm.style.display = 'block';
-        accountForm.classList.add('active');
-    }
-
-    if (adminForm) {
-        adminForm.style.display = 'none';
-        adminForm.classList.remove('active');
-    }
+    // 确保默认只显示账号登录表单，隐藏管理员和注册表单
+    setLoginView('account');
 
     console.log('登录页面初始化完成');
 });
@@ -1610,15 +1628,10 @@ function initializeLoginPage() {
     const adminTab = document.querySelector('[data-tab="admin"]');
     const accountForm = document.getElementById('account-form');
     const adminForm = document.getElementById('admin-form');
+    const registerForm = document.getElementById('register-form');
 
-    if (accountTab && adminTab && accountForm && adminForm) {
-        // 设置账号登录为活动状态
-        accountTab.classList.add('active');
-        adminTab.classList.remove('active');
-
-        // 显示账号登录表单，隐藏管理员表单
-        accountForm.classList.add('active');
-        adminForm.classList.remove('active');
+    if (accountTab && adminTab && accountForm && adminForm && registerForm) {
+        setLoginView('account');
 
         console.log('登录页面状态初始化完成');
     } else {
@@ -2166,48 +2179,12 @@ function bindOtherEvents() {
 
 // 显示注册表单
 function showRegisterForm() {
-    const tabs = document.querySelectorAll('.login-tab');
-    const forms = document.querySelectorAll('.login-form');
-    const loginPage = document.querySelector('.login-page');
-
-    tabs.forEach(tab => tab.classList.remove('active'));
-    forms.forEach(form => {
-        form.classList.remove('active');
-        form.style.display = 'none';
-    });
-
-    const registerForm = document.getElementById('register-form');
-    if (registerForm) {
-        registerForm.style.display = 'block';
-        registerForm.classList.add('active');
-    }
-    loginPage.classList.add('register-mode');
+    setLoginView('register');
 }
 
 // 显示登录表单
 function showLoginForm() {
-    const tabs = document.querySelectorAll('.login-tab');
-    const forms = document.querySelectorAll('.login-form');
-    const loginPage = document.querySelector('.login-page');
-
-    tabs.forEach(tab => tab.classList.remove('active'));
-    forms.forEach(form => {
-        form.classList.remove('active');
-        form.style.display = ''; // 清除可能残留的 inline display:none
-    });
-
-    const accountForm = document.getElementById('account-form');
-    if (accountForm) {
-        accountForm.style.display = 'block';
-        accountForm.classList.add('active');
-    }
-    const accountTab = document.querySelector('[data-tab="account"]');
-    if (accountTab) accountTab.classList.add('active');
-
-    const adminForm = document.getElementById('admin-form');
-    if (adminForm) adminForm.style.display = 'none';
-
-    if (loginPage) loginPage.classList.remove('register-mode');
+    setLoginView('account');
 }
 
 // 初始化管理员登录表单
@@ -2279,6 +2256,7 @@ function showAdminForm() {
     if (adminTab) {
         adminTab.style.display = 'block';
     }
+    setLoginView('admin');
 }
 
 // 处理账号登录
@@ -2577,67 +2555,7 @@ function bindTabEvents() {
 // 切换标签页
 function switchTab(tabType) {
     console.log('切换标签页到:', tabType);
-
-    // 移除所有活动状态
-    document.querySelectorAll('.login-tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.login-form').forEach(form => {
-        form.classList.remove('active');
-        console.log('移除表单活动状态:', form.id);
-    });
-
-    // 激活选中的标签页
-    const activeTab = document.querySelector(`[data-tab="${tabType}"]`);
-    if (activeTab) {
-        activeTab.classList.add('active');
-        console.log('激活标签页:', activeTab.textContent);
-    }
-
-    // 显示对应的表单
-    if (tabType === 'account') {
-        const accountForm = document.getElementById('account-form');
-        const adminForm = document.getElementById('admin-form');
-
-        if (accountForm) {
-            accountForm.style.display = 'block';
-            accountForm.classList.add('active');
-            console.log('显示账号登录表单');
-        } else {
-            console.error('未找到账号登录表单');
-        }
-
-        // 隐藏管理员表单
-        if (adminForm) {
-            adminForm.style.display = 'none';
-            adminForm.classList.remove('active');
-            console.log('隐藏管理员登录表单');
-        }
-    } else if (tabType === 'admin') {
-        const adminForm = document.getElementById('admin-form');
-        const accountForm = document.getElementById('account-form');
-        const syncForm = document.getElementById('sync-form');
-
-        if (adminForm) {
-            adminForm.style.display = 'block';
-            adminForm.classList.add('active');
-            console.log('显示管理员登录表单');
-        } else {
-            console.error('未找到管理员登录表单');
-        }
-
-        // 隐藏账号表单
-        if (accountForm) {
-            accountForm.style.display = 'none';
-            accountForm.classList.remove('active');
-            console.log('隐藏账号登录表单');
-        }
-
-        // 隐藏数据同步表单
-        if (syncForm) {
-            syncForm.style.display = 'none';
-            syncForm.classList.remove('active');
-            console.log('隐藏数据同步表单');
-        }
-    }
+    setLoginView(tabType === 'admin' ? 'admin' : 'account');
 }
 
 // 处理手机登录
@@ -3216,19 +3134,7 @@ function showAdminContact() {
 
 function closeAdminContact() {
     document.querySelector('.admin-contact-container')?.style.setProperty('display', 'none');
-    const accountForm = document.getElementById('account-form');
-    const adminForm = document.getElementById('admin-form');
-    if (accountForm) {
-        accountForm.style.display = 'block';
-        accountForm.classList.add('active');
-    }
-    if (adminForm) {
-        adminForm.style.display = 'none';
-        adminForm.classList.remove('active');
-    }
-    document.querySelector('[data-tab="account"]')?.classList.add('active');
-    document.querySelector('[data-tab="admin"]')?.classList.remove('active');
-    document.querySelector('.login-page')?.classList.remove('register-mode');
+    setLoginView('account');
 }
 
 // 显示管理员登录
