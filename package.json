@@ -1,8 +1,30 @@
 {
-  "name": "xxsg",
-  "version": "3.0.0",
+  "name": "xxsg-open-source",
+  "version": "1.0.0",
   "private": false,
-  "description": "XXSG personal productivity web app",
+  "description": "Local-first self-hosted productivity PWA with four-quadrant tasks, calendar, habits, Pomodoro, daily fortune, and BYOK AI features.",
+  "license": "MIT",
+  "author": "XXSG contributors",
+  "homepage": "https://wangyuanhao666.github.io/XXSG-OpenSource/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangyuanhao666/XXSG-OpenSource.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wangyuanhao666/XXSG-OpenSource/issues"
+  },
+  "keywords": [
+    "local-first",
+    "pwa",
+    "productivity",
+    "task-management",
+    "four-quadrant",
+    "pomodoro",
+    "habit-tracker",
+    "calendar",
+    "byok",
+    "ai"
+  ],
   "scripts": {
     "check": "npm run check:syntax && npm run check:manifest && npm run check:sw-cache && npm run check:production-boundary && npm run check:no-inline-handlers && npm run check:no-inner-html && npm run check:no-sensitive-console && npm run check:sensitive-field-categories && npm run check:max-file-size-soft && npm run check:pomodoro-storage && npm run check:task-storage && npm run check:calendar-event-storage && npm run check:settings-storage && npm run check:productivity-storage && npm run check:time-tracker-storage && npm run check:ai-assistant-storage && npm run check:user-storage && npm run check:session-storage && npm run check:admin-storage && npm run check:data-sync-storage",
     "check:syntax": "node tools/check-js-syntax.mjs",
