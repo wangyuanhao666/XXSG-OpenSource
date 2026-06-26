@@ -39,6 +39,36 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    function enhancePasswordVisibilityToggles(root = document) {
+        root.querySelectorAll('input[type="password"][id]').forEach(input => {
+            if (input.dataset.passwordToggleEnhanced === 'true') return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'password-toggle-field';
+            input.parentNode.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+
+            const toggle = document.createElement('button');
+            toggle.type = 'button';
+            toggle.className = 'password-toggle-btn';
+            toggle.setAttribute('aria-label', '显示密码');
+            toggle.setAttribute('aria-pressed', 'false');
+            toggle.textContent = '👁️';
+
+            toggle.addEventListener('click', () => {
+                const shouldShow = input.type === 'password';
+                input.type = shouldShow ? 'text' : 'password';
+                toggle.setAttribute('aria-label', shouldShow ? '隐藏密码' : '显示密码');
+                toggle.setAttribute('aria-pressed', String(shouldShow));
+                toggle.textContent = shouldShow ? '🙈' : '👁️';
+                input.focus();
+            });
+
+            wrapper.appendChild(toggle);
+            input.dataset.passwordToggleEnhanced = 'true';
+        });
+    }
+
     function validateInput(username, email, password, confirmPassword) {
         let isValid = true;
 
@@ -153,6 +183,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        enhancePasswordVisibilityToggles();
         const form = document.getElementById('register-form');
         if (form) form.addEventListener('submit', handleRegister);
     });

@@ -14,6 +14,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 - Open-source first-use guidance on the login page.
 - SEO/social metadata for the main entry and login page.
 - Local admin initialization status notice and reset action on the admin login form.
+- Password visibility toggles on login, admin login, and local registration password fields.
 
 ### Changed
 

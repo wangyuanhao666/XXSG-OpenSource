@@ -127,6 +127,36 @@ function resetLocalAdminInitialization() {
     showNotification('本地管理员已重置，请使用 admin 和新的 8 位以上密码重新初始化。', 'success');
 }
 
+function enhancePasswordVisibilityToggles(root = document) {
+    root.querySelectorAll('input[type="password"][id], input[data-password-toggle-enhanced="true"]').forEach(input => {
+        if (input.dataset.passwordToggleEnhanced === 'true') return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'password-toggle-field';
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'password-toggle-btn';
+        toggle.setAttribute('aria-label', '显示密码');
+        toggle.setAttribute('aria-pressed', 'false');
+        toggle.textContent = '👁️';
+
+        toggle.addEventListener('click', () => {
+            const shouldShow = input.type === 'password';
+            input.type = shouldShow ? 'text' : 'password';
+            toggle.setAttribute('aria-label', shouldShow ? '隐藏密码' : '显示密码');
+            toggle.setAttribute('aria-pressed', String(shouldShow));
+            toggle.textContent = shouldShow ? '🙈' : '👁️';
+            input.focus();
+        });
+
+        wrapper.appendChild(toggle);
+        input.dataset.passwordToggleEnhanced = 'true';
+    });
+}
+
 // 工具函数定义 - 必须在其他函数之前定义
 // 显示错误信息
 function showError(elementId, message) {
@@ -1634,6 +1664,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 初始化管理员登录部分
     initAdminForm();
+    enhancePasswordVisibilityToggles();
 
     // 确保管理员标签页可见
     const adminTab = document.querySelector('[data-tab="admin"]');
@@ -2314,6 +2345,7 @@ function showAdminForm() {
 
         // 重新绑定事件
         adminForm.addEventListener('submit', handleAdminLogin);
+        enhancePasswordVisibilityToggles(adminForm);
     }
     if (adminTab) {
         adminTab.style.display = 'block';
