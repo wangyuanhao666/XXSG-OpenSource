@@ -4,6 +4,26 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [Unreleased]
+
+### Added
+
+- GitHub Pages demo link in README.
+- Local self-registration flow for the open-source build.
+- Open-source first-use guidance on the login page.
+- SEO/social metadata for the main entry and login page.
+
+### Changed
+
+- Replaced “contact administrator” onboarding with local-first account creation guidance.
+- Clarified that ordinary users can create a browser-local account without contacting the project maintainer.
+- Aligned admin-created users and self-registered users to password-hash storage.
+
+### Fixed
+
+- Fixed a malformed nested script tag in `index.html`.
+- Fixed hashed local user login fallback when `secureUserLogin` is not provided.
+
 ## [v1.0.0-local-first] - 2026-06-26
 
 ### Added

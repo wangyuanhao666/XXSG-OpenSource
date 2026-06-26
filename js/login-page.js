@@ -332,10 +332,24 @@ async function simulateLogin(username, authCredential) {
                 if (window.secureUserLogin) {
                     userResult = await window.secureUserLogin(username, authCredential);
                 } else {
-                    // 降级方案（明文比较）
-                    const user = users.find(u =>
-                        (u.username === username || u.email === username) && u.password === authCredential
-                    );
+                    // 降级方案：支持历史明文密码和当前开源版哈希密码
+                    let user = null;
+                    for (const candidate of users) {
+                        const matchesIdentity = candidate.username === username || candidate.email === username;
+                        if (!matchesIdentity) continue;
+
+                        if (candidate.password && candidate.password.includes(':') &&
+                            window.Security && window.Security.Password && window.Security.Password.verifyPassword) {
+                            const verified = await window.Security.Password.verifyPassword(authCredential, candidate.password);
+                            if (verified) {
+                                user = candidate;
+                                break;
+                            }
+                        } else if (candidate.password === authCredential) {
+                            user = candidate;
+                            break;
+                        }
+                    }
 
                     if (user) {
                         console.log('找到用户:', user.username);
@@ -461,7 +475,7 @@ function addSecurityNotice() {
     }, 5000);
 }
 
-// 首次使用欢迎提示（安全版，不显示明文密码）
+// 首次使用欢迎提示（开源本地优先版）
 function showFirstTimeWelcome() {
     // 检查是否已经显示过欢迎提示
     if (document.getElementById('first-time-welcome')) {
@@ -476,22 +490,22 @@ function showFirstTimeWelcome() {
             <div class="first-time-welcome-emoji">🎉</div>
             <h2 class="first-time-welcome-title">欢迎使用象限时光！</h2>
             <p class="first-time-welcome-intro">
-                系统已为您初始化完毕，请按以下方式获取登录凭据：
+                当前开源版是本地优先应用，你可以直接创建当前浏览器可用的本地账号：
             </p>
 
             <div class="first-time-welcome-info">
                 <div class="first-time-welcome-row">
                     <span class="first-time-welcome-row-icon">📝</span>
                     <div>
-                        <div class="first-time-welcome-row-title">查看帮助文档</div>
-                        <div class="first-time-welcome-row-text">点击页面左下角“帮助”按钮，查看详细的使用指南</div>
+                        <div class="first-time-welcome-row-title">第一步：创建账号</div>
+                        <div class="first-time-welcome-row-text">点击登录页下方“本地注册 / 创建账号”，创建普通用户后即可进入应用。</div>
                     </div>
                 </div>
                 <div class="first-time-welcome-row">
-                    <span class="first-time-welcome-row-icon">📞</span>
+                    <span class="first-time-welcome-row-icon">🔐</span>
                     <div>
-                        <div class="first-time-welcome-row-title">联系管理员</div>
-                        <div class="first-time-welcome-row-text">点击登录表单下方“联系管理员”获取帮助</div>
+                        <div class="first-time-welcome-row-title">可选：初始化管理员</div>
+                        <div class="first-time-welcome-row-text">管理员用户名为 admin；首次输入任意 8 位以上密码，会初始化当前浏览器的本地管理员。</div>
                     </div>
                 </div>
             </div>
@@ -502,8 +516,8 @@ function showFirstTimeWelcome() {
                     <strong>安全提示</strong>
                 </div>
                 <div class="first-time-welcome-security-text">
-                    为保障账户安全，系统不会在页面上显示密码信息。<br>
-                    请通过上述安全渠道获取登录凭据。
+                    账号、任务和 AI 配置默认保存在当前浏览器本地。<br>
+                    换浏览器或清理缓存前，请先导出备份。
                 </div>
             </div>
 
@@ -1853,7 +1867,7 @@ async function handleAdminLogin(e) {
 }
 
 // 创建用户处理
-function handleCreateUser(e) {
+async function handleCreateUser(e) {
     e.preventDefault();
     const username = document.getElementById('new-username').value;
     const initialCredential = document.getElementById('new-password').value;
@@ -1866,7 +1880,7 @@ function handleCreateUser(e) {
 
     // 创建用户（密码使用哈希存储）
     const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
-        ? window.Security.Password.hashPassword(initialCredential)
+        ? await window.Security.Password.hashPassword(initialCredential)
         : initialCredential;
     const newUser = {
         id: 'user_' + Date.now(),
@@ -2114,16 +2128,16 @@ async function initLoginPage() {
 
 // 绑定其他事件
 function bindOtherEvents() {
-    // 显示管理员联系方式
-    const showAdminContactBtn = document.getElementById('show-admin-contact');
-    if (showAdminContactBtn) {
-        showAdminContactBtn.addEventListener('click', function (e) {
+    // 显示本地注册表单
+    const showRegisterBtn = document.getElementById('show-register');
+    if (showRegisterBtn) {
+        showRegisterBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            showAdminContact();
+            showRegisterForm();
         });
     }
 
-    // 显示管理员联系方式（从管理员表单）
+    // 显示开源版使用说明（从管理员表单）
     const showAdminContactFromAdminBtn = document.getElementById('show-admin-contact-from-admin');
     if (showAdminContactFromAdminBtn) {
         showAdminContactFromAdminBtn.addEventListener('click', function (e) {
@@ -2132,6 +2146,13 @@ function bindOtherEvents() {
         });
     }
 
+    const closeAdminContactBtn = document.getElementById('close-admin-contact-btn');
+    if (closeAdminContactBtn) {
+        closeAdminContactBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            closeAdminContact();
+        });
+    }
 
     // 显示登录表单
     const showLoginBtn = document.getElementById('show-login');
@@ -2150,9 +2171,16 @@ function showRegisterForm() {
     const loginPage = document.querySelector('.login-page');
 
     tabs.forEach(tab => tab.classList.remove('active'));
-    forms.forEach(form => form.classList.remove('active'));
+    forms.forEach(form => {
+        form.classList.remove('active');
+        form.style.display = 'none';
+    });
 
-    document.getElementById('register-form').classList.add('active');
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.style.display = 'block';
+        registerForm.classList.add('active');
+    }
     loginPage.classList.add('register-mode');
 }
 
@@ -2240,7 +2268,7 @@ function showAdminForm() {
             </button>
 
             <div class="login-footer">
-                <a href="#" id="show-admin-contact-from-admin">联系管理员获取账号</a>
+                <a href="#" id="show-admin-contact-from-admin">查看开源版使用说明</a>
             </div>
         `);
         adminForm.style.display = 'block';
@@ -2384,7 +2412,106 @@ async function handleAccountLogin(e) {
 // 处理注册
 async function handleRegister(e) {
     e.preventDefault();
-    showNotification('请联系管理员创建账号，或点击右下角"管理员"按钮', 'info');
+    clearErrors();
+
+    const username = document.getElementById('reg-username')?.value.trim() || '';
+    const email = document.getElementById('reg-email')?.value.trim() || '';
+    const newCredential = document.getElementById('reg-password')?.value || '';
+    const confirmCredential = document.getElementById('reg-confirm-password')?.value || '';
+
+    if (!validateLocalRegisterInput(username, email, newCredential, confirmCredential)) {
+        return;
+    }
+
+    showLoading(true);
+
+    try {
+        const users = window.UserStorage.getUsers();
+        const usernameKey = username.toLowerCase();
+        const emailKey = email.toLowerCase();
+        const existingUser = users.find(user => {
+            const sameUsername = String(user.username || '').toLowerCase() === usernameKey;
+            const sameEmail = emailKey && String(user.email || '').toLowerCase() === emailKey;
+            return sameUsername || sameEmail;
+        });
+
+        if (existingUser) {
+            showLoading(false);
+            showError('reg-username-error', '该用户名或邮箱已存在，请直接登录或换一个');
+            return;
+        }
+
+        const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
+            ? await window.Security.Password.hashPassword(newCredential)
+            : newCredential;
+
+        const newUser = {
+            id: `user_${Date.now()}`,
+            username,
+            email,
+            phone: '',
+            password: passwordHash,
+            role: 'user',
+            avatar: '',
+            permissions: DEFAULT_USER_PERMISSIONS.slice(),
+            createdAt: new Date().toISOString(),
+            createdBy: 'self-registration',
+            passwordMigrated: passwordHash !== newCredential,
+            localOnly: true
+        };
+
+        window.UserStorage.setUsers([...users, newUser]);
+
+        const sessionSaved = saveUserSession(newUser, true);
+        if (!sessionSaved) {
+            showLoading(false);
+            showNotification('账号已创建，但登录会话保存失败，请手动登录', 'error');
+            showLoginForm();
+            return;
+        }
+
+        backupUserData();
+        showNotification('本地账号创建成功，正在进入应用...', 'success');
+
+        setTimeout(() => {
+            window.location.replace('index.html?from=register&t=' + Date.now());
+        }, 300);
+    } catch (error) {
+        console.error('本地注册失败:', error);
+        showLoading(false);
+        showNotification('本地注册失败，请稍后重试', 'error');
+    }
+}
+
+function validateLocalRegisterInput(username, email, newCredential, confirmCredential) {
+    let isValid = true;
+
+    if (!username || username.length < 3) {
+        showError('reg-username-error', '用户名至少 3 个字符');
+        isValid = false;
+    }
+
+    if (username.toLowerCase() === 'admin') {
+        showError('reg-username-error', 'admin 是本地管理员保留账号，请换一个用户名');
+        isValid = false;
+    }
+
+    if (email && !validateEmail(email)) {
+        showError('reg-email-error', '请输入正确的邮箱地址');
+        isValid = false;
+    }
+
+    if (!newCredential || newCredential.length < 6) {
+        showError('reg-password-error', '密码至少 6 位');
+        isValid = false;
+    }
+
+    if (newCredential !== confirmCredential) {
+        showError('reg-confirm-password-error', '两次输入的密码不一致');
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 // 绑定表单事件
@@ -3017,33 +3144,29 @@ function createAdminSystem() {
     const adminContactHTML = `
         <div class="admin-contact-container" style="display: none;">
             <div class="admin-contact-card">
-                <h2>📞 联系管理员</h2>
+                <h2>🌱 开源版使用说明</h2>
                 <div class="contact-info">
                     <div class="contact-item">
-                        <div class="contact-icon">📱</div>
+                        <div class="contact-icon">👤</div>
                         <div class="contact-details">
-                            <h3>电话联系</h3>
-                            <p>Maintainer contact is not bundled in the open-source build. Configure it in your fork.</p>
+                            <h3>普通用户</h3>
+                            <p>点击“本地注册 / 创建账号”，即可在当前浏览器创建个人账号并开始使用。</p>
                         </div>
                     </div>
 
                     <div class="contact-item">
-                        <div class="contact-icon">💬</div>
+                        <div class="contact-icon">🔐</div>
                         <div class="contact-details">
-                            <h3>微信联系</h3>
-                            <p>扫描下方二维码添加管理员微信</p>
-                            <div class="qr-code">
-                                <div class="qr-image-container">
-                                    <img src="wechat-qr.png" alt="微信二维码" class="qr-image">
-                                    <!-- 备选方案：使用Base64编码的二维码图片 -->
-                                    <!-- <img src="data:image/png;base64,YOUR_BASE64_CODE_HERE" alt="微信二维码" class="qr-image"> -->
-                                    <div class="qr-placeholder" style="display: none;">
-                                        <div class="qr-icon">📱</div>
-                                        <p>微信二维码</p>
-                                        <p class="qr-tip">请使用微信扫描添加好友</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <h3>本地管理员</h3>
+                            <p>管理员用户名固定为 admin；首次输入任意 8 位以上密码会初始化当前浏览器的本地管理员。</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">💾</div>
+                        <div class="contact-details">
+                            <h3>数据边界</h3>
+                            <p>当前开源版默认使用浏览器本地存储；换浏览器或清理缓存前请先导出备份。</p>
                         </div>
                     </div>
                 </div>
@@ -3081,19 +3204,18 @@ function closeAdminLogin() {
     document.querySelector('.admin-contact-container').style.display = 'none';
 }
 
-// 显示管理员联系方式
+// 显示开源版使用说明
 function showAdminContact() {
-    console.log('showAdminContact 被调用');
-    console.log('关闭按钮id查找:', document.getElementById('close-admin-contact-btn'));
-    console.log('关闭按钮qs查找:', document.querySelector('.btn-secondary'));
-    document.querySelector('.admin-login-container').style.display = 'none';
-    document.querySelector('.user-management-container').style.display = 'none';
-    document.querySelector('.create-user-container').style.display = 'none';
-    document.querySelector('.change-admin-password-container').style.display = 'none';
+    document.querySelector('.admin-login-container')?.style.setProperty('display', 'none');
+    document.querySelector('.user-management-container')?.style.setProperty('display', 'none');
+    document.querySelector('.create-user-container')?.style.setProperty('display', 'none');
+    document.querySelector('.change-admin-password-container')?.style.setProperty('display', 'none');
     const cc = document.querySelector('.admin-contact-container');
     if (cc) cc.style.display = 'flex';
-}function closeAdminContact() {
-    document.querySelector('.admin-contact-container').style.display = 'none';
+}
+
+function closeAdminContact() {
+    document.querySelector('.admin-contact-container')?.style.setProperty('display', 'none');
     const accountForm = document.getElementById('account-form');
     const adminForm = document.getElementById('admin-form');
     if (accountForm) {

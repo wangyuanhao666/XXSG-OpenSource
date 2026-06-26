@@ -186,9 +186,9 @@
         '登录': 'Log In',
         '忘记密码？': 'Forgot password?',
         '数据同步': 'Data Sync',
-        '还没有账号？联系管理员获取账号': 'No account yet? Contact an administrator',
+        '还没有账号？本地注册 / 创建账号': 'No account yet? Create a local account',
         '还没有账号？': 'No account yet?',
-        '联系管理员获取账号': ' Contact an administrator',
+        '本地注册 / 创建账号': 'Create a local account',
         '管理员后台': 'Admin Console'
     };
 

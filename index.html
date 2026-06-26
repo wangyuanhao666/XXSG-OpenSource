@@ -4,14 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="pageTitle">象限时光</title>
+    <title data-translate="pageTitle">象限时光 XXSG - 本地优先的四象限生产力 PWA</title>
+    <meta name="description" content="象限时光 XXSG 是一个本地优先的开源生产力 PWA，提供四象限任务、日历、习惯打卡、番茄钟、每日一签和 BYOK AI 功能。">
+    <meta name="application-name" content="象限时光 XXSG">
+    <meta name="robots" content="index,follow">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="象限时光 XXSG">
+    <meta property="og:description" content="本地优先的开源四象限生产力 PWA，支持自托管和 BYOK AI。">
+    <meta property="og:url" content="https://wangyuanhao666.github.io/XXSG-OpenSource/">
+    <meta name="twitter:card" content="summary">
     <!-- Favicon 配置 - 多格式兼容 -->
     <link rel="icon" type="image/svg+xml" href="logo-icon.svg?v=20260526-1">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="logo-icon.svg?v=20260526-1">
     <link rel="shortcut icon" href="favicon.svg">
     <!-- 安全修复脚本 - 必须最先加载 -->
-    <script><script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf("xxsg")>=0}).map(function(k){return caches.delete(k)}))})</script>
+    <script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf("xxsg")>=0}).map(function(k){return caches.delete(k)}))})</script>
     <script src="js/session-sanitize-boot.js?v=1.0.0"></script>
     <script src="js/indexeddb-storage.js?v=20260619-1"></script>
     <link rel="stylesheet" href="style-blue.css?v=20260621-3">

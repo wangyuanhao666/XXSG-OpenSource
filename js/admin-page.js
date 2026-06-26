@@ -5354,7 +5354,7 @@ function createNewUser() {
 }
 
 // 处理创建用户
-function handleCreateUser() {
+async function handleCreateUser() {
     const username = document.getElementById('new-username').value.trim();
     const initialCredential = document.getElementById('new-password').value;
     const email = document.getElementById('new-email').value.trim();
@@ -5388,15 +5388,20 @@ function handleCreateUser() {
         return;
     }
 
+    const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
+        ? await window.Security.Password.hashPassword(initialCredential)
+        : initialCredential;
+
     const newUser = {
         id: 'user_' + Date.now(),
         username: username,
-        password: initialCredential,
+        password: passwordHash,
         email: email || '',
         role: role,
         permissions: selectedPermissions,
         createdAt: new Date().toISOString(),
-        createdBy: 'admin'
+        createdBy: 'admin',
+        passwordMigrated: passwordHash !== initialCredential
     };
 
     users.push(newUser);
