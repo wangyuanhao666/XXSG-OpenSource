@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible bug in XXSG
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve XXSG. Please do not paste API keys or personal backup data.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, and deployment type.
+      placeholder: "Chrome 126 / Windows 11 / local npm run serve"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Tell us exactly how to reproduce the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Screenshots are welcome. Please redact private data.
