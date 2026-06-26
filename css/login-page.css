@@ -588,6 +588,47 @@
     color: #dc2626;
 }
 
+.admin-local-state {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.admin-local-state[data-state="initialized"] {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #9a3412;
+}
+
+.admin-local-state[data-state="empty"] {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.footer-separator {
+    margin: 0 0.5rem;
+    color: #cbd5e1;
+}
+
+.link-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #2563eb;
+    font: inherit;
+    cursor: pointer;
+}
+
+.link-button:hover {
+    text-decoration: underline;
+}
+
 /* 忘记密码页面全新设计 */
 .forgot-password-content {
     padding: 0;

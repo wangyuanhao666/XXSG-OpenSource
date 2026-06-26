@@ -79,6 +79,52 @@ function setLoginView(view) {
     if (loginPage) {
         loginPage.classList.toggle('register-mode', view === 'register');
     }
+
+    if (view === 'admin') {
+        updateAdminLocalState();
+    }
+}
+
+function getInputValue(...ids) {
+    for (const id of ids) {
+        const element = document.getElementById(id);
+        const value = element?.value || '';
+        if (value) return value.trim ? value.trim() : value;
+    }
+    return '';
+}
+
+async function hashAdminCredentialIfPossible(credential) {
+    if (window.Security?.Password?.hashPassword) {
+        return window.Security.Password.hashPassword(credential);
+    }
+    return credential;
+}
+
+function updateAdminLocalState() {
+    const stateBox = document.getElementById('admin-local-state');
+    if (!stateBox || !window.AdminStorage) return;
+
+    const hasAdminPassword = Boolean(window.AdminStorage.getRaw('adminPassword'));
+    if (hasAdminPassword) {
+        stateBox.dataset.state = 'initialized';
+        stateBox.textContent = '当前浏览器已经初始化过本地管理员。请使用你之前设置的管理员密码登录；如果忘记了，可以点击下方“重置本地管理员”后重新初始化。';
+    } else {
+        stateBox.dataset.state = 'empty';
+        stateBox.textContent = '当前浏览器尚未初始化本地管理员。管理员账号固定为 admin；首次输入任意 8 位以上密码，会把它设置为本地管理员密码。';
+    }
+}
+
+function resetLocalAdminInitialization() {
+    if (!window.AdminStorage) return;
+    const confirmed = window.confirm('确认重置当前浏览器的本地管理员密码吗？这不会删除普通用户、任务和设置，但你需要重新用 admin + 新的 8 位以上密码初始化管理员。');
+    if (!confirmed) return;
+
+    window.AdminStorage.removeKey('adminPassword');
+    updateAdminLocalState();
+    const passwordInput = document.getElementById('admin-password') || document.getElementById('admin-password-2');
+    if (passwordInput) passwordInput.value = '';
+    showNotification('本地管理员已重置，请使用 admin 和新的 8 位以上密码重新初始化。', 'success');
 }
 
 // 工具函数定义 - 必须在其他函数之前定义
@@ -1598,6 +1644,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 确保默认只显示账号登录表单，隐藏管理员和注册表单
     setLoginView('account');
+    updateAdminLocalState();
 
     console.log('登录页面初始化完成');
 });
@@ -1628,10 +1675,9 @@ function initializeLoginPage() {
     const adminTab = document.querySelector('[data-tab="admin"]');
     const accountForm = document.getElementById('account-form');
     const adminForm = document.getElementById('admin-form');
-    const registerForm = document.getElementById('register-form');
-
-    if (accountTab && adminTab && accountForm && adminForm && registerForm) {
+    if (accountTab && adminTab && accountForm && adminForm) {
         setLoginView('account');
+        updateAdminLocalState();
 
         console.log('登录页面状态初始化完成');
     } else {
@@ -1800,8 +1846,8 @@ function checkLoginStatus() {
 // 管理员登录处理
 async function handleAdminLogin(e) {
     e.preventDefault();
-    const username = document.getElementById('admin-username').value.trim() || document.getElementById('admin-username-2').value.trim();
-    const adminCredential = document.getElementById('admin-password').value || document.getElementById('admin-password-2').value;
+    const username = getInputValue('admin-username', 'admin-username-2');
+    const adminCredential = getInputValue('admin-password', 'admin-password-2');
 
     console.log('管理员登录尝试:', username);
 
@@ -1816,7 +1862,9 @@ async function handleAdminLogin(e) {
     let isValid = false;
 
     if (storedAdminCredential) {
-        if (storedAdminCredential.includes(':')) {
+        if (username !== 'admin') {
+            isValid = false;
+        } else if (storedAdminCredential.includes(':')) {
             // 哈希格式，使用Security模块的verifyPassword方法
             console.log('检测到哈希密码，使用Security模块验证');
             if (window.Security && window.Security.Password && window.Security.Password.verifyPassword) {
@@ -1831,18 +1879,24 @@ async function handleAdminLogin(e) {
             // 明文格式
             console.log('检测到明文密码');
             isValid = (username === 'admin' && adminCredential === storedAdminCredential);
+            if (isValid) {
+                const hashedCredential = await hashAdminCredentialIfPossible(adminCredential);
+                if (hashedCredential !== adminCredential) {
+                    window.AdminStorage.setAdminPassword(hashedCredential);
+                }
+            }
         }
     } else {
-        // 没有设置密码，使用默认密码
-        console.log('使用默认密码');
         // Open-source/self-hosted first run: initialize the local admin password.
         if (username === 'admin' && adminCredential.length >= 8) {
-            window.AdminStorage.setAdminPassword(adminCredential);
+            const hashedCredential = await hashAdminCredentialIfPossible(adminCredential);
+            window.AdminStorage.setAdminPassword(hashedCredential);
             isValid = true;
             console.log('Admin password initialized for this browser deployment.');
-            showNotification('Admin password initialized. Please keep it safe.', 'success');
+            updateAdminLocalState();
+            showNotification('本地管理员初始化成功，请妥善保存这个密码。', 'success');
         } else {
-            showError('admin-password-error', 'First admin password must be at least 8 characters.');
+            showError('admin-password-error', '首次初始化请使用账号 admin，并输入至少 8 位密码。');
             return;
         }
     }
@@ -1873,7 +1927,7 @@ async function handleAdminLogin(e) {
         window.location.href = 'admin.html';
     } else {
         console.log('管理员登录失败: 账号或密码错误');
-        showError('admin-username-error', '管理员账号或密码错误');
+        showError('admin-username-error', '管理员账号或密码错误。如果忘记本地管理员密码，可点击下方“重置本地管理员”后重新初始化。');
         // 保持在当前管理员登录页面，不进行表单切换
         // 只显示错误提示，让用户重新输入
     }
@@ -2164,6 +2218,14 @@ function bindOtherEvents() {
         closeAdminContactBtn.addEventListener('click', function (e) {
             e.preventDefault();
             closeAdminContact();
+        });
+    }
+
+    const resetLocalAdminBtn = document.getElementById('reset-local-admin-btn');
+    if (resetLocalAdminBtn) {
+        resetLocalAdminBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            resetLocalAdminInitialization();
         });
     }
 

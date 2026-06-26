@@ -13,6 +13,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 - Dedicated `register.html` page for local account creation.
 - Open-source first-use guidance on the login page.
 - SEO/social metadata for the main entry and login page.
+- Local admin initialization status notice and reset action on the admin login form.
 
 ### Changed
 
@@ -20,11 +21,13 @@ The project follows pragmatic release notes rather than strict semantic versioni
 - Separated login and registration views so account login, admin login, and registration no longer appear together.
 - Clarified that ordinary users can create a browser-local account without contacting the project maintainer.
 - Aligned admin-created users and self-registered users to password-hash storage.
+- Clarified initialized vs uninitialized local admin behavior.
 
 ### Fixed
 
 - Fixed a malformed nested script tag in `index.html`.
 - Fixed hashed local user login fallback when `secureUserLogin` is not provided.
+- Fixed local admin login so hashed-password verification still requires username `admin`.
 
 ## [v1.0.0-local-first] - 2026-06-26
 

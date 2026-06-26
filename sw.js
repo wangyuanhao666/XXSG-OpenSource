@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.20';
+const CACHE_VERSION = 'xxsg-v3.0.21';
 const APP_SHELL = [
   './',
   './index.html',

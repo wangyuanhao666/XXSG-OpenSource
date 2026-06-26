@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/login-page.css?v=1.0.0">
+    <link rel="stylesheet" href="css/login-page.css?v=1.0.2">
 
     <link rel="stylesheet" href="world-class-design-system.css?v=20260529-2">
 </head>
@@ -88,6 +88,8 @@
 
             <!-- 管理员登录表单 -->
             <form class="login-form" id="admin-form">
+                <div class="admin-local-state" id="admin-local-state" role="status" aria-live="polite"></div>
+
                 <div class="form-group">
                     <label for="admin-username">管理员账号</label>
                     <input type="text" id="admin-username" name="admin-username" placeholder="请输入管理员账号"
@@ -108,6 +110,8 @@
 
                 <div class="login-footer">
                     <a href="#" id="show-admin-contact-from-admin">查看开源版使用说明</a>
+                    <span class="footer-separator">|</span>
+                    <button type="button" class="link-button" id="reset-local-admin-btn">重置本地管理员</button>
                 </div>
             </form>
 
@@ -221,7 +225,7 @@
     <script src="js/task-storage.js?v=1.0.0"></script>
     <script src="js/settings-storage.js?v=1.0.0"></script>
     <script src="js/data-sync-storage.js?v=1.0.0"></script>
-    <script src="js/login-page.js?v=20260619-9"></script>
+    <script src="js/login-page.js?v=1.0.2"></script>
 
     <!-- 安全模块 -->
     <script src="src/core/security.js?v=1.0.0"></script>
