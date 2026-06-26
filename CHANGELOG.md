@@ -8,6 +8,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ### Added
 
+- Quick-start entry table in README for demo, login, admin initialization, and BYOK AI configuration.
 - GitHub Pages demo link in README.
 - Local self-registration flow for the open-source build.
 - Dedicated `register.html` page for local account creation.
@@ -26,6 +27,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ### Fixed
 
+- Removed stale references to missing security helper scripts from HTML entry points.
 - Fixed a malformed nested script tag in `index.html`.
 - Fixed hashed local user login fallback when `secureUserLogin` is not provided.
 - Fixed local admin login so hashed-password verification still requires username `admin`.
