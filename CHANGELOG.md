@@ -6,6 +6,8 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ## [Unreleased]
 
+## [v1.0.1] - 2026-06-26
+
 ### Added
 
 - Quick-start entry table in README for demo, login, admin initialization, and BYOK AI configuration.
@@ -66,3 +68,4 @@ The project follows pragmatic release notes rather than strict semantic versioni
 - This release is not a complete public multi-tenant SaaS.
 
 [v1.0.0-local-first]: https://github.com/wangyuanhao666/XXSG-OpenSource/releases/tag/v1.0.0-local-first
+[v1.0.1]: https://github.com/wangyuanhao666/XXSG-OpenSource/releases/tag/v1.0.1

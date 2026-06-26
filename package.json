@@ -1,6 +1,6 @@
 {
   "name": "xxsg-open-source",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "Local-first self-hosted productivity PWA with four-quadrant tasks, calendar, habits, Pomodoro, daily fortune, and BYOK AI features.",
   "license": "MIT",
