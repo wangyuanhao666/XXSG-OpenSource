@@ -6,6 +6,15 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ## [Unreleased]
 
+### Added
+
+- Credential write regression check to block direct plaintext password writes in CI.
+
+### Fixed
+
+- Password reset, profile password change, admin user editing, and admin password change now write hashed credentials when the security module is available.
+- Admin password change now verifies hashed local admin credentials instead of comparing the stored hash as plaintext.
+
 ## [v1.0.1] - 2026-06-26
 
 ### Added

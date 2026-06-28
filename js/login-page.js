@@ -101,6 +101,22 @@ async function hashAdminCredentialIfPossible(credential) {
     return credential;
 }
 
+function isStoredCredentialHash(credential) {
+    return typeof credential === 'string' && credential.includes(':');
+}
+
+async function verifyCredentialIfPossible(inputCredential, storedCredential) {
+    if (!inputCredential || !storedCredential) {
+        return false;
+    }
+
+    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
+        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
+    }
+
+    return inputCredential === storedCredential;
+}
+
 function updateAdminLocalState() {
     const stateBox = document.getElementById('admin-local-state');
     if (!stateBox || !window.AdminStorage) return;
@@ -2883,7 +2899,7 @@ async function simulatePhoneLogin(phone, code) {
 // 模拟注册请求
 async function simulateRegister(username, phone, newCredential) {
     return new Promise((resolve) => {
-        setTimeout(() => {
+        setTimeout(async () => {
             // 检查用户是否已存在
             const users = window.UserStorage.getUsers();
             const existingUser = users.find(u =>
@@ -2893,11 +2909,13 @@ async function simulateRegister(username, phone, newCredential) {
             if (existingUser) {
                 resolve(null);
             } else {
+                const passwordHash = await hashAdminCredentialIfPossible(newCredential);
                 const newUser = {
                     id: 'user_' + Date.now(),
                     username: username,
                     phone: phone,
-                    password: newCredential,
+                    password: passwordHash,
+                    passwordMigrated: passwordHash !== newCredential,
                     avatar: '',
                     createdAt: new Date().toISOString(),
                     verified: true // 通过验证码验证
@@ -3666,7 +3684,7 @@ function editUser(userId) {
     document.body.appendChild(editDialog);
 
     // 绑定编辑表单事件
-    document.getElementById('edit-user-form').addEventListener('submit', function (e) {
+    document.getElementById('edit-user-form').addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const username = document.getElementById('edit-username').value;
@@ -3677,6 +3695,7 @@ function editUser(userId) {
         // 获取选中的权限
         const permissionCheckboxes = document.querySelectorAll('input[name="edit-permissions"]:checked');
         const permissions = Array.from(permissionCheckboxes).map(cb => cb.value);
+        const passwordHash = editedCredential ? await hashAdminCredentialIfPossible(editedCredential) : null;
 
         // 更新用户信息
         const updatedUsers = users.map(u => {
@@ -3684,7 +3703,8 @@ function editUser(userId) {
                 return {
                     ...u,
                     username: username,
-                    password: editedCredential || u.password, // 如果密码为空，保持原密码
+                    password: passwordHash || u.password, // 如果密码为空，保持原密码
+                    passwordMigrated: passwordHash ? passwordHash !== editedCredential : u.passwordMigrated,
                     email: email,
                     role: role,
                     permissions: permissions, // 更新权限信息
@@ -3891,7 +3911,7 @@ function clearForgotPasswordErrors() {
     errorElements.forEach(el => el.textContent = '');
 }
 
-function resetPassword() {
+async function resetPassword() {
     try {
         const phone = document.getElementById('reset-phone').value.trim();
         const email = document.getElementById('reset-email').value.trim();
@@ -3941,8 +3961,10 @@ function resetPassword() {
             return;
         }
 
-        // 更新用户密码
-        user.password = newCredential;
+        // 更新用户密码。开源版兼容旧明文数据，但新写入统一保存为哈希。
+        const passwordHash = await hashAdminCredentialIfPossible(newCredential);
+        user.password = passwordHash;
+        user.passwordMigrated = passwordHash !== newCredential;
 
         // 保存到localStorage
         window.UserStorage.setUsers(users);
@@ -4081,7 +4103,7 @@ function checkPasswordStrength(credential) {
 }
 
 // 修改管理员密码
-function changeAdminPassword() {
+async function changeAdminPassword() {
     try {
         const currentCredential = document.getElementById('current-admin-password').value;
         const newCredential = document.getElementById('new-admin-password').value;
@@ -4098,15 +4120,16 @@ function changeAdminPassword() {
         }
 
         // 验证指令密码
-        if (!verifyCommandPassword(commandCredential)) {
+        const storedAdminCredential = getCurrentAdminPassword();
+
+        if (!(await verifyCredentialIfPossible(commandCredential, storedAdminCredential))) {
             showError('command-password-error', '指令密码错误，无法完成修改');
             showNotification('指令密码验证失败', 'error');
             return;
         }
 
         // 验证当前密码
-        const storedAdminCredential = getCurrentAdminPassword();
-        if (currentCredential !== storedAdminCredential) {
+        if (!(await verifyCredentialIfPossible(currentCredential, storedAdminCredential))) {
             showError('current-admin-password-error', '当前密码不正确');
             return;
         }
@@ -4133,8 +4156,9 @@ function changeAdminPassword() {
             return;
         }
 
-        // 更新管理员密码
-        setAdminPassword(newCredential);
+        // 更新管理员密码。兼容旧明文密码，但新密码统一保存为哈希。
+        const hashedCredential = await hashAdminCredentialIfPossible(newCredential);
+        setAdminPassword(hashedCredential);
 
         // 修改管理员密码后备份数据
         backupUserData();

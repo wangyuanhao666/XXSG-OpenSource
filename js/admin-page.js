@@ -5621,8 +5621,31 @@ function editUser(userId) {
     }
 }
 
+function isStoredCredentialHash(credential) {
+    return typeof credential === 'string' && credential.includes(':');
+}
+
+async function verifyCredentialIfPossible(inputCredential, storedCredential) {
+    if (!inputCredential || !storedCredential) {
+        return false;
+    }
+
+    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
+        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
+    }
+
+    return inputCredential === storedCredential;
+}
+
+async function hashCredentialIfPossible(credential) {
+    if (window.Security?.Password?.hashPassword) {
+        return window.Security.Password.hashPassword(credential);
+    }
+    return credential;
+}
+
 // 处理编辑用户
-function handleEditUser(userId) {
+async function handleEditUser(userId) {
     const username = document.getElementById('edit-username').value.trim();
     const email = document.getElementById('edit-email').value.trim();
     const role = document.getElementById('edit-role').value;
@@ -5701,7 +5724,9 @@ function handleEditUser(userId) {
     users[userIndex].role = role;
     users[userIndex].permissions = cleanPermissions;
     if (editedCredential) {
-        users[userIndex].password = editedCredential;
+        const passwordHash = await hashCredentialIfPossible(editedCredential);
+        users[userIndex].password = passwordHash;
+        users[userIndex].passwordMigrated = passwordHash !== editedCredential;
     }
 
     console.log('🔧 准备保存的用户数据:', {
@@ -5790,7 +5815,7 @@ function deleteUser(userId) {
 }
 
 // 修改密码
-function changePassword() {
+async function changePassword() {
     const currentCredential = document.getElementById('current-password').value;
     const newCredential = document.getElementById('new-password').value;
     const confirmCredential = document.getElementById('confirm-password').value;
@@ -5810,9 +5835,14 @@ function changePassword() {
         return;
     }
 
-    // 这里应该验证当前密码，然后更新密码
-    // 为了演示，我们直接更新
-    window.AdminStorage.setAdminPassword(newCredential);
+    const storedAdminCredential = window.AdminStorage.getRaw('adminPassword') || '';
+    if (!(await verifyCredentialIfPossible(currentCredential, storedAdminCredential))) {
+        alert('当前密码不正确');
+        return;
+    }
+
+    const hashedCredential = await hashCredentialIfPossible(newCredential);
+    window.AdminStorage.setAdminPassword(hashedCredential);
     window.AdminStorage.addPasswordChangeLog({ action: 'password_changed', note: 'admin page update' });
     alert('密码修改成功！');
 

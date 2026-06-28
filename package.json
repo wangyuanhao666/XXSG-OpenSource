@@ -26,12 +26,13 @@
     "ai"
   ],
   "scripts": {
-    "check": "npm run check:syntax && npm run check:manifest && npm run check:sw-cache && npm run check:production-boundary && npm run check:no-inline-handlers && npm run check:no-inner-html && npm run check:no-sensitive-console && npm run check:sensitive-field-categories && npm run check:max-file-size-soft && npm run check:pomodoro-storage && npm run check:task-storage && npm run check:calendar-event-storage && npm run check:settings-storage && npm run check:productivity-storage && npm run check:time-tracker-storage && npm run check:ai-assistant-storage && npm run check:user-storage && npm run check:session-storage && npm run check:admin-storage && npm run check:data-sync-storage",
+    "check": "npm run check:syntax && npm run check:manifest && npm run check:sw-cache && npm run check:production-boundary && npm run check:no-inline-handlers && npm run check:no-inner-html && npm run check:no-sensitive-console && npm run check:sensitive-field-categories && npm run check:credential-writes && npm run check:max-file-size-soft && npm run check:pomodoro-storage && npm run check:task-storage && npm run check:calendar-event-storage && npm run check:settings-storage && npm run check:productivity-storage && npm run check:time-tracker-storage && npm run check:ai-assistant-storage && npm run check:user-storage && npm run check:session-storage && npm run check:admin-storage && npm run check:data-sync-storage",
     "check:syntax": "node tools/check-js-syntax.mjs",
     "check:no-inline-handlers": "node tools/check-no-inline-handlers.mjs",
     "check:no-inner-html": "node tools/check-no-inner-html.mjs",
     "check:no-sensitive-console": "node tools/check-no-sensitive-console.mjs",
     "check:sensitive-field-categories": "node tools/check-sensitive-field-categories.mjs",
+    "check:credential-writes": "node tools/check-credential-writes.mjs",
     "check:max-file-size-soft": "node tools/check-max-file-size-soft.mjs",
     "check:pomodoro-storage": "node tools/check-pomodoro-storage.mjs",
     "check:task-storage": "node tools/check-task-storage.mjs",

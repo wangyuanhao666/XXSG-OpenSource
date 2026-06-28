@@ -906,7 +906,30 @@ function getPreferenceName(preferenceId) {
     return names[preferenceId] || preferenceId;
 }
 
-function changePassword() {
+function isStoredCredentialHash(credential) {
+    return typeof credential === 'string' && credential.includes(':');
+}
+
+async function verifyCredentialIfPossible(inputCredential, storedCredential) {
+    if (!inputCredential || !storedCredential) {
+        return false;
+    }
+
+    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
+        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
+    }
+
+    return inputCredential === storedCredential;
+}
+
+async function hashCredentialIfPossible(credential) {
+    if (window.Security?.Password?.hashPassword) {
+        return window.Security.Password.hashPassword(credential);
+    }
+    return credential;
+}
+
+async function changePassword() {
     try {
         const currentCredential = document.getElementById('current-password').value;
         const newCredential = document.getElementById('new-password').value;
@@ -976,8 +999,8 @@ function changePassword() {
             sessionActive: Boolean(sessionStr)
         });
 
-        // 验证当前密码（简单验证，实际应用中应该加密比较）
-        if (currentCredential !== latestUser.password) {
+        // 验证当前密码。兼容旧明文密码和新哈希密码。
+        if (!(await verifyCredentialIfPossible(currentCredential, latestUser.password))) {
             console.log('Credential verification failed.', {
                 userId: latestUser.id || currentUser.id || null,
                 username: latestUser.username || currentUser.username || null,
@@ -989,8 +1012,10 @@ function changePassword() {
 
         console.log('密码验证成功，开始更新密码');
 
-        // 更新用户密码
-        currentUser.password = newCredential;
+        // 更新用户密码。兼容旧明文数据，但新写入统一保存为哈希。
+        const passwordHash = await hashCredentialIfPossible(newCredential);
+        currentUser.password = passwordHash;
+        currentUser.passwordMigrated = passwordHash !== newCredential;
 
         // 更新localStorage中的用户会话
         const localSessionStr = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
@@ -1025,7 +1050,11 @@ function changePassword() {
                 let users = JSON.parse(usersStr);
                 users = users.map(u => {
                     if ((u.id && currentUser.id && u.id === currentUser.id) || (u.username === currentUser.username)) {
-                        return { ...u, password: newCredential };
+                        return {
+                            ...u,
+                            password: passwordHash,
+                            passwordMigrated: passwordHash !== newCredential
+                        };
                     }
                     return u;
                 });
