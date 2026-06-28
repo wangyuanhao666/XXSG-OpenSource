@@ -67,4 +67,5 @@ http://localhost:8080
 - 不要提交浏览器导出的个人备份。
 - 不要把当前版本描述为完整 SaaS。
 - 如果开放给公网用户，请在页面或 README 中说明本地存储和 BYOK 边界。
+- 每日一签 AI 和 AI 任务分析不会在部署后自动可用，需要部署者/使用者登录管理员后台配置 API Key：每日一签 AI 当前支持 DeepSeek；AI 任务分析当前支持 DeepSeek 和 OpenAI。
 - 如果要统一托管 AI Key，请先实现服务端 AI Proxy。

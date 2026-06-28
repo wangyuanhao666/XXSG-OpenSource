@@ -51,7 +51,7 @@ http://localhost:8080
 每日一签支持两种模式：
 
 - 传统签文：无需 API Key。
-- AI 签文：需要配置 DeepSeek API Key。
+- AI 签文：需要进入管理员后台配置 DeepSeek API Key。
 
 如果没有配置 AI Key，传统签文仍可正常使用。
 
@@ -62,8 +62,27 @@ http://localhost:8080
 你需要：
 
 1. 自行在模型服务商处申请 API Key。
-2. 在管理员后台配置。
+2. 登录管理员后台配置。
 3. 确认已启用对应 AI 功能。
+
+配置入口：
+
+1. 打开 `login.html`。
+2. 切换到“管理员后台登录”。
+3. 使用管理员账号 `admin` 登录；如果是首次使用，输入任意 8 位以上密码完成本地管理员初始化。
+4. 进入管理员后台后：
+   - 每日一签 AI：打开“AI 签语配置”，填写 DeepSeek API Key。
+   - AI 任务分析 / 智能建议：打开“AI 服务配置”，选择 DeepSeek 或 OpenAI，填写对应 API Key 并启用。
+
+当前支持的 API Key：
+
+| 功能 | 支持的 API Key | 默认接口 / 模型 |
+| --- | --- | --- |
+| 每日一签 AI 签文 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
+| AI 任务分析 / 智能建议 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
+| AI 任务分析 / 智能建议 | OpenAI API Key | `https://api.openai.com/v1/chat/completions`，`gpt-3.5-turbo` |
+
+说明：当前静态开源版主要配置 API Key，默认使用项目内置的官方接口和模型名称；它不是完整的自定义模型网关。
 
 请不要把真实 API Key 写入源码或提交到 GitHub。
 

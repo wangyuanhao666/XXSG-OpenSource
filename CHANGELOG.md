@@ -6,6 +6,12 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ## [Unreleased]
 
+### Documentation
+
+- Clarified that Daily Fortune AI and AI task analysis require API Key configuration in the admin dashboard.
+- Documented the currently supported API keys: DeepSeek for Daily Fortune AI, and DeepSeek / OpenAI for AI task analysis.
+- Aligned help page wording with the current admin API Key configuration flow.
+
 ## [v1.0.2] - 2026-06-28
 
 ### Added
