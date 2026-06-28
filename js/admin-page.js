@@ -1,22 +1,64 @@
 // ============================================================
 // 🤖 AI服务管理器（管理员后台专用）
 // ============================================================
+const AI_SERVICE_PRESETS = {
+    deepseek: { name: 'DeepSeek', endpoint: 'https://api.deepseek.com/chat/completions', model: 'deepseek-chat', protocol: 'openai-compatible', link: 'https://platform.deepseek.com' },
+    openai: { name: 'OpenAI', endpoint: 'https://api.openai.com/v1/chat/completions', model: 'gpt-3.5-turbo', protocol: 'openai-compatible', link: 'https://platform.openai.com' },
+    claude: { name: 'Claude', endpoint: 'https://api.anthropic.com/v1/messages', model: 'claude-sonnet-4-5', protocol: 'anthropic-messages', link: 'https://console.anthropic.com' },
+    kimi: { name: 'Kimi', endpoint: 'https://api.moonshot.cn/v1/chat/completions', model: 'kimi-k2.6', protocol: 'openai-compatible', link: 'https://platform.moonshot.cn' },
+    qwen: { name: '通义千问 Qwen', endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', model: 'qwen-plus', protocol: 'openai-compatible', link: 'https://dashscope.aliyun.com' },
+    glm: { name: 'GLM / Z.ai', endpoint: 'https://api.z.ai/api/paas/v4/chat/completions', model: 'glm-4.5-flash', protocol: 'openai-compatible', link: 'https://z.ai' },
+    minimax: { name: 'MiniMax', endpoint: 'https://api.minimax.io/v1/chat/completions', model: 'MiniMax-M3', protocol: 'openai-compatible', link: 'https://platform.minimaxi.com' }
+};
+
+function createAIServiceState() {
+    return Object.fromEntries(Object.entries(AI_SERVICE_PRESETS).map(([id, preset]) => [
+        id,
+        { ...preset, enabled: false, credential: null }
+    ]));
+}
+
+function getAIServiceInputId(serviceName) {
+    return serviceName === 'deepseek' ? 'deepseek-service-api-key' : `${serviceName}-api-key`;
+}
+
+function renderAIServiceConfigMarkup() {
+    const tabs = Object.entries(AI_SERVICE_PRESETS).map(([serviceName, preset], index) => `
+            <button class="service-tab ${index === 0 ? 'active' : ''}" data-ai-service="${serviceName}" data-admin-action="switchAIService">
+                ${preset.name}
+            </button>
+    `).join('');
+
+    const panels = Object.entries(AI_SERVICE_PRESETS).map(([serviceName, preset], index) => {
+        const inputId = getAIServiceInputId(serviceName);
+        return `
+            <div id="${serviceName}-config" class="service-config ${index === 0 ? 'active' : ''}">
+                <div class="form-group">
+                    <label for="${inputId}">🔑 ${preset.name} API Key:</label>
+                    <input type="password" id="${inputId}" placeholder="请输入 ${preset.name} API Key">
+                    <small>
+                        获取方式：访问 <a href="${preset.link}" target="_blank" rel="noopener noreferrer">${preset.name} 平台</a>
+                        · 默认模型：<code>${preset.model}</code>
+                    </small>
+                </div>
+                <button class="admin-btn primary" data-ai-service="${serviceName}" data-admin-action="saveAIServiceConfig">
+                    保存配置
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    return `
+        <div class="service-tabs">
+            ${tabs}
+        </div>
+        ${panels}
+    `;
+}
+
 class AIServiceManager {
     constructor() {
-        this._services = {
-            deepseek: {
-                name: 'DeepSeek',
-                enabled: false,
-                credential: null,
-                endpoint: 'https://api.deepseek.com/chat/completions'
-            },
-            openai: {
-                name: 'OpenAI',
-                enabled: false,
-                credential: null,
-                endpoint: 'https://api.openai.com/v1/chat/completions'
-            }
-        };
+        this._services = createAIServiceState();
         this.currentService = 'deepseek';
         this._initialized = false;
         this.init();
@@ -54,16 +96,16 @@ class AIServiceManager {
         }
 
         if (aiConfig) {
-            this._services.deepseek.enabled = aiConfig.deepseek?.enabled || false;
-            this._services.deepseek.credential = aiConfig.deepseek?.apiKey || null;
-            this._services.openai.enabled = aiConfig.openai?.enabled || false;
-            this._services.openai.credential = aiConfig.openai?.apiKey || null;
+            Object.keys(this._services).forEach(serviceName => {
+                this._services[serviceName].enabled = aiConfig[serviceName]?.enabled || false;
+                this._services[serviceName].credential = aiConfig[serviceName]?.apiKey || null;
+            });
             this.currentService = aiConfig.currentService || 'deepseek';
 
-            console.log('✅ AI配置加载完成:', {
-                deepseek: { enabled: this._services.deepseek.enabled, credentialConfigured: !!this._services.deepseek.credential },
-                openai: { enabled: this._services.openai.enabled, credentialConfigured: !!this._services.openai.credential }
-            });
+            console.log('✅ AI配置加载完成:', Object.fromEntries(Object.entries(this._services).map(([serviceName, service]) => [
+                serviceName,
+                { enabled: service.enabled, credentialConfigured: !!service.credential }
+            ])));
         }
     }
 
@@ -71,23 +113,23 @@ class AIServiceManager {
         if (this._services[service]) {
             this._services[service].credential = credential;
             this._services[service].enabled = !!credential;
+            if (credential) {
+                this.currentService = service;
+            }
             await this.saveAIConfig();
             console.log(`✅ ${service} API密钥已设置`);
         }
     }
 
     async saveAIConfig() {
-        const config = {
-            deepseek: {
-                enabled: this._services.deepseek.enabled,
-                apiKey: this._services.deepseek.credential
-            },
-            openai: {
-                enabled: this._services.openai.enabled,
-                apiKey: this._services.openai.credential
-            },
-            currentService: this.currentService
-        };
+        const config = Object.fromEntries(Object.entries(this._services).map(([serviceName, service]) => [
+            serviceName,
+            {
+                enabled: service.enabled,
+                apiKey: service.credential
+            }
+        ]));
+        config.currentService = this.currentService;
 
         if (window.secureStorage) {
             await window.secureStorage.ready();
@@ -111,16 +153,13 @@ class AIServiceManager {
     async debugAIConfig() {
         console.log('🔍 AI配置调试信息:');
         console.log('当前服务:', this.currentService);
-        console.log('服务状态:', {
-            deepseek: {
-                enabled: this._services.deepseek.enabled,
-                credentialConfigured: !!this._services.deepseek.credential
-            },
-            openai: {
-                enabled: this._services.openai.enabled,
-                credentialConfigured: !!this._services.openai.credential
+        console.log('服务状态:', Object.fromEntries(Object.entries(this._services).map(([serviceName, service]) => [
+            serviceName,
+            {
+                enabled: service.enabled,
+                credentialConfigured: !!service.credential
             }
-        });
+        ])));
     }
 }
 
@@ -688,10 +727,8 @@ function goToSystemStats() {
 
 // 页面加载时初始化AI配置显示
 function initAIConfigDisplay() {
-    // 加载DeepSeek配置
-    loadAIServiceConfig('deepseek');
-    // 加载OpenAI配置
-    loadAIServiceConfig('openai');
+    // 加载所有 AI 服务配置
+    Object.keys(AI_SERVICE_PRESETS).forEach(serviceName => loadAIServiceConfig(serviceName));
 }
 
 // 创建AI配置页面
@@ -766,36 +803,8 @@ function createAIConfigPage() {
                         <!-- AI服务配置 -->
                         <div class="ai-services-config">
                             <h3>🤖 AI服务配置</h3>
-                            <div class="service-tabs">
-            <button class="service-tab active" data-ai-service="deepseek" data-admin-action="switchAIService">
-                                    DeepSeek
-                                </button>
-            <button class="service-tab" data-ai-service="openai" data-admin-action="switchAIService">
-                                    OpenAI
-                                </button>
-                            </div>
-
-                            <div id="deepseek-config" class="service-config active">
-                                <div class="form-group">
-                                    <label for="deepseek-service-api-key">🔑 AI服务 DeepSeek API Key:</label>
-                                    <input type="password" id="deepseek-service-api-key" placeholder="请输入AI服务 DeepSeek API Key">
-                                    <small>获取方式：访问 <a href="https://platform.deepseek.com" target="_blank">DeepSeek开放平台</a></small>
-                                </div>
-                    <button class="admin-btn primary" data-ai-service="deepseek" data-admin-action="saveAIServiceConfig">
-                                    保存配置
-                                </button>
-                            </div>
-
-                            <div id="openai-config" class="service-config">
-                                <div class="form-group">
-                                    <label for="openai-api-key">🔑 OpenAI API Key:</label>
-                                    <input type="password" id="openai-api-key" placeholder="请输入OpenAI API Key">
-                                    <small>获取方式：访问 <a href="https://platform.openai.com" target="_blank">OpenAI平台</a></small>
-                                </div>
-                    <button class="admin-btn primary" data-ai-service="openai" data-admin-action="saveAIServiceConfig">
-                                    保存配置
-                                </button>
-                            </div>
+                            <p class="ai-service-note">AI任务分析支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax。当前为浏览器侧 BYOK 模式，请勿把真实 Key 提交到仓库。</p>
+                            ${renderAIServiceConfigMarkup()}
                         </div>
 
                         <!-- 使用统计 -->
@@ -5892,7 +5901,7 @@ async function loadAIServiceConfig(serviceName) {
         const serviceConfig = aiConfig[serviceName];
 
         // 根据服务名称获取正确的输入框ID
-        const inputId = serviceName === 'deepseek' ? 'deepseek-service-api-key' : `${serviceName}-api-key`;
+        const inputId = getAIServiceInputId(serviceName);
         const input = document.getElementById(inputId);
 
         // 🔧 优化：只有当 serviceConfig 存在且 credential 有值时才显示已配置
@@ -6010,7 +6019,7 @@ async function loadAIServiceConfig(serviceName) {
         } else if (input) {
             // 🔧 优化：未配置时清空所有状态
             input.value = '';
-            input.placeholder = `请输入${serviceName} API Key`;
+            input.placeholder = `请输入${AI_SERVICE_PRESETS[serviceName]?.name || serviceName} API Key`;
             input.style.color = '';
             input.readOnly = false; // 确保可编辑
             input.dataset.credential = ''; // 清空 dataset
@@ -6042,7 +6051,7 @@ async function saveAIServiceConfig(serviceName, event) {
     }
 
     // 根据服务名称获取正确的输入框ID
-    const inputId = serviceName === 'deepseek' ? 'deepseek-service-api-key' : `${serviceName}-api-key`;
+    const inputId = getAIServiceInputId(serviceName);
     const credentialInput = document.getElementById(inputId);
 
     if (!credentialInput) {
@@ -6100,6 +6109,7 @@ async function saveAIServiceConfig(serviceName, event) {
                     enabled: true,
                     apiKey: serviceCredential // 存储明文，由SecureStorage统一加密
                 };
+                aiConfig.currentService = serviceName;
 
                 if (window.secureStorage) {
                     await window.secureStorage.setSecure('aiConfig', aiConfig);
@@ -6132,15 +6142,11 @@ async function saveAIServiceConfig(serviceName, event) {
 
 // 测试AI服务API Key
 async function testAIServiceKey(serviceName, serviceCredential) {
-    const endpoints = {
-        deepseek: 'https://api.deepseek.com/chat/completions',
-        openai: 'https://api.openai.com/v1/chat/completions'
-    };
-
-    const models = {
-        deepseek: 'deepseek-chat',
-        openai: 'gpt-3.5-turbo'
-    };
+    const preset = AI_SERVICE_PRESETS[serviceName];
+    if (!preset) {
+        console.error('未知AI服务:', serviceName);
+        return false;
+    }
 
     try {
             const credentialConfigured = Boolean(serviceCredential);
@@ -6161,30 +6167,13 @@ async function testAIServiceKey(serviceName, serviceCredential) {
             return false;
         }
 
-        // 验证 API Key 格式
-        if (!cleanCredential.startsWith('sk-')) {
-            console.error('API Key格式错误：应以 sk- 开头');
-            return false;
-        }
+        const requestHeaders = buildAIServiceTestHeaders(preset, cleanCredential);
+        const requestBody = buildAIServiceTestBody(preset);
 
-        const response = await fetch(endpoints[serviceName], {
+        const response = await fetch(preset.endpoint, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${cleanCredential}`,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                model: models[serviceName],
-                messages: [
-                    {
-                        role: 'user',
-                        content: 'test'
-                    }
-                ],
-                max_tokens: 5,
-                temperature: 0.1
-            })
+            headers: requestHeaders,
+            body: JSON.stringify(requestBody)
         });
 
         console.log('📥 API测试响应:', response.status, response.statusText);
@@ -6202,6 +6191,53 @@ async function testAIServiceKey(serviceName, serviceCredential) {
         console.error('❌ 测试API Key异常:', error);
         return false;
     }
+}
+
+function buildAIServiceTestHeaders(preset, serviceCredential) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    };
+
+    if (preset.protocol === 'anthropic-messages') {
+        headers['x-api-key'] = serviceCredential;
+        headers['anthropic-version'] = '2023-06-01';
+        headers['anthropic-dangerous-direct-browser-access'] = 'true';
+        return headers;
+    }
+
+    headers.Authorization = `Bearer ${serviceCredential}`;
+    return headers;
+}
+
+function buildAIServiceTestBody(preset) {
+    if (preset.protocol === 'anthropic-messages') {
+        return {
+            model: preset.model,
+            messages: [
+                {
+                    role: 'user',
+                    content: 'test'
+                }
+            ],
+            max_tokens: 5,
+            temperature: 0.1,
+            stream: false
+        };
+    }
+
+    return {
+        model: preset.model,
+        messages: [
+            {
+                role: 'user',
+                content: 'test'
+            }
+        ],
+        max_tokens: 5,
+        temperature: 0.1,
+        stream: false
+    };
 }
 
 // 测试API Key

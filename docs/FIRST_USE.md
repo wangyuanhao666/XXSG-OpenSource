@@ -72,7 +72,7 @@ http://localhost:8080
 3. 使用管理员账号 `admin` 登录；如果是首次使用，输入任意 8 位以上密码完成本地管理员初始化。
 4. 进入管理员后台后：
    - 每日一签 AI：打开“AI 签语配置”，填写 DeepSeek API Key。
-   - AI 任务分析 / 智能建议：打开“AI 服务配置”，选择 DeepSeek 或 OpenAI，填写对应 API Key 并启用。
+   - AI 任务分析 / 智能建议：打开“AI 服务配置”，选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM 或 MiniMax，填写对应 API Key 并启用。
 
 当前支持的 API Key：
 
@@ -81,8 +81,13 @@ http://localhost:8080
 | 每日一签 AI 签文 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
 | AI 任务分析 / 智能建议 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
 | AI 任务分析 / 智能建议 | OpenAI API Key | `https://api.openai.com/v1/chat/completions`，`gpt-3.5-turbo` |
+| AI 任务分析 / 智能建议 | Claude / Anthropic API Key | `https://api.anthropic.com/v1/messages`，`claude-sonnet-4-5` |
+| AI 任务分析 / 智能建议 | Kimi / Moonshot API Key | `https://api.moonshot.cn/v1/chat/completions`，`kimi-k2.6` |
+| AI 任务分析 / 智能建议 | 通义千问 / DashScope API Key | `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`，`qwen-plus` |
+| AI 任务分析 / 智能建议 | GLM / Z.ai API Key | `https://api.z.ai/api/paas/v4/chat/completions`，`glm-4.5-flash` |
+| AI 任务分析 / 智能建议 | MiniMax API Key | `https://api.minimax.io/v1/chat/completions`，`MiniMax-M3` |
 
-说明：当前静态开源版主要配置 API Key，默认使用项目内置的官方接口和模型名称；它不是完整的自定义模型网关。
+说明：当前静态开源版主要配置 API Key，默认使用项目内置的官方接口和模型名称；它不是完整的自定义模型网关。Claude 使用 Anthropic Messages 协议，其它 AI 任务分析服务走 OpenAI 兼容 Chat Completions 协议。
 
 请不要把真实 API Key 写入源码或提交到 GitHub。
 

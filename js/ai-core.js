@@ -1,23 +1,27 @@
 // ==================== AI功能增强 ====================
 
+const AI_SERVICE_PRESETS = {
+    deepseek: { name: 'DeepSeek', endpoint: 'https://api.deepseek.com/chat/completions', model: 'deepseek-chat', protocol: 'openai-compatible' },
+    openai: { name: 'OpenAI', endpoint: 'https://api.openai.com/v1/chat/completions', model: 'gpt-3.5-turbo', protocol: 'openai-compatible' },
+    claude: { name: 'Claude', endpoint: 'https://api.anthropic.com/v1/messages', model: 'claude-sonnet-4-5', protocol: 'anthropic-messages' },
+    kimi: { name: 'Kimi', endpoint: 'https://api.moonshot.cn/v1/chat/completions', model: 'kimi-k2.6', protocol: 'openai-compatible' },
+    qwen: { name: '通义千问 Qwen', endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', model: 'qwen-plus', protocol: 'openai-compatible' },
+    glm: { name: 'GLM / Z.ai', endpoint: 'https://api.z.ai/api/paas/v4/chat/completions', model: 'glm-4.5-flash', protocol: 'openai-compatible' },
+    minimax: { name: 'MiniMax', endpoint: 'https://api.minimax.io/v1/chat/completions', model: 'MiniMax-M3', protocol: 'openai-compatible' }
+};
+
+function createAIServiceState() {
+    return Object.fromEntries(Object.entries(AI_SERVICE_PRESETS).map(([id, preset]) => [
+        id,
+        { ...preset, enabled: false, apiKey: null }
+    ]));
+}
+
 // AI服务管理器
 class AIServiceManager {
     constructor() {
         // 🔐 内部存储（真实的 API Key 存在这里）
-        this._services = {
-            deepseek: {
-                name: 'DeepSeek',
-                enabled: false,
-                apiKey: null,
-                endpoint: 'https://api.deepseek.com/chat/completions'
-            },
-            openai: {
-                name: 'OpenAI',
-                enabled: false,
-                apiKey: null,
-                endpoint: 'https://api.openai.com/v1/chat/completions'
-            }
-        };
+        this._services = createAIServiceState();
 
         this.currentService = 'deepseek';
 
@@ -26,13 +30,15 @@ class AIServiceManager {
         this.services = new Proxy(this._services, {
             get(target, prop) {
                 // 返回安全副本（不包含 apiKey）
-                if (prop === 'deepseek' || prop === 'openai') {
+                if (target[prop]) {
                     const service = target[prop];
                     return {
                         name: service.name,
                         enabled: service.enabled,
                         // 🔐 不暴露 apiKey
-                        endpoint: service.endpoint
+                        endpoint: service.endpoint,
+                        model: service.model,
+                        protocol: service.protocol
                     };
                 }
                 return target[prop];
@@ -89,15 +95,17 @@ class AIServiceManager {
                 debugLog('📋 找到AI配置');
 
                 // 🔐 使用 _services 访问真实数据
-                this._services.deepseek.enabled = aiConfig.deepseek?.enabled || false;
-                this._services.deepseek.apiKey = aiConfig.deepseek?.apiKey || null;
-                this._services.openai.enabled = aiConfig.openai?.enabled || false;
-                this._services.openai.apiKey = aiConfig.openai?.apiKey || null;
+                Object.keys(this._services).forEach(serviceName => {
+                    this._services[serviceName].enabled = aiConfig[serviceName]?.enabled || false;
+                    this._services[serviceName].apiKey = aiConfig[serviceName]?.apiKey || null;
+                });
                 this.currentService = aiConfig.currentService || 'deepseek';
 
                 debugLog('✅ AI配置加载完成:', {
-                    deepseek: { enabled: this._services.deepseek.enabled, hasKey: !!this._services.deepseek.apiKey },
-                    openai: { enabled: this._services.openai.enabled, hasKey: !!this._services.openai.apiKey },
+                    services: Object.fromEntries(Object.entries(this._services).map(([name, service]) => [
+                        name,
+                        { enabled: service.enabled, hasKey: !!service.apiKey }
+                    ])),
                     currentService: this.currentService
                 });
             } catch (error) {
@@ -139,17 +147,14 @@ class AIServiceManager {
 
     // 保存AI配置
     async saveAIConfig() {
-        const config = {
-            deepseek: {
-                enabled: this._services.deepseek.enabled,
-                apiKey: this._services.deepseek.apiKey
-            },
-            openai: {
-                enabled: this._services.openai.enabled,
-                apiKey: this._services.openai.apiKey
-            },
-            currentService: this.currentService
-        };
+        const config = Object.fromEntries(Object.entries(this._services).map(([serviceName, service]) => [
+            serviceName,
+            {
+                enabled: service.enabled,
+                apiKey: service.apiKey
+            }
+        ]));
+        config.currentService = this.currentService;
 
         if (window.secureStorage) {
             await window.secureStorage.ready();
@@ -167,6 +172,9 @@ class AIServiceManager {
         if (this._services[service]) {
             this._services[service].apiKey = apiKey;
             this._services[service].enabled = !!apiKey;
+            if (apiKey) {
+                this.currentService = service;
+            }
             await this.saveAIConfig();
             debugLog(`✅ ${service} API密钥已设置`);
         }
@@ -174,6 +182,11 @@ class AIServiceManager {
 
     // 获取当前可用的AI服务
     getAvailableService() {
+        const selected = this._services[this.currentService];
+        if (selected?.enabled && selected.apiKey) {
+            return this.currentService;
+        }
+
         for (const [serviceName, service] of Object.entries(this._services)) {
             if (service.enabled && service.apiKey) {
                 return serviceName;
@@ -188,22 +201,15 @@ class AIServiceManager {
         SafeLogger.debug('当前服务:', this.currentService);
 
         // 🔐 安全输出：不显示明文 API key
-        SafeLogger.debug('服务状态:', {
-            deepseek: {
-                enabled: this._services.deepseek.enabled,
-                hasKey: !!this._services.deepseek.apiKey,
-                keyLength: this._services.deepseek.apiKey?.length || 0,
-                keyPreview: this._services.deepseek.apiKey ?
-                    'sk-***' + this._services.deepseek.apiKey.slice(-4) : '无'
-            },
-            openai: {
-                enabled: this._services.openai.enabled,
-                hasKey: !!this._services.openai.apiKey,
-                keyLength: this._services.openai.apiKey?.length || 0,
-                keyPreview: this._services.openai.apiKey ?
-                    'sk-***' + this._services.openai.apiKey.slice(-4) : '无'
+        SafeLogger.debug('服务状态:', Object.fromEntries(Object.entries(this._services).map(([name, service]) => [
+            name,
+            {
+                enabled: service.enabled,
+                hasKey: !!service.apiKey,
+                keyLength: service.apiKey?.length || 0,
+                keyPreview: service.apiKey ? '***' + service.apiKey.slice(-4) : '无'
             }
-        });
+        ])));
 
         // 检查存储中的配置（加密）
         let storageInfo = {};
@@ -233,18 +239,14 @@ class AIServiceManager {
         return {
             currentService: this.currentService,
             availableService: this.getAvailableService(),
-            services: {
-                deepseek: {
-                    enabled: this._services.deepseek.enabled,
-                    hasKey: !!this._services.deepseek.apiKey,
-                    keyLength: this._services.deepseek.apiKey?.length || 0
-                },
-                openai: {
-                    enabled: this._services.openai.enabled,
-                    hasKey: !!this._services.openai.apiKey,
-                    keyLength: this._services.openai.apiKey?.length || 0
+            services: Object.fromEntries(Object.entries(this._services).map(([name, service]) => [
+                name,
+                {
+                    enabled: service.enabled,
+                    hasKey: !!service.apiKey,
+                    keyLength: service.apiKey?.length || 0
                 }
-            },
+            ])),
             storage: storageInfo,
             hasPlaintext: !!(oldPlainConfig || oldDeepSeekKey)
         };
@@ -283,28 +285,12 @@ class AIServiceManager {
             throw new Error('API Key未配置，请在管理员后台配置');
         }
 
-        // 构建请求体
-        const requestBody = {
-            model: service.name === 'DeepSeek' ? 'deepseek-chat' : 'gpt-3.5-turbo',
-            messages: [
-                {
-                    role: 'system',
-                    content: options.systemPrompt || '你是一个智能的任务管理助手，专门帮助用户分析任务并给出建议。'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            temperature: options.temperature || 0.7,
-            max_tokens: options.maxTokens || 500,
-            stream: false
-        };
-
-        // 确保DeepSeek API使用正确的模型名称
-        if (service.name === 'DeepSeek') {
-            requestBody.model = 'deepseek-chat';
-        }
+        const systemPrompt = options.systemPrompt || '你是一个智能的任务管理助手，专门帮助用户分析任务并给出建议。';
+        const requestBody = this.buildAIRequestBody(service, prompt, {
+            ...options,
+            systemPrompt
+        });
+        const requestHeaders = this.buildAIRequestHeaders(service);
 
         SafeLogger.debug('📤 发送API请求:', {
             model: requestBody.model,
@@ -317,11 +303,7 @@ class AIServiceManager {
         try {
             const response = await fetch(service.endpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${service.apiKey}`,
-                    'Accept': 'application/json'
-                },
+                headers: requestHeaders,
                 body: JSON.stringify(requestBody)
             });
 
@@ -375,10 +357,68 @@ class AIServiceManager {
         }
     }
 
+    buildAIRequestBody(service, prompt, options = {}) {
+        if (service.protocol === 'anthropic-messages') {
+            return {
+                model: service.model,
+                system: options.systemPrompt,
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                temperature: options.temperature || 0.7,
+                max_tokens: options.maxTokens || 500,
+                stream: false
+            };
+        }
+
+        return {
+            model: service.model,
+            messages: [
+                {
+                    role: 'system',
+                    content: options.systemPrompt
+                },
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ],
+            temperature: options.temperature || 0.7,
+            max_tokens: options.maxTokens || 500,
+            stream: false
+        };
+    }
+
+    buildAIRequestHeaders(service) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        };
+
+        if (service.protocol === 'anthropic-messages') {
+            headers['x-api-key'] = service.apiKey;
+            headers['anthropic-version'] = '2023-06-01';
+            headers['anthropic-dangerous-direct-browser-access'] = 'true';
+            return headers;
+        }
+
+        headers.Authorization = `Bearer ${service.apiKey}`;
+        return headers;
+    }
+
     // 解析AI响应
     parseAIResponse(response, serviceName) {
         try {
-            const content = response.choices[0].message.content;
+            const service = this._services[serviceName];
+            const content = service?.protocol === 'anthropic-messages'
+                ? response.content?.map(part => part.text || '').join('').trim()
+                : response.choices?.[0]?.message?.content;
+            if (!content) {
+                throw new Error('AI响应为空');
+            }
             SafeLogger.debug(`✅ ${serviceName}响应:`, content);
             return content;
         } catch (error) {
@@ -1853,14 +1893,13 @@ async function analyzeTaskWithAI() {
 
     SafeLogger.debug('🔧 AI服务状态检查:', {
         availableService: availableService,
-        deepseek: {
-            enabled: aiServiceManager.services.deepseek.enabled,
-            hasKey: !!aiServiceManager.services.deepseek.apiKey
-        },
-        openai: {
-            enabled: aiServiceManager.services.openai.enabled,
-            hasKey: !!aiServiceManager.services.openai.apiKey
-        }
+        services: Object.fromEntries(Object.entries(aiServiceManager._services || {}).map(([name, service]) => [
+            name,
+            {
+                enabled: service.enabled,
+                hasKey: !!service.apiKey
+            }
+        ]))
     });
 
     const analyzeBtn = document.querySelector('.ai-analyze-btn');
