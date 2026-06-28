@@ -2938,11 +2938,18 @@
                     var notice = document.createElement('div');
                     notice.id = 'backup-notice-banner';
                     var span = document.createElement('span');
-                    span.innerHTML = '💾 您的数据存储在浏览器本地，建议定期<a href="data-sync.html" style="color:#fff;font-weight:600;">导出备份</a>，防止误清除导致数据丢失';
+                    span.appendChild(document.createTextNode('💾 您的数据存储在浏览器本地，建议定期'));
+                    var backupLink = document.createElement('a');
+                    backupLink.href = 'data-sync.html';
+                    backupLink.textContent = '导出备份';
+                    backupLink.style.color = '#fff';
+                    backupLink.style.fontWeight = '600';
+                    span.appendChild(backupLink);
+                    span.appendChild(document.createTextNode('，防止误清除导致数据丢失'));
                     var closeBtn = document.createElement('button');
                     closeBtn.textContent = '×';
                     closeBtn.style.cssText = 'background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.2rem;cursor:pointer;margin-left:0.75rem;';
-                    closeBtn.onclick = function() { notice.remove(); };
+                    closeBtn.addEventListener('click', function() { notice.remove(); });
                     notice.appendChild(span);
                     notice.appendChild(closeBtn);
                     Object.assign(notice.style, {

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" role="img" aria-labelledby="title desc">
+  <title id="title">XXSG OpenSource quick start flow</title>
+  <desc id="desc">A visual quick start flow for local registration, admin initialization, BYOK AI configuration, and future SaaS backend boundaries.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="55%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#ecfeff"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-25%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#1e293b" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .title{font:800 46px "Inter","Noto Sans SC",Arial,sans-serif;fill:#0f172a}
+      .subtitle{font:500 22px "Inter","Noto Sans SC",Arial,sans-serif;fill:#475569}
+      .label{font:800 25px "Inter","Noto Sans SC",Arial,sans-serif;fill:#0f172a}
+      .body{font:500 18px "Inter","Noto Sans SC",Arial,sans-serif;fill:#475569}
+      .small{font:600 15px "Inter","Noto Sans SC",Arial,sans-serif;fill:#64748b}
+      .pill{font:800 15px "Inter","Noto Sans SC",Arial,sans-serif;fill:#fff}
+      .card{fill:#fff;stroke:#dbeafe;stroke-width:2;filter:url(#shadow)}
+      .soft{fill:#f8fafc;stroke:#e2e8f0;stroke-width:2}
+      .arrow{stroke:#2563eb;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+    </style>
+  </defs>
+
+  <rect width="1280" height="620" rx="36" fill="url(#bg)"/>
+  <circle cx="1120" cy="92" r="110" fill="#dbeafe" opacity="0.5"/>
+  <circle cx="160" cy="520" r="140" fill="#ccfbf1" opacity="0.45"/>
+
+  <g transform="translate(72 58)">
+    <rect x="0" y="0" width="148" height="48" rx="24" fill="url(#brand)"/>
+    <text x="74" y="31" text-anchor="middle" class="pill">Local-first</text>
+    <text x="0" y="104" class="title">XXSG 开源版快速路径</text>
+    <text x="0" y="143" class="subtitle">普通用户本地注册即用；部署者初始化本地管理员；AI 采用 BYOK，不内置公开默认密码。</text>
+  </g>
+
+  <g transform="translate(70 230)">
+    <rect class="card" x="0" y="0" width="250" height="220" rx="28"/>
+    <text x="32" y="56" font-size="42">🌱</text>
+    <text x="32" y="100" class="label">1. 本地注册</text>
+    <text x="32" y="138" class="body">打开 register.html</text>
+    <text x="32" y="170" class="body">创建当前浏览器账号</text>
+    <text x="32" y="202" class="small">不需要联系作者</text>
+  </g>
+
+  <path class="arrow" d="M340 340 C385 340 405 340 450 340"/>
+  <path class="arrow" d="M433 323 L454 340 L433 357"/>
+
+  <g transform="translate(470 230)">
+    <rect class="card" x="0" y="0" width="250" height="220" rx="28"/>
+    <text x="32" y="56" font-size="42">✅</text>
+    <text x="32" y="100" class="label">2. 直接使用</text>
+    <text x="32" y="138" class="body">任务 / 日历 / 习惯</text>
+    <text x="32" y="170" class="body">番茄钟 / 每日一签</text>
+    <text x="32" y="202" class="small">数据默认保存在本地</text>
+  </g>
+
+  <path class="arrow" d="M742 340 C790 340 810 265 858 265"/>
+  <path class="arrow" d="M838 252 L862 264 L845 285"/>
+  <path class="arrow" d="M742 340 C790 340 810 415 858 415"/>
+  <path class="arrow" d="M845 395 L862 416 L838 428"/>
+
+  <g transform="translate(880 140)">
+    <rect class="soft" x="0" y="0" width="330" height="168" rx="26"/>
+    <text x="28" y="50" font-size="36">🔐</text>
+    <text x="78" y="50" class="label">管理员初始化</text>
+    <text x="28" y="91" class="body">账号固定为 admin</text>
+    <text x="28" y="123" class="body">首次输入 8 位以上密码</text>
+    <text x="28" y="149" class="small">仅初始化当前浏览器本地后台</text>
+  </g>
+
+  <g transform="translate(880 350)">
+    <rect class="soft" x="0" y="0" width="330" height="168" rx="26"/>
+    <text x="28" y="50" font-size="36">🤖</text>
+    <text x="78" y="50" class="label">BYOK AI 配置</text>
+    <text x="28" y="91" class="body">每日一签 AI / AI 服务</text>
+    <text x="28" y="123" class="body">自行配置模型 API Key</text>
+    <text x="28" y="149" class="small">公网多人需先接 AI Proxy</text>
+  </g>
+
+  <g transform="translate(72 520)">
+    <rect x="0" y="0" width="1136" height="54" rx="27" fill="#0f172a" opacity="0.92"/>
+    <text x="34" y="35" class="pill">边界提醒：当前版本不是完整 SaaS。跨设备同步、服务端注册、统一 AI 额度和多人权限，需要后端认证、数据库和 AI Proxy。</text>
+  </g>
+</svg>

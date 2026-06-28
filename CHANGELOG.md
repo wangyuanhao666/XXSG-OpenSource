@@ -9,11 +9,13 @@ The project follows pragmatic release notes rather than strict semantic versioni
 ### Added
 
 - Credential write regression check to block direct plaintext password writes in CI.
+- README quick-start visual for local registration, admin initialization, BYOK AI configuration, and SaaS boundaries.
 
 ### Fixed
 
 - Password reset, profile password change, admin user editing, and admin password change now write hashed credentials when the security module is available.
 - Admin password change now verifies hashed local admin credentials instead of comparing the stored hash as plaintext.
+- Removed the remaining `index.html` HTML-string insertion and inline click handler from the local backup notice.
 
 ## [v1.0.1] - 2026-06-26
 
