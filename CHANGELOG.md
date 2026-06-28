@@ -6,6 +6,8 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ## [Unreleased]
 
+## [v1.0.2] - 2026-06-28
+
 ### Added
 
 - Credential write regression check to block direct plaintext password writes in CI.
@@ -80,3 +82,4 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 [v1.0.0-local-first]: https://github.com/wangyuanhao666/XXSG-OpenSource/releases/tag/v1.0.0-local-first
 [v1.0.1]: https://github.com/wangyuanhao666/XXSG-OpenSource/releases/tag/v1.0.1
+[v1.0.2]: https://github.com/wangyuanhao666/XXSG-OpenSource/releases/tag/v1.0.2
