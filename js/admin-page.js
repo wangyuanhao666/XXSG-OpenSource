@@ -769,22 +769,19 @@ function createAIConfigPage() {
                             </small>
                         </div>
 
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="enable-ai-fortune" checked>
-                                <span>启用AI签语生成功能（所有用户）</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="auto-fallback">
-                                <span>AI生成失败时自动回退到传统签语</span>
-                            </label>
+                        <!-- AI服务配置 -->
+                        <div class="ai-services-config">
+                            <h3>🤖 AI服务配置</h3>
+                            <p class="ai-service-note">AI 签语和 AI 任务分析支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax。当前为浏览器侧 BYOK 模式，API Key 只保存在当前浏览器本地，请勿把真实 Key 提交到仓库。</p>
+                            ${renderAIServiceConfigMarkup()}
                         </div>
 
                         <div class="config-status" id="config-status">
                             <h4>📊 当前状态</h4>
+                            <div class="status-item">
+                                <span>当前AI服务：</span>
+                                <span id="current-ai-service-status" class="status-badge">未配置</span>
+                            </div>
                             <div class="status-item">
                                 <span>API Key状态：</span>
                                 <span id="api-key-status" class="status-badge">未配置</span>
@@ -797,15 +794,22 @@ function createAIConfigPage() {
 
                         <!-- 将按钮移到当前状态卡片下方 -->
                         <div class="form-actions" style="margin-top: 1.5rem; margin-bottom: 2rem; text-align: center;">
-            <button type="button" data-admin-action="saveAIConfig" class="admin-btn">💾 保存配置</button>
+            <button type="button" data-admin-action="saveAIConfig" class="admin-btn">💾 保存AI签语开关</button>
             <button type="button" data-admin-action="testAIKey" class="admin-btn ai">🧪 测试当前AI服务</button>
                         </div>
 
-                        <!-- AI服务配置 -->
-                        <div class="ai-services-config">
-                            <h3>🤖 AI服务配置</h3>
-                            <p class="ai-service-note">AI 签语和 AI 任务分析支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax。当前为浏览器侧 BYOK 模式，请勿把真实 Key 提交到仓库。</p>
-                            ${renderAIServiceConfigMarkup()}
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enable-ai-fortune" checked>
+                                <span>启用AI签语生成功能（所有用户）</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-fallback">
+                                <span>AI生成失败时自动回退到传统签语</span>
+                            </label>
                         </div>
 
                         <!-- 使用统计 -->
@@ -1280,9 +1284,6 @@ async function loadAIConfigStatus() {
         aiCredential = configuredAIService;
     }
 
-    if (document.getElementById('deepseek-fortune-api-key')) {
-        document.getElementById('deepseek-fortune-api-key').value = aiCredential || '';
-    }
     if (document.getElementById('enable-ai-fortune')) {
         document.getElementById('enable-ai-fortune').checked = aiEnabled;
     }
@@ -1293,6 +1294,17 @@ async function loadAIConfigStatus() {
     // 更新状态显示
     const apiKeyStatus = document.getElementById('api-key-status');
     const aiFunctionStatus = document.getElementById('ai-function-status');
+    const currentAIServiceStatus = document.getElementById('current-ai-service-status');
+
+    if (currentAIServiceStatus) {
+        if (configuredAIService) {
+            currentAIServiceStatus.textContent = AI_SERVICE_PRESETS[configuredAIService]?.name || configuredAIService;
+            currentAIServiceStatus.className = 'status-badge status-success';
+        } else {
+            currentAIServiceStatus.textContent = '未配置';
+            currentAIServiceStatus.className = 'status-badge status-error';
+        }
+    }
 
     if (apiKeyStatus) {
         if (aiCredential) {
@@ -6251,7 +6263,7 @@ function buildAIServiceTestBody(preset) {
 }
 
 // 测试API Key
-async function testAIKey() {
+async function legacyDeepSeekFortuneTestAIKey() {
     // 使用AI签语专用的API Key输入框
     const credentialInput = document.getElementById('deepseek-fortune-api-key');
 
