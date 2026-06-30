@@ -8,14 +8,19 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 ### Documentation
 
-- Clarified that Daily Fortune AI and AI task analysis require API Key configuration in the admin dashboard.
-- Documented the currently supported API keys: DeepSeek for Daily Fortune AI, and DeepSeek / OpenAI / Claude / Kimi / Qwen / GLM / MiniMax for AI task analysis.
+- Clarified that Daily Fortune AI and AI task analysis share the same admin AI configuration.
+- Documented the currently supported API keys for both AI features: DeepSeek / OpenAI / Claude / Kimi / Qwen / GLM/Z.ai / MiniMax.
 - Aligned help page wording with the current admin API Key configuration flow.
 
 ### Added
 
 - Expanded AI task analysis providers to DeepSeek, OpenAI, Claude, Kimi, Qwen, GLM/Z.ai, and MiniMax.
+- Expanded Daily Fortune AI to use the shared multi-provider AI service configuration.
 - Added Anthropic Messages protocol support for Claude alongside OpenAI-compatible chat completions providers.
+
+### Changed
+
+- Renamed the admin "AI 签语配置" entry to "AI 配置" because the page now manages both Daily Fortune AI and AI service capabilities.
 
 ## [v1.0.2] - 2026-06-28
 

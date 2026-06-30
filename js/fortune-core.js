@@ -814,8 +814,29 @@ class FortuneSystem {
 
     // 🔐 检查是否有 API Key
     async hasApiKey() {
-        const key = await this.getApiKey();
-        return !!key;
+        const serviceName = await this.getConfiguredAIServiceName();
+        return !!serviceName;
+    }
+
+    async getConfiguredAIServiceName() {
+        if (window.aiServiceManager && typeof window.aiServiceManager.getAvailableService === 'function') {
+            const serviceName = window.aiServiceManager.getAvailableService();
+            if (serviceName) return serviceName;
+        }
+
+        const legacyKey = await this.getApiKey();
+        if (legacyKey && window.aiServiceManager && typeof window.aiServiceManager.setAPIKey === 'function') {
+            try {
+                await window.aiServiceManager.setAPIKey('deepseek', legacyKey);
+                if (typeof window.aiServiceManager.getAvailableService === 'function') {
+                    return window.aiServiceManager.getAvailableService();
+                }
+            } catch (error) {
+                SafeLogger.warn('Legacy DeepSeek key migration failed for AI fortune:', error);
+            }
+        }
+
+        return legacyKey ? 'deepseek' : null;
     }
 
     // AI生成签语
@@ -828,12 +849,12 @@ class FortuneSystem {
         if (requestedType !== 'ai') return;
 
         // 🔐 安全获取 API Key
-        const apiKey = await this.getApiKey();
-        SafeLogger.debug('API Key状态:', apiKey ? '已配置' : '未配置');
+        const aiServiceName = await this.getConfiguredAIServiceName();
+        SafeLogger.debug('AI服务状态:', aiServiceName || '未配置');
         SafeLogger.debug('AI功能状态:', this.aiEnabled ? '已启用' : '未启用');
         SafeLogger.debug('用户会话状态:', currentUser ? '已登录' : '未登录');
 
-        if (!apiKey) {
+        if (!aiServiceName) {
             SafeLogger.debug('API Key未配置，显示设置界面');
             this.showAISettings();
             return;
@@ -859,7 +880,7 @@ class FortuneSystem {
         this.showLoadingState();
 
         try {
-            const fortune = await this.callDeepSeekAPI(apiKey);
+            const fortune = await this.callConfiguredAIService(aiServiceName);
             // 将AI生成的内容分别存储到对应的属性中
             this.fortuneContent = fortune.text;
             this.fortuneMeaning = fortune.meaning;
@@ -934,14 +955,76 @@ class FortuneSystem {
     }
 
     // 调用DeepSeek API
-    async callDeepSeekAPI(apiKey) {
+    getAIFortuneSystemPrompt() {
+        return '你是一个智慧的中文签语生成器，专门为用户生成每日励志签语。请用简洁优美的中文回复，只输出 JSON，格式为 {"text":"签语内容","meaning":"含义解释","advice":"今日建议"}。';
+    }
+
+    parseAIFortuneResponse(content) {
+        try {
+            let cleanContent = String(content || '').trim();
+            if (cleanContent.includes('```json')) {
+                const match = cleanContent.match(/```json\s*([\s\S]*?)\s*```/);
+                if (match) cleanContent = match[1].trim();
+            } else if (cleanContent.includes('```')) {
+                const match = cleanContent.match(/```\s*([\s\S]*?)\s*```/);
+                if (match) cleanContent = match[1].trim();
+            }
+
+            const fortune = JSON.parse(cleanContent);
+            return {
+                text: fortune.text || '今日宜积极向上',
+                meaning: fortune.meaning || '保持积极心态，迎接美好的一天。',
+                advice: fortune.advice || '今日宜专注目标，稳步前进。',
+                source: 'AI生成',
+                timestamp: new Date().toISOString()
+            };
+        } catch (parseError) {
+            SafeLogger.error('AI fortune JSON parse failed:', parseError);
+            return {
+                text: '今日宜积极向上',
+                meaning: '保持积极心态，迎接美好的一天。',
+                advice: '今日宜专注目标，稳步前进。',
+                source: 'AI生成',
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
+    async callConfiguredAIService(serviceName) {
+        SafeLogger.debug('=== Start AI fortune generation ===', { serviceName });
+        const prompt = this.buildAIPrompt();
+
+        this.recordApiRequest();
+
+        if (window.aiServiceManager && typeof window.aiServiceManager.callAI === 'function') {
+            const content = await window.aiServiceManager.callAI(prompt, {
+                systemPrompt: this.getAIFortuneSystemPrompt(),
+                temperature: 0.8,
+                maxTokens: 500
+            });
+            return this.parseAIFortuneResponse(content);
+        }
+
+        if (serviceName === 'deepseek') {
+            const apiKey = await this.getApiKey();
+            if (apiKey) {
+                return this.callDeepSeekAPI(apiKey, { skipRecord: true });
+            }
+        }
+
+        throw new Error('AI 服务未初始化，请刷新页面后重试');
+    }
+
+    async callDeepSeekAPI(apiKey, options = {}) {
         SafeLogger.debug('=== 开始调用DeepSeek API ===');
         const prompt = this.buildAIPrompt();
         SafeLogger.debug('生成的提示词:', prompt);
         SafeLogger.debug('API Key状态:', apiKey ? '已配置' : '未配置');
 
         // 记录API请求
-        this.recordApiRequest();
+        if (!options.skipRecord) {
+            this.recordApiRequest();
+        }
 
         const response = await fetch('https://api.deepseek.com/chat/completions', {
             method: 'POST',
@@ -1263,7 +1346,7 @@ class FortuneSystem {
     }
 
     createAdminAISettingsContent(modal) {
-        const { content, body, footer } = this.createAISettingsShell('🔧 管理员 - AI签语配置');
+        const { content, body, footer } = this.createAISettingsShell('🔧 管理员 - AI配置');
 
         body.append(
             this.createFortuneNoticeBox('⚠️ 管理员配置', '此配置将影响所有用户的AI签语功能，请谨慎操作。', '#fff3cd', '#856404', '#ffc107'),

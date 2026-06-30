@@ -142,6 +142,11 @@ class AIServiceManager {
     }
 
     getAvailableService() {
+        const selected = this._services[this.currentService];
+        if (selected?.enabled && selected.credential) {
+            return this.currentService;
+        }
+
         for (const [serviceName, service] of Object.entries(this._services)) {
             if (service.enabled && service.credential) {
                 return serviceName;
@@ -745,26 +750,22 @@ function createAIConfigPage() {
                         <span class="material-icons">arrow_back</span>
                         返回主页
                     </button>
-                <h1>🤖 AI签语配置</h1>
-                <p>配置DeepSeek API Key以启用AI智能签语功能</p>
+                <h1>🤖 AI配置</h1>
+                <p>统一配置 AI 签语和 AI 服务能力，支持多家主流大模型 API</p>
             </div>
 
             <div class="ai-config-content">
                 <div class="config-card">
                     <div class="config-info">
                         <h3>📋 配置说明</h3>
-                        <p>配置DeepSeek API Key以启用AI智能签语功能。配置后，所有用户都可以使用AI生成个性化签语。</p>
+                        <p>AI 签语和 AI 任务分析共用下方 AI 服务配置。选择任一服务商并保存 API Key 后，即可启用 AI 签语和 AI 服务能力。</p>
                     </div>
 
                     <form id="ai-key-config-form" class="config-form">
                         <div class="form-group">
-                            <label for="deepseek-fortune-api-key">🔑 AI签语 DeepSeek API Key:</label>
-                            <input type="password" id="deepseek-fortune-api-key" placeholder="请输入AI签语 DeepSeek API Key" autocomplete="new-password" required>
+                            <label>🔑 AI 签语使用的 API Key:</label>
                             <small>
-                                <strong>获取方式：</strong><br>
-                                1. 访问 <a href="https://platform.deepseek.com" target="_blank" style="color: var(--theme-primary);">DeepSeek开放平台</a><br>
-                                2. 注册账号并获取API Key<br>
-                                3. API Key将安全存储在本地，仅管理员可配置
+                                请在下方“AI 服务配置”中选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai 或 MiniMax，并保存对应 API Key。AI 签语会自动使用当前已配置的可用服务。
                             </small>
                         </div>
 
@@ -797,13 +798,13 @@ function createAIConfigPage() {
                         <!-- 将按钮移到当前状态卡片下方 -->
                         <div class="form-actions" style="margin-top: 1.5rem; margin-bottom: 2rem; text-align: center;">
             <button type="button" data-admin-action="saveAIConfig" class="admin-btn">💾 保存配置</button>
-            <button type="button" data-admin-action="testAIKey" class="admin-btn ai">🧪 测试API Key</button>
+            <button type="button" data-admin-action="testAIKey" class="admin-btn ai">🧪 测试当前AI服务</button>
                         </div>
 
                         <!-- AI服务配置 -->
                         <div class="ai-services-config">
                             <h3>🤖 AI服务配置</h3>
-                            <p class="ai-service-note">AI任务分析支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax。当前为浏览器侧 BYOK 模式，请勿把真实 Key 提交到仓库。</p>
+                            <p class="ai-service-note">AI 签语和 AI 任务分析支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax。当前为浏览器侧 BYOK 模式，请勿把真实 Key 提交到仓库。</p>
                             ${renderAIServiceConfigMarkup()}
                         </div>
 
@@ -1272,6 +1273,13 @@ async function loadAIConfigStatus() {
     }
 
     // 更新表单值
+    const configuredAIService = window.aiServiceManager && typeof window.aiServiceManager.getAvailableService === 'function'
+        ? window.aiServiceManager.getAvailableService()
+        : null;
+    if (!aiCredential && configuredAIService) {
+        aiCredential = configuredAIService;
+    }
+
     if (document.getElementById('deepseek-fortune-api-key')) {
         document.getElementById('deepseek-fortune-api-key').value = aiCredential || '';
     }
@@ -1501,20 +1509,22 @@ async function syncToAPINowAdmin() {
 
 // 保存AI配置（使用安全存储）
 async function saveAIConfig() {
-    const aiCredential = document.getElementById('deepseek-fortune-api-key').value.trim();
+    const configuredAIService = window.aiServiceManager && typeof window.aiServiceManager.getAvailableService === 'function'
+        ? window.aiServiceManager.getAvailableService()
+        : null;
     const aiEnabled = document.getElementById('enable-ai-fortune').checked;
     const autoFallback = document.getElementById('auto-fallback').checked;
 
-    const credentialConfigured = Boolean(aiCredential);
+    const credentialConfigured = Boolean(configuredAIService);
     console.log('AI config saved.', { credentialConfigured, aiEnabled, autoFallback });
 
-    if (!aiCredential && aiEnabled) {
-        alert('请先配置AI签语API Key再启用AI功能');
+    if (!configuredAIService && aiEnabled) {
+        alert('请先在下方 AI 服务配置中保存任一服务商 API Key，再启用 AI 签语功能');
         return;
     }
 
     // 保存配置到安全存储
-    if (aiCredential) {
+    if (false) {
         if (window.secureSaveApiKey) {
             await window.secureSaveApiKey('deepSeek', aiCredential);
             window.AdminStorage.removeKey('deepSeekApiKey'); // 删除明文密钥
@@ -1528,7 +1538,7 @@ async function saveAIConfig() {
     window.AdminStorage.setRaw('aiAutoFallback', autoFallback.toString());
 
     console.log('✅ AI配置保存完成');
-    alert('AI签语配置保存成功！');
+    alert('AI 配置保存成功！');
 
     // 更新状态显示
     await loadAIConfigStatus();
@@ -6340,6 +6350,45 @@ async function testAIKey() {
 }
 
 // 加载使用统计报表
+// Override legacy DeepSeek-only tester: AI fortune now uses the shared multi-provider service config.
+async function testAIKey() {
+    const manager = window.aiServiceManager;
+    if (!manager || typeof manager.getAvailableService !== 'function') {
+        alert('AI 服务管理器未初始化，请刷新页面后重试');
+        return;
+    }
+
+    const serviceName = manager.currentService && manager._services?.[manager.currentService]?.credential
+        ? manager.currentService
+        : manager.getAvailableService();
+    const serviceCredential = serviceName ? manager._services?.[serviceName]?.credential : null;
+
+    if (!serviceName || !serviceCredential) {
+        alert('请先在下方 AI 服务配置中保存任一服务商 API Key');
+        return;
+    }
+
+    const testBtn = document.querySelector('.admin-btn.ai');
+    const originalText = testBtn ? testBtn.textContent : '';
+    if (testBtn) {
+        testBtn.textContent = '🧪 测试中...';
+        testBtn.disabled = true;
+    }
+
+    try {
+        const isValid = await testAIServiceKey(serviceName, serviceCredential);
+        const displayName = AI_SERVICE_PRESETS[serviceName]?.name || serviceName;
+        alert(isValid ? `${displayName} API Key 测试成功！` : `${displayName} API Key 测试失败，请检查 Key、模型额度或网络连接。`);
+    } catch (error) {
+        alert('AI 服务测试失败：' + error.message);
+    } finally {
+        if (testBtn) {
+            testBtn.textContent = originalText;
+            testBtn.disabled = false;
+        }
+    }
+}
+
 function loadUsageReport() {
     try {
         // 从localStorage获取统计数据

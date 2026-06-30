@@ -51,7 +51,7 @@ http://localhost:8080
 每日一签支持两种模式：
 
 - 传统签文：无需 API Key。
-- AI 签文：需要进入管理员后台配置 DeepSeek API Key。
+- AI 签文：需要进入管理员后台 → AI 配置，配置任一支持的 AI 服务 API Key。
 
 如果没有配置 AI Key，传统签文仍可正常使用。
 
@@ -71,15 +71,15 @@ http://localhost:8080
 2. 切换到“管理员后台登录”。
 3. 使用管理员账号 `admin` 登录；如果是首次使用，输入任意 8 位以上密码完成本地管理员初始化。
 4. 进入管理员后台后：
-   - 每日一签 AI：打开“AI 签语配置”，填写 DeepSeek API Key。
-   - AI 任务分析 / 智能建议：打开“AI 服务配置”，选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM 或 MiniMax，填写对应 API Key 并启用。
+   - 每日一签 AI：打开“AI 配置”，选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai 或 MiniMax，填写对应 API Key。
+   - AI 任务分析 / 智能建议：同样在“AI 配置”中选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai 或 MiniMax，填写对应 API Key 并启用。
 
 当前支持的 API Key：
 
 | 功能 | 支持的 API Key | 默认接口 / 模型 |
 | --- | --- | --- |
-| 每日一签 AI 签文 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
-| AI 任务分析 / 智能建议 | DeepSeek API Key | `https://api.deepseek.com/chat/completions`，`deepseek-chat` |
+| 每日一签 AI 签文 | 任一支持的 AI 服务 API Key | 支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax |
+| AI 任务分析 / 智能建议 | 任一支持的 AI 服务 API Key | 支持 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai、MiniMax |
 | AI 任务分析 / 智能建议 | OpenAI API Key | `https://api.openai.com/v1/chat/completions`，`gpt-3.5-turbo` |
 | AI 任务分析 / 智能建议 | Claude / Anthropic API Key | `https://api.anthropic.com/v1/messages`，`claude-sonnet-4-5` |
 | AI 任务分析 / 智能建议 | Kimi / Moonshot API Key | `https://api.moonshot.cn/v1/chat/completions`，`kimi-k2.6` |
