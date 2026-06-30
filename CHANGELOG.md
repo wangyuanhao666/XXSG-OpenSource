@@ -22,6 +22,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 
 - Renamed the admin "AI 签语配置" entry to "AI 配置" because the page now manages both Daily Fortune AI and AI service capabilities.
 - Reordered the admin AI configuration page to show service configuration before status, actions, and Daily Fortune AI switches.
+- Consolidated the AI configuration page into one visible save action that saves the selected service API Key and Daily Fortune AI switches together.
 
 ## [v1.0.2] - 2026-06-28
 

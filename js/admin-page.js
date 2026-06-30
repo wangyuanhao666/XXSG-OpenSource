@@ -22,6 +22,11 @@ function getAIServiceInputId(serviceName) {
     return serviceName === 'deepseek' ? 'deepseek-service-api-key' : `${serviceName}-api-key`;
 }
 
+function getActiveAIServiceName() {
+    const activeTab = document.querySelector('.service-tab.active');
+    return activeTab?.dataset.aiService || window.aiServiceManager?.currentService || 'deepseek';
+}
+
 function renderAIServiceConfigMarkup() {
     const tabs = Object.entries(AI_SERVICE_PRESETS).map(([serviceName, preset], index) => `
             <button class="service-tab ${index === 0 ? 'active' : ''}" data-ai-service="${serviceName}" data-admin-action="switchAIService">
@@ -41,9 +46,6 @@ function renderAIServiceConfigMarkup() {
                         · 默认模型：<code>${preset.model}</code>
                     </small>
                 </div>
-                <button class="admin-btn primary" data-ai-service="${serviceName}" data-admin-action="saveAIServiceConfig">
-                    保存配置
-                </button>
             </div>
         `;
     }).join('');
@@ -763,10 +765,10 @@ function createAIConfigPage() {
 
                     <form id="ai-key-config-form" class="config-form">
                         <div class="form-group">
-                            <label>🔑 AI 签语使用的 API Key:</label>
-                            <small>
+                            <h3 class="ai-config-section-title">🔑 AI 签语使用的 API Key</h3>
+                            <p class="ai-config-section-note">
                                 请在下方“AI 服务配置”中选择 DeepSeek、OpenAI、Claude、Kimi、通义千问、GLM/Z.ai 或 MiniMax，并保存对应 API Key。AI 签语会自动使用当前已配置的可用服务。
-                            </small>
+                            </p>
                         </div>
 
                         <!-- AI服务配置 -->
@@ -792,12 +794,6 @@ function createAIConfigPage() {
                             </div>
                         </div>
 
-                        <!-- 将按钮移到当前状态卡片下方 -->
-                        <div class="form-actions" style="margin-top: 1.5rem; margin-bottom: 2rem; text-align: center;">
-            <button type="button" data-admin-action="saveAIConfig" class="admin-btn">💾 保存AI签语开关</button>
-            <button type="button" data-admin-action="testAIKey" class="admin-btn ai">🧪 测试当前AI服务</button>
-                        </div>
-
                         <div class="form-group">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="enable-ai-fortune" checked>
@@ -810,6 +806,11 @@ function createAIConfigPage() {
                                 <input type="checkbox" id="auto-fallback">
                                 <span>AI生成失败时自动回退到传统签语</span>
                             </label>
+                        </div>
+
+                        <div class="form-actions" style="margin-top: 1.5rem; margin-bottom: 2rem; text-align: center;">
+            <button type="button" data-admin-action="saveAIConfig" class="admin-btn">💾 保存当前配置</button>
+            <button type="button" data-admin-action="testAIKey" class="admin-btn ai">🧪 测试当前AI服务</button>
                         </div>
 
                         <!-- 使用统计 -->
@@ -927,6 +928,23 @@ function createAIConfigPage() {
 
         .form-group {
             margin-bottom: 1.5rem;
+        }
+
+        .ai-config-section-title,
+        .ai-services-config h3 {
+            margin: 0 0 0.75rem 0;
+            color: #1f2937;
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .ai-config-section-note,
+        .ai-service-note {
+            margin: 0 0 1rem 0;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.65;
         }
 
         .form-group label {
@@ -1521,6 +1539,26 @@ async function syncToAPINowAdmin() {
 
 // 保存AI配置（使用安全存储）
 async function saveAIConfig() {
+    const activeService = getActiveAIServiceName();
+    const activeInput = document.getElementById(getAIServiceInputId(activeService));
+    const hasNewCredential = Boolean(activeInput && !activeInput.readOnly && activeInput.value.trim());
+
+    if (hasNewCredential) {
+        const serviceCredential = activeInput.value.trim();
+        const isValid = await testAIServiceKey(activeService, serviceCredential);
+        if (!isValid) {
+            alert('当前服务 API Key 测试失败，请检查 Key、模型额度或网络连接。');
+            return;
+        }
+
+        if (window.aiServiceManager) {
+            await window.aiServiceManager.setAPIKey(activeService, serviceCredential);
+            loadAIServiceConfig(activeService);
+        } else {
+            await saveAIServiceConfig(activeService, null, { silent: true });
+        }
+    }
+
     const configuredAIService = window.aiServiceManager && typeof window.aiServiceManager.getAvailableService === 'function'
         ? window.aiServiceManager.getAvailableService()
         : null;
@@ -6065,7 +6103,8 @@ async function loadAIServiceConfig(serviceName) {
 }
 
 // 保存AI服务配置
-async function saveAIServiceConfig(serviceName, event) {
+async function saveAIServiceConfig(serviceName, event, options = {}) {
+    const silent = Boolean(options.silent);
     // 🔧 阻止事件冒泡和默认行为，防止触发表单提交
     if (event) {
         event.preventDefault();
@@ -6367,7 +6406,7 @@ async function testAIKey() {
     const manager = window.aiServiceManager;
     if (!manager || typeof manager.getAvailableService !== 'function') {
         alert('AI 服务管理器未初始化，请刷新页面后重试');
-        return;
+        return false;
     }
 
     const serviceName = manager.currentService && manager._services?.[manager.currentService]?.credential
@@ -6377,7 +6416,7 @@ async function testAIKey() {
 
     if (!serviceName || !serviceCredential) {
         alert('请先在下方 AI 服务配置中保存任一服务商 API Key');
-        return;
+        return false;
     }
 
     const testBtn = document.querySelector('.admin-btn.ai');
