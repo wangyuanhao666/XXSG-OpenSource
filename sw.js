@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.22';
+const CACHE_VERSION = 'xxsg-v3.0.23';
 const APP_SHELL = [
   './',
   './index.html',
@@ -57,11 +57,13 @@ const APP_SHELL = [
   './js/smart-schedule-system.js',
   './js/task-decomposition-system.js',
   './js/smart-health-system.js',
+  './js/reward-support.js',
   './i18n-auto.js',
   './calendar-sync-tasks.js',
   './js/page-event-bindings.js',
   './quadrant-calendar-sync.js',
   './js/api-sync-bootstrap.js',
+  './assets/images/reward-wechat.png',
   './logo.svg',
   './logo-icon.svg',
   './logo-text.svg',

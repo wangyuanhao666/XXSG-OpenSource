@@ -17,6 +17,7 @@ The project follows pragmatic release notes rather than strict semantic versioni
 - Expanded AI task analysis providers to DeepSeek, OpenAI, Claude, Kimi, Qwen, GLM/Z.ai, and MiniMax.
 - Expanded Daily Fortune AI to use the shared multi-provider AI service configuration.
 - Added Anthropic Messages protocol support for Claude alongside OpenAI-compatible chat completions providers.
+- Added a voluntary "随喜赞赏" support modal with a WeChat reward QR code and a fixed entry in the More Features page.
 
 ### Changed
 
