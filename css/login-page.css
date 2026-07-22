@@ -2814,3 +2814,90 @@ body.dark-mode .verification-tip {
 #show-data-sync {
     color: #2563eb !important;
 }
+
+/* Codex-style animated login background */
+.login-page {
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at 6% 30%, rgba(213, 235, 255, 0.98) 0%, rgba(178, 210, 255, 0.62) 30%, rgba(178, 210, 255, 0) 58%),
+        radial-gradient(ellipse at 71% -4%, rgba(69, 85, 255, 0.7) 0%, rgba(93, 104, 255, 0.48) 28%, rgba(93, 104, 255, 0) 51%),
+        radial-gradient(ellipse at 88% 68%, rgba(205, 198, 255, 0.9) 0%, rgba(178, 168, 255, 0.54) 42%, rgba(178, 168, 255, 0) 72%),
+        linear-gradient(135deg, #dcedff 0%, #a9c6ff 38%, #6674f2 66%, #c9c4ff 100%);
+    background-size: 150% 150%, 145% 145%, 150% 150%, 120% 120%;
+    animation: codexGradientDrift 12s ease-in-out infinite alternate;
+}
+
+.login-page::before {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(196, 204, 255, 0.16)),
+        radial-gradient(ellipse at 72% 2%, rgba(74, 88, 255, 0.22), transparent 42%);
+    filter: blur(18px);
+    opacity: 0.58;
+    animation: codexMistDrift 16s ease-in-out infinite alternate;
+    z-index: 1;
+}
+
+.login-codex-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.login-codex-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: normal;
+}
+
+.login-bg-decoration {
+    z-index: 2;
+    opacity: 0;
+}
+
+.login-floating-shape {
+    filter: blur(110px);
+}
+
+.login-container {
+    z-index: 4;
+}
+
+@keyframes codexGradientDrift {
+    0% {
+        background-position: 0% 12%, 100% 0%, 82% 90%, 4% 92%, 0% 50%;
+    }
+
+    50% {
+        background-position: 16% 22%, 78% 16%, 66% 76%, 18% 70%, 42% 50%;
+    }
+
+    100% {
+        background-position: 24% 8%, 62% 34%, 92% 62%, 8% 58%, 100% 50%;
+    }
+}
+
+@keyframes codexMistDrift {
+    0% {
+        transform: translate3d(-2%, -1%, 0) scale(1);
+    }
+
+    100% {
+        transform: translate3d(3%, 2%, 0) scale(1.06);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-page,
+    .login-page::before {
+        animation: none;
+    }
+}

@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.23';
+const CACHE_VERSION = 'xxsg-v3.0.24';
 const APP_SHELL = [
   './',
   './index.html',
@@ -67,7 +67,8 @@ const APP_SHELL = [
   './logo.svg',
   './logo-icon.svg',
   './logo-text.svg',
-  './logo-text-dark.svg'
+  './logo-text-dark.svg',
+  './assets/codex-floral-a.mp4'
 ];
 
 self.addEventListener('install', event => {

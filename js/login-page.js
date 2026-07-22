@@ -1659,10 +1659,204 @@ function cleanURL() {
     }
 }
 
+function initializeCodexLoginBackground() {
+    const canvas = document.getElementById('login-codex-background');
+    if (!canvas) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    const state = {
+        width: 0,
+        height: 0,
+        dpr: 1,
+        rect: null,
+        pointer: null,
+        lastPointer: null,
+        particles: [],
+        idleMarks: [],
+        rafId: 0
+    };
+
+    const resizeCanvas = () => {
+        const rect = canvas.getBoundingClientRect();
+        state.rect = rect;
+        state.width = Math.max(1, Math.round(rect.width));
+        state.height = Math.max(1, Math.round(rect.height));
+        state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(state.width * state.dpr);
+        canvas.height = Math.round(state.height * state.dpr);
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        state.idleMarks = createCodexIdleMarks(state.width, state.height);
+    };
+
+    const addTrail = (x, y) => {
+        const last = state.lastPointer || { x, y };
+        const dx = x - last.x;
+        const dy = y - last.y;
+        const speed = Math.min(46, Math.hypot(dx, dy));
+        const angle = Math.atan2(dy || 0.1, dx || 0.1);
+        const count = Math.max(2, Math.ceil(speed / 5));
+        const glyphs = ['-', '>', 'f'];
+
+        for (let i = 0; i < count; i += 1) {
+            const spread = (i - count / 2) * 6;
+            const tail = i * 7;
+            state.particles.push({
+                x: x - Math.cos(angle) * tail - Math.sin(angle) * spread,
+                y: y - Math.sin(angle) * tail + Math.cos(angle) * spread,
+                vx: -Math.cos(angle) * (0.5 + Math.random() * 0.9),
+                vy: -Math.sin(angle) * (0.5 + Math.random() * 0.9),
+                angle,
+                glyph: glyphs[(i + Math.floor(speed)) % glyphs.length],
+                size: 12 + Math.random() * 4,
+                life: 1,
+                decay: 0.05 + Math.random() * 0.026
+            });
+        }
+
+        if (state.particles.length > 90) {
+            state.particles.splice(0, state.particles.length - 90);
+        }
+
+        state.lastPointer = { x, y };
+    };
+
+    const handlePointerMove = (event) => {
+        const events = typeof event.getCoalescedEvents === 'function' ? event.getCoalescedEvents() : [event];
+        const rect = state.rect || canvas.getBoundingClientRect();
+        events.forEach(pointerEvent => {
+            const x = pointerEvent.clientX - rect.left;
+            const y = pointerEvent.clientY - rect.top;
+            state.pointer = { x, y };
+            addTrail(x, y);
+        });
+        drawCodexImmediateTrail(ctx, state);
+    };
+
+    const handlePointerLeave = () => {
+        state.pointer = null;
+        state.lastPointer = null;
+    };
+
+    const stop = () => {
+        if (state.rafId) {
+            cancelAnimationFrame(state.rafId);
+            state.rafId = 0;
+        }
+        ctx.clearRect(0, 0, state.width, state.height);
+    };
+
+    const start = () => {
+        if (prefersReducedMotion.matches || state.rafId) return;
+        const frame = (time) => {
+            drawCodexBackgroundFrame(ctx, state, time);
+            state.rafId = requestAnimationFrame(frame);
+        };
+        state.rafId = requestAnimationFrame(frame);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    if ('onpointerrawupdate' in window) {
+        window.addEventListener('pointerrawupdate', handlePointerMove, { passive: true });
+    } else {
+        window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    }
+    window.addEventListener('pointerleave', handlePointerLeave);
+    prefersReducedMotion.addEventListener('change', () => {
+        if (prefersReducedMotion.matches) {
+            stop();
+        } else {
+            resizeCanvas();
+            start();
+        }
+    });
+    start();
+}
+
+function createCodexIdleMarks(width, height) {
+    const groups = [
+        { x: width * 0.77, y: height * 0.78, rows: 3, cols: 5 },
+        { x: width * 0.88, y: height * 0.81, rows: 3, cols: 6 }
+    ];
+
+    return groups.flatMap(group => {
+        const marks = [];
+        for (let row = 0; row < group.rows; row += 1) {
+            for (let col = 0; col < group.cols; col += 1) {
+                const glyph = (row + col) % 3 === 0 ? '>' : '-';
+                marks.push({
+                    x: group.x + col * 16 + (row % 2) * 7,
+                    y: group.y + row * 10,
+                    glyph,
+                    size: glyph === '>' ? 12 : 10,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        return marks;
+    });
+}
+
+function drawCodexBackgroundFrame(ctx, state, time) {
+    ctx.clearRect(0, 0, state.width, state.height);
+
+    state.idleMarks.forEach(mark => {
+        const alpha = 0.28 + Math.sin(time / 900 + mark.phase) * 0.11;
+        drawCodexGlyph(ctx, mark.x, mark.y, mark.glyph, 0, mark.size, alpha);
+    });
+
+    if (state.pointer) {
+        ctx.beginPath();
+        ctx.arc(state.pointer.x, state.pointer.y, 42, 0, Math.PI * 2);
+        const glow = ctx.createRadialGradient(state.pointer.x, state.pointer.y, 0, state.pointer.x, state.pointer.y, 42);
+        glow.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+        glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = glow;
+        ctx.fill();
+        drawCodexGlyph(ctx, state.pointer.x + 4, state.pointer.y + 1, '>', 0, 13, 0.82);
+    }
+
+    state.particles = state.particles.filter(particle => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.life -= particle.decay;
+        if (particle.life <= 0) return false;
+        drawCodexGlyph(ctx, particle.x, particle.y, particle.glyph, particle.angle, particle.size, particle.life * 0.72);
+        return true;
+    });
+}
+
+function drawCodexImmediateTrail(ctx, state) {
+    if (!state.pointer || state.rafId === 0) return;
+    state.particles.slice(-10).forEach(particle => {
+        drawCodexGlyph(ctx, particle.x, particle.y, particle.glyph, particle.angle, particle.size, particle.life * 0.7);
+    });
+    drawCodexGlyph(ctx, state.pointer.x + 4, state.pointer.y + 1, '>', 0, 13, 0.9);
+}
+
+function drawCodexGlyph(ctx, x, y, glyph, angle, size, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+    ctx.shadowColor = 'rgba(255, 255, 255, 0.36)';
+    ctx.shadowBlur = 4;
+    ctx.font = `${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(glyph, 0, 0);
+    ctx.restore();
+}
+
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function () {
     // 首先清理URL中的敏感参数
     cleanURL();
+    initializeCodexLoginBackground();
 
     // 先尝试恢复数据，再初始化默认数据
     restoreUserData();
