@@ -433,16 +433,6 @@ window.debugAdminPermissions = function() {
     const users = window.UserStorage.getUsers();
     console.log('所有用户:', users);
 
-    const wqfgUser = users.find(u => u.username === 'WQFG');
-    if (wqfgUser) {
-        console.log('WQFG用户:', {
-            username: wqfgUser.username,
-            permissions: wqfgUser.permissions,
-            permissionsCount: wqfgUser.permissions.length,
-            permissionsType: typeof wqfgUser.permissions
-        });
-    }
-
     const currentUser = window.SessionStorage.getCurrentUser();
     if (currentUser) console.log('Current session user:', currentUser.username);
 
@@ -539,11 +529,6 @@ window.fixEditUserPermissionLoading = function() {
                                 </div>
                             </div>
 
-                            ${user.username === 'WQFG' ? `
-                            <div class="alert alert-warning" style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
-                                ⚠️ WQFG用户建议只保留"添加任务"和"四象限视图"两个权限
-                            </div>
-                            ` : ''}
                         </form>
                         <div class="modal-footer">
                 <button type="button" class="admin-btn secondary" data-admin-action="closeEditUserModal">
@@ -1609,7 +1594,7 @@ function createUserManagementPage() {
                     返回主页
                 </button>
                 <h1>👥 用户管理</h1>
-                <p>管理系统用户，创建新用户，分配权限，查看用户统计信息</p>
+                <p>管理此浏览器中的本地账号。新访客的账号列表为空，注册或手动创建后才会出现账号。</p>
             </div>
 
             <div class="user-management-content">
@@ -5748,23 +5733,6 @@ async function handleEditUser(userId) {
         }
     });
 
-    // 🔧 移除所有强制权限限制，完全尊重管理员选择
-    if (username === 'WQFG') {
-        console.log('🔧 检测到WQFG用户，完全尊重管理员权限选择...');
-
-        // 完全移除权限限制，使用管理员选择的所有权限
-        // 不再进行任何过滤
-
-        console.log('🔧 WQFG用户最终权限:', selectedPermissions);
-        console.log('🔧 权限数量:', selectedPermissions.length);
-
-        // 只有在完全没有任何权限时才设置默认权限
-        if (selectedPermissions.length === 0) {
-            selectedPermissions = ['add-task', 'quadrant-view'];
-            console.log('⚠️ WQFG用户完全没有选择权限，设置基础权限');
-        }
-    }
-
     // 确保至少有一个权限
     if (selectedPermissions.length === 0) {
         alert('请至少选择一个权限');
@@ -5833,13 +5801,6 @@ async function handleEditUser(userId) {
                 console.error('❌ 保存的权限与预期不符:');
                 console.error('  预期权限:', cleanPermissions);
                 console.error('  实际权限:', savedUser.permissions);
-            }
-
-            // 🔧 特殊验证：如果是WQFG用户，确保权限保存正确
-            if (savedUser.username === 'WQFG') {
-                console.log('🔧 WQFG用户权限特别验证:');
-                console.log('  保存权限:', savedUser.permissions);
-                console.log('  权限是否为空:', savedUser.permissions.length === 0);
             }
 
             // 获取权限名称

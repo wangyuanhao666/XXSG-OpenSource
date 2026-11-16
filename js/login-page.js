@@ -397,45 +397,6 @@ async function simulateLogin(username, authCredential) {
                 // 模拟用户数据
                 const users = window.UserStorage.getUsers();
 
-                // 如果没有用户数据，创建一些默认测试用户（使用哈希密码）
-                if (users.length === 0) {
-                    console.log('🔐 创建默认测试用户（使用哈希密码）...');
-
-                    // 生成哈希密码
-                    const defaultCredentialHash = await window.Security?.Password?.hashPassword?.('') || '';
-                    const demoCredentialHash = await window.Security?.Password?.hashPassword?.('') || '';
-
-                    const defaultUsers = [
-                        {
-                            id: 'user_1',
-                            username: 'example-user',
-                            password: defaultCredentialHash,
-                            email: 'user@example.local',
-                            phone: '13800138000',
-                            role: 'user',
-                            permissions: DEFAULT_USER_PERMISSIONS.slice(),
-                            createdAt: new Date().toISOString(),
-                            createdBy: 'admin',
-                            passwordMigrated: true
-                        },
-                        {
-                            id: 'user_2',
-                            username: 'demo',
-                            password: demoCredentialHash,
-                            email: 'demo@example.local',
-                            phone: '13900139000',
-                            role: 'user',
-                            permissions: DEFAULT_USER_PERMISSIONS.slice(),
-                            createdAt: new Date().toISOString(),
-                            createdBy: 'admin',
-                            passwordMigrated: true
-                        }
-                    ];
-                    // No demo users are created in open-source builds. Use the admin panel to create users.
-                    // Demo users intentionally disabled for open-source builds.
-                    console.log('✅ 默认用户已创建（密码已哈希）');
-                }
-
                 // 首先检查是否是管理员账户
                 if (username === 'admin') {
                     let adminResult;
@@ -710,22 +671,6 @@ function initializeDefaultData() {
         // No default admin password in open-source builds; first admin login initializes it.
         console.log('Open-source build: admin password will be initialized on first admin login.');
 
-        // 创建默认演示用户
-        const defaultUsers = [
-            {
-                id: 'demo',
-                username: 'demo',
-                password: '',
-                email: 'demo@example.local',
-                role: 'normal',
-                permissions: ['add-task', 'quadrant-view'],
-                createdAt: new Date().toISOString(),
-                createdBy: 'system'
-            }
-        ];
-        // No demo users are created in open-source builds. Use the admin panel to create users.
-        console.log('Open-source build: demo users are not created automatically.');
-
         // 设置默认AI配置
         window.DataSyncStorage.setRaw('aiFortuneEnabled', 'false');
         console.log('已设置默认AI功能状态: 未启用');
@@ -737,21 +682,7 @@ function initializeDefaultData() {
 
     } else if (!hasUsers && hasAdminPassword) {
         // 只有管理员密码但没有用户数据的情况
-        console.log('检测到只有管理员数据，创建演示用户...');
-        const defaultUsers = [
-            {
-                id: 'demo',
-                username: 'demo',
-                password: '',
-                email: 'demo@example.local',
-                role: 'normal',
-                permissions: ['add-task', 'quadrant-view'],
-                createdAt: new Date().toISOString(),
-                createdBy: 'system'
-            }
-        ];
-        // No demo users are created in open-source builds. Use the admin panel to create users.
-        console.log('Open-source build: demo users are not created automatically.');
+        console.log('检测到只有管理员数据，普通用户列表保持为空。');
 
     } else if (hasUsers && !hasAdminPassword) {
         // 只有用户数据但没有管理员密码的情况

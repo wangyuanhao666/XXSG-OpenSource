@@ -186,54 +186,6 @@ const PermissionManager = {
         }
     },
 
-    // 监听localStorage变化
-    startMonitoring: function() {
-        console.log('👁️ === 启动权限监听 ===');
-
-        const originalSetItem = localStorage.setItem;
-        localStorage.setItem = (key, value) => {
-            if (key === 'users') {
-                console.log('🔄 检测到用户数据更新');
-
-                try {
-                    const users = JSON.parse(value);
-                    const wqfgUser = users.find(u => u.username === 'WQFG');
-
-                    if (wqfgUser) {
-                        console.log('📋 WQFG用户权限:', wqfgUser.permissions);
-
-                        // 检查关键权限
-                        const criticalStatus = {
-                            review: wqfgUser.permissions.includes('review'),
-                            templates: wqfgUser.permissions.includes('templates')
-                        };
-
-                        console.log('🔑 关键权限状态:', criticalStatus);
-
-                        // 如果缺失关键权限，立即警告
-                        if (!criticalStatus.review || !criticalStatus.templates) {
-                            console.warn('⚠️ 警告：WQFG用户即将丢失关键权限！');
-                            console.warn('  review权限:', criticalStatus.review);
-                            console.warn('  templates权限:', criticalStatus.templates);
-                        }
-                    }
-                } catch (error) {
-                    console.error('❌ 解析用户数据失败:', error);
-                }
-            }
-
-            return originalSetItem.call(localStorage, key, value);
-        };
-
-        console.log('✅ 权限监听已启动');
-    },
-
-    // 一键修复WQFG用户权限
-    quickFixWQFG: function() {
-        console.log('🚀 === 一键修复WQFG权限 ===');
-        return this.fixUserPermissions('WQFG');
-    },
-
     // 验证菜单显示状态
     validateMenuDisplay: function() {
         console.log('\n🖥️ === 验证菜单显示状态 ===');
@@ -283,13 +235,8 @@ const PermissionManager = {
 window.PermissionManager = PermissionManager;
 
 // 便捷的全局函数
-window.diagnoseWQFG = () => PermissionManager.diagnoseUserPermissions('WQFG');
-window.fixWQFG = () => PermissionManager.quickFixWQFG();
 window.validateMenus = () => PermissionManager.validateMenuDisplay();
-
-// 自动启动监听
-PermissionManager.startMonitoring();
 
 console.log('🎯 权限管理系统已加载');
 console.log('使用 PermissionManager 进行权限管理');
-console.log('快捷函数: diagnoseWQFG(), fixWQFG(), validateMenus()');
+console.log('快捷函数: validateMenus()');

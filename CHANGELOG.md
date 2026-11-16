@@ -4,6 +4,13 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [v1.1.2] - 2026-11-16
+
+### Fixed
+
+- Removed personal account names and profile placeholders from the public build.
+- Clarified that admin user management lists accounts stored in the current browser; fresh browsers start with no regular users.
+
 ## [v1.1.1] - 2026-11-16
 
 ### Fixed
