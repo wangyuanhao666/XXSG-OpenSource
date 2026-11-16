@@ -169,25 +169,17 @@ window.syncPermissionsFromStorage = function() {
     try {
         // 1. 从用户数据同步所有用户权限
         const users = window.UserStorage.getUsers();
-        const wqfgUser = users.find(u => u.username === 'WQFG');
-
-        if (wqfgUser) {
-            console.log('📋 WQFG用户当前权限:', wqfgUser.permissions);
-            console.log('📋 权限数量:', wqfgUser.permissions ? wqfgUser.permissions.length : 0);
-            // 不强制修改，保持管理员设置的权限
-        } else {
-            console.error('❌ WQFG用户不存在');
-        }
+        const activeUsername = currentUser?.username;
+        const storedUser = users.find(u => u.username === activeUsername);
 
         // 2. 同步会话数据（保持管理员设置的权限）
         const sessionData = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
         if (sessionData) {
             try {
                 const session = JSON.parse(sessionData);
-                if (session.user && session.user.username === 'WQFG') {
-                    const storageUser = users.find(u => u.username === 'WQFG');
-                    if (storageUser) {
-                        session.user.permissions = [...storageUser.permissions];
+                if (session.user && session.user.username === activeUsername) {
+                    if (storedUser) {
+                        session.user.permissions = [...storedUser.permissions];
                         // 使用清理后的 session 保存，不包含敏感凭据
                         const sanitizedSession = sanitizeSession(session);
                         window.SessionStorage.setSession(sanitizedSession, { remember: true });
@@ -200,12 +192,9 @@ window.syncPermissionsFromStorage = function() {
         }
 
         // 3. 同步全局变量（保持管理员设置的权限）
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.username === 'WQFG') {
-            const storageUser = users.find(u => u.username === 'WQFG');
-            if (storageUser) {
-                currentUser.permissions = [...storageUser.permissions];
+        if (typeof currentUser !== 'undefined' && currentUser && storedUser) {
+                currentUser.permissions = [...storedUser.permissions];
                 console.log('✅ 全局变量已同步:', currentUser.permissions);
-            }
         }
 
         // 4. 立即更新菜单显示
@@ -229,18 +218,7 @@ window.autoSyncPermissions = function() {
 
     // 检查所有用户权限设置
     const users = window.UserStorage.getUsers();
-    const wqfgUser = users.find(u => u.username === 'WQFG');
-
-    if (wqfgUser) {
-        console.log('📋 WQFG用户权限状态:');
-        console.log('  当前权限:', wqfgUser.permissions);
-        console.log('  权限数量:', wqfgUser.permissions ? wqfgUser.permissions.length : 0);
-        console.log('  权限来源:', '管理员设置');
-
-        // 不进行任何强制修复，完全保持管理员设置的权限
-        console.log('✅ 权限保持管理员设置，无需修复');
-
-        // 调用同步函数确保显示正确
+    if (currentUser && users.some(u => u.username === currentUser.username)) {
         syncPermissionsFromStorage();
     }
 };
@@ -276,13 +254,6 @@ function checkUserMenuPermissions() {
             });
 
             // 🔧 移除强制权限限制，完全尊重管理员设置的权限
-            if (currentUserData.username === 'WQFG') {
-                console.log('🔧 WQFG用户权限完全来自管理员配置');
-                console.log('🔧 当前权限:', currentUserData.permissions);
-                console.log('🔧 权限数量:', currentUserData.permissions ? currentUserData.permissions.length : 0);
-                // 不进行任何强制检查或修复，完全使用管理员设置的权限
-            }
-
             // 更新全局currentUser对象
             currentUser.permissions = [...(currentUserData.permissions || [])];
             console.log('🔧 更新全局用户权限:', currentUser.permissions);
@@ -1766,11 +1737,6 @@ function ensureUserPermissions(user) {
             });
             console.log('✅ 管理员权限已补充完整:', user.permissions);
         }
-    } else if (user.username === 'WQFG') {
-        console.log('🔑 WQFG用户权限检查，完全尊重管理员设置的权限');
-        // WQFG用户权限完全由管理员在后台设置，不进行任何强制修改
-        console.log('🔧 WQFG当前权限:', user.permissions);
-        console.log('🔧 权限来源: 管理员后台配置');
     } else {
         // 普通用户处理
         if (!user.permissions || user.permissions.length === 0) {
@@ -4801,35 +4767,32 @@ function updateProfileInfo() {
     // 更新用户名
     const usernameInput = document.getElementById('profile-username');
     if (usernameInput) {
-        usernameInput.value = currentUser.username || 'WQFG';
+        usernameInput.value = currentUser.username || '';
     }
 
     // 更新邮箱
     const emailInput = document.getElementById('profile-email');
     if (emailInput) {
-        emailInput.value = currentUser.email || 'wqfg@example.com';
+        emailInput.value = currentUser.email || '';
     }
 
     // 更新手机号 - 使用真实的手机号格式
     const phoneInput = document.getElementById('profile-phone');
     if (phoneInput) {
-        phoneInput.value = currentUser.phone || '13812345678';
+        phoneInput.value = currentUser.phone || '';
     }
 
     // 更新个人简介
     const bioInput = document.getElementById('profile-bio');
     if (bioInput) {
-        bioInput.value = currentUser.bio || '象限时光的忠实用户，致力于高效时间管理';
+        bioInput.value = currentUser.bio || '';
     }
 
     // 更新注册时间 - 支持手动编辑
     const registerTimeInput = document.getElementById('profile-register-time');
     if (registerTimeInput) {
-        const registerTime = currentUser.createdAt || '2024-01-15T10:30';
-        // 转换为datetime-local格式
-        const date = new Date(registerTime);
-        const localDateTime = date.toISOString().slice(0, 16);
-        registerTimeInput.value = localDateTime;
+        const date = currentUser.createdAt ? new Date(currentUser.createdAt) : null;
+        registerTimeInput.value = date && !Number.isNaN(date.getTime()) ? date.toISOString().slice(0, 16) : '';
     }
 
     // 更新最后登录时间
