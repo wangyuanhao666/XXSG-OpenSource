@@ -53,18 +53,36 @@
             toggle.className = 'password-toggle-btn';
             toggle.setAttribute('aria-label', '显示密码');
             toggle.setAttribute('aria-pressed', 'false');
-            toggle.textContent = '👁️';
+            const icon = document.createElement('span');
+            icon.className = 'material-icons';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = 'visibility';
+            toggle.appendChild(icon);
+
+            const syncToggle = () => {
+                toggle.hidden = input.value.length === 0;
+                if (toggle.hidden) {
+                    input.type = 'password';
+                    toggle.setAttribute('aria-label', '显示密码');
+                    toggle.setAttribute('aria-pressed', 'false');
+                    icon.textContent = 'visibility';
+                }
+            };
 
             toggle.addEventListener('click', () => {
                 const shouldShow = input.type === 'password';
                 input.type = shouldShow ? 'text' : 'password';
                 toggle.setAttribute('aria-label', shouldShow ? '隐藏密码' : '显示密码');
                 toggle.setAttribute('aria-pressed', String(shouldShow));
-                toggle.textContent = shouldShow ? '🙈' : '👁️';
+                icon.textContent = shouldShow ? 'visibility_off' : 'visibility';
                 input.focus();
             });
 
             wrapper.appendChild(toggle);
+            input.addEventListener('input', syncToggle);
+            input.addEventListener('change', syncToggle);
+            syncToggle();
+            setTimeout(syncToggle, 300);
             input.dataset.passwordToggleEnhanced = 'true';
         });
     }

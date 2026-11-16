@@ -4,6 +4,12 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [v1.1.1] - 2026-11-16
+
+### Fixed
+
+- Password visibility controls on login and registration pages now appear only after a password is entered and use a consistent Material icon instead of emoji.
+
 ## [v1.1.0] - 2026-11-16
 
 ### Added

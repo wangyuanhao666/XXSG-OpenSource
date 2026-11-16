@@ -550,6 +550,9 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.password-toggle-btn[hidden] { display: none; }
+.password-toggle-btn .material-icons { font-size: 20px; }
+
 .password-toggle-btn:hover,
 .password-toggle-btn:focus-visible {
     background: #eff6ff;
