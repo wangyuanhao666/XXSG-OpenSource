@@ -1640,18 +1640,28 @@ class FortuneSystem {
         }
     }
 
-    getLunarDate(date) {
-        // 根据当前语言显示不同格式的农历日期
-        if (currentLanguage === 'zh') {
-            const lunarMonths = ['正月', '二月', '三月', '四月', '五月', '六月',
-                '七月', '八月', '九月', '十月', '冬月', '腊月'];
-            const month = lunarMonths[date.getMonth()];
-            return `农历${month}`;
-        } else {
-            const lunarMonths = ['1st Month', '2nd Month', '3rd Month', '4th Month', '5th Month', '6th Month',
-                '7th Month', '8th Month', '9th Month', '10th Month', '11th Month', '12th Month'];
-            const month = lunarMonths[date.getMonth()];
-            return `Lunar ${month}`;
+    getLunarDate(date, language = currentLanguage) {
+        try {
+            const locale = language === 'zh' ? 'zh-CN-u-ca-chinese' : 'en-US-u-ca-chinese';
+            const formatter = new Intl.DateTimeFormat(locale, { month: 'long', day: 'numeric' });
+            if (formatter.resolvedOptions().calendar !== 'chinese') {
+                throw new Error('Chinese calendar is unavailable');
+            }
+            if (language !== 'zh') {
+                return `Lunar ${formatter.format(date)}`;
+            }
+
+            const parts = formatter.formatToParts(date);
+            const month = parts.find(part => part.type === 'month')?.value
+                .replace('十一月', '冬月').replace('十二月', '腊月');
+            const day = Number(parts.find(part => part.type === 'day')?.value);
+            const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+            if (!month || !lunarDays[day - 1]) throw new Error('Invalid lunar date');
+            return `农历${month}${lunarDays[day - 1]}`;
+        } catch (error) {
+            return language === 'zh' ? '农历日期暂不可用' : 'Lunar date unavailable';
         }
     }
 
@@ -1718,7 +1728,20 @@ class FortuneSystem {
         }
 
         if (envelope) {
-            envelope.addEventListener('click', () => this.drawFortune());
+            const activateEnvelope = () => {
+                if (this.getSelectedFortuneType() === 'ai') {
+                    this.generateAIFortune();
+                } else {
+                    this.drawFortune();
+                }
+            };
+            envelope.addEventListener('click', activateEnvelope);
+            envelope.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    activateEnvelope();
+                }
+            });
         }
 
         if (shareBtn) {
@@ -2167,6 +2190,16 @@ class FortuneSystem {
         const aiBtn = document.getElementById('ai-fortune-btn');
         const mainCard = document.getElementById('fortune-card');
         const leftSection = document.getElementById('fortune-left-section');
+        const selectedType = this.getSelectedFortuneType();
+
+        if (envelope) {
+            const prompt = selectedType === 'ai'
+                ? (currentLanguage === 'zh' ? '点击生成今日 AI 签文' : 'Click to generate today\'s AI fortune')
+                : (currentLanguage === 'zh' ? '点击抽取今日签文' : 'Click to draw today\'s fortune');
+            const envelopeText = envelope.querySelector('.envelope-text');
+            if (envelopeText) envelopeText.textContent = prompt;
+            envelope.setAttribute('aria-label', prompt);
+        }
 
         if (envelope) envelope.style.display = 'block';
         if (textWrapper) textWrapper.style.display = 'none';
@@ -2198,7 +2231,6 @@ class FortuneSystem {
         }
 
         // 根据当前类型显示对应的抽取按钮
-        const selectedType = this.getSelectedFortuneType();
         if (selectedType === 'ai') {
             if (drawBtn) drawBtn.style.display = 'none';
             if (aiBtn) aiBtn.style.display = 'inline-flex';
@@ -2403,7 +2435,7 @@ class FortuneSystem {
         // 绘制农历信息
         ctx.fillStyle = '#495057'; // 稍微深一些的颜色
         ctx.font = '24px "Noto Sans SC", sans-serif';
-        ctx.fillText('农历九月', width / 2, contentStartY + 100);
+        ctx.fillText(this.getLunarDate(currentDate, 'zh'), width / 2, contentStartY + 100);
     }
 
     // 绘制标题和祝福语

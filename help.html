@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>象限时光 — 项目介绍与使用说明</title>
     <link rel="stylesheet" href="help-style.css">
+    <link rel="stylesheet" href="css/help-modern.css?v=1.0.3">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
@@ -21,6 +22,7 @@
         <header class="help-header">
             <div class="help-header-inner">
                 <div class="help-header-content">
+                    <span class="help-eyebrow">象限时光 · 使用指南</span>
                     <div class="help-logo">
                         <span class="material-icons">dashboard_customize</span>
                         <h1>象限时光</h1>
@@ -454,7 +456,11 @@
     <script>
         document.addEventListener('click', function (event) {
             if (event.target.closest('[data-help-close]')) {
-                window.close();
+                if (window.opener && !window.opener.closed) {
+                    window.close();
+                } else {
+                    window.location.href = 'index.html';
+                }
             }
         });
 

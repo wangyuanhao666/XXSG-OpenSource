@@ -3128,6 +3128,7 @@ body.dark-mode .quadrant-view.fullscreen-mode .quadrant-center-fullscreen-btn:ho
 .quadrant-tasks {
     flex: 1;
     overflow-y: hidden !important; /* 默认隐藏滚动条 */
+    min-height: 0;
     padding: 8px;
     margin-bottom: 12px;
     background: transparent !important; /* 强制透明背景 */
@@ -3136,17 +3137,19 @@ body.dark-mode .quadrant-view.fullscreen-mode .quadrant-center-fullscreen-btn:ho
     position: relative; /* 为绝对定位的空状态提供定位上下文 */
 }
 
-/* 只有明确添加 has-scroll 类时才显示滚动条，并限制最大高度 */
-/* 6条任务约289px，设置为220px确保内容超出容器，强制显示滚动条 */
-.quadrant-tasks.has-scroll {
-    overflow-y: auto !important;
-    max-height: 220px; /* 限制高度，确保6条任务时内容超出并显示滚动条 */
+/* 网格模式的5条可视高度由脚本按实际行高计算，避免字体和缩放导致提前滚动。 */
+.quadrant-view:not(.list-mode) .quadrant-tasks {
+    min-height: 0;
 }
 
-/* 确保没有 has-scroll 类时不限制高度 */
+/* 只有真实内容溢出时才显示滚动条。 */
+.quadrant-tasks.has-scroll {
+    overflow-y: auto !important;
+}
+
+/* 内容未溢出时隐藏滚动槽。 */
 .quadrant-tasks:not(.has-scroll) {
     overflow-y: hidden !important;
-    max-height: none !important; /* 不限制高度，让5条任务自然显示 */
 }
 
 /* 空象限任务容器的特殊样式 */

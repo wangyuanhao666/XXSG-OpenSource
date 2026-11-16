@@ -42,6 +42,7 @@ async function requestNotificationPermission() {
 
 // 更新通知状态显示
 function updateNotificationStatus() {
+    const status = document.querySelector('#notification-modal .notification-status');
     const statusIcon = document.getElementById('notification-status-icon');
     const statusDesc = document.getElementById('notification-status-desc');
     const requestBtn = document.getElementById('request-permission-btn');
@@ -49,6 +50,7 @@ function updateNotificationStatus() {
     const alert = document.getElementById('notification-alert');
 
     if (!statusIcon || !statusDesc || !requestBtn || !options) return;
+    if (status) status.dataset.permission = notificationPermission;
 
     if (notificationPermission === 'granted') {
         statusIcon.textContent = 'notifications';

@@ -653,26 +653,6 @@ function showTaskDecompositionModal() {
     `);
 
     document.body.appendChild(modal);
-    const taskListEl = modal.querySelector('#decomposition-task-list');
-    if (taskListEl) {
-        tasks.forEach((task, index) => {
-            const itemEl = document.createElement('div');
-            itemEl.className = `task-option ${getQuadrantFromPriority(task.priority)}`;
-            itemEl.dataset.decompositionAction = 'select-task';
-            itemEl.dataset.taskIndex = String(index);
-
-            const textEl = document.createElement('div');
-            textEl.className = 'task-text';
-            textEl.textContent = task.text;
-
-            const quadrantEl = document.createElement('div');
-            quadrantEl.className = 'task-quadrant';
-            quadrantEl.textContent = getQuadrantText(task.priority);
-
-            itemEl.append(textEl, quadrantEl);
-            taskListEl.appendChild(itemEl);
-        });
-    }
     modal.addEventListener('click', event => {
         const actionEl = event.target.closest('[data-decomposition-action]');
         if (!actionEl || !modal.contains(actionEl)) return;
@@ -684,6 +664,27 @@ function showTaskDecompositionModal() {
             selectTaskForDecomposition(Number(actionEl.dataset.taskIndex));
         }
     });
+    const taskListEl = modal.querySelector('#decomposition-task-list');
+    if (taskListEl) {
+        tasks.forEach((task, index) => {
+            const itemEl = document.createElement('div');
+            const quadrant = getQuadrantFromPriority(task.priority);
+            itemEl.className = `task-option ${quadrant}`;
+            itemEl.dataset.decompositionAction = 'select-task';
+            itemEl.dataset.taskIndex = String(index);
+
+            const textEl = document.createElement('div');
+            textEl.className = 'task-text';
+            textEl.textContent = task.text;
+
+            const quadrantEl = document.createElement('div');
+            quadrantEl.className = 'task-quadrant';
+            quadrantEl.textContent = getQuadrantLabel(quadrant);
+
+            itemEl.append(textEl, quadrantEl);
+            taskListEl.appendChild(itemEl);
+        });
+    }
 }
 
 // 关闭任务分解模态框

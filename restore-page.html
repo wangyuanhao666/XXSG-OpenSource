@@ -892,7 +892,7 @@
                     <span class="material-icons">arrow_back</span>
                 </button>
                 <h1 style="color: #ffffff !important;">恢复数据</h1>
-                <p>从备份文件恢复您的任务数据</p>
+                <p>从备份文件恢复任务或完整应用数据</p>
             </div>
             
             <div class="restore-content">
@@ -902,7 +902,7 @@
                     </div>
                     <div class="warning-title">⚠️ 重要警告</div>
                     <div class="warning-text">
-                        恢复数据将覆盖当前的所有任务数据，此操作不可撤销！<br>
+                        恢复数据将覆盖同名的现有数据，此操作不可撤销！<br>
                         请确保您已经备份了当前数据，或者确定要替换现有数据。
                     </div>
                 </div>
@@ -983,6 +983,7 @@
                     <div class="backup-list" id="backup-list">
                         <!-- 备份列表将通过JavaScript动态生成 -->
                     </div>
+                    <p class="upload-hint">上方仅显示浏览器内的短期任务备份。完整备份在每月最后一个工作日打开网页时保存到项目 backups 文件夹；周末、法定节假日提前，错过后在下个工作日打开时补备。恢复请在下方选择文件。</p>
                 </div>
 
                 <div class="restore-form">
@@ -996,7 +997,7 @@
                                 <span class="material-icons">cloud_upload</span>
                     </div>
                             <div class="upload-text">点击选择文件或拖拽文件到此处</div>
-                            <div class="upload-hint">支持 JSON、CSV、TXT 格式的备份文件</div>
+                            <div class="upload-hint">支持 JSON、CSV、TXT；月度完整备份请先登录后恢复。清除网站数据后需先重新建立账号，账号密码不包含在文件中。</div>
                             <input type="file" id="file-input" class="file-input" accept=".json,.csv,.txt">
                             </div>
                         
@@ -1048,6 +1049,7 @@
     </div>
 
     <script src="i18n-auto.js?v=1.0.6"></script>
+    <script src="js/monthly-local-backup.js?v=20261113-5"></script>
     <script>
         let currentTasks = [];
         let selectedFile = null;
@@ -1299,7 +1301,11 @@
             }
 
             let preview = '';
-            if (Array.isArray(fileData)) {
+            if (fileData.format === window.XXSGMonthlyLocalBackup.format) {
+                const keys = Object.keys(fileData.entries || {});
+                const schedule = fileData.metadata?.scheduledFor;
+                preview = `月度完整备份：${keys.length} 项应用数据\n备份时间：${fileData.createdAt || '未知'}${schedule ? `\n计划日期：${schedule}${fileData.metadata.late ? '（工作日补备）' : ''}` : ''}\n\n包含任务、习惯、日历、倒计时及其他本地内容。登录凭据和 API 密钥不在备份中。恢复时会覆盖同名数据。`;
+            } else if (Array.isArray(fileData)) {
                 preview = `备份文件包含 ${fileData.length} 个任务：\n\n`;
                 fileData.forEach((task, index) => {
                     preview += `${index + 1}. ${task.title}\n`;
@@ -1352,6 +1358,20 @@
             
             setTimeout(() => {
                 try {
+                    if (fileData.format === window.XXSGMonthlyLocalBackup.format) {
+                        const rawSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+                        let sessionUser = null;
+                        if (rawSession) {
+                            const parsedSession = JSON.parse(rawSession);
+                            sessionUser = parsedSession.user || parsedSession;
+                        }
+                        window.XXSGMonthlyLocalBackup.restore(fileData, sessionUser?.id);
+                        loadCurrentTasks();
+                        updateStats();
+                        document.getElementById('success-message').classList.add('show');
+                        showNotification('完整应用数据恢复成功，请刷新主页', 'success');
+                        return;
+                    }
                     let tasksToRestore = [];
                     
                     if (Array.isArray(fileData)) {
@@ -1401,7 +1421,7 @@
                     
                     } catch (error) {
                         console.error('恢复数据失败:', error);
-                    showNotification('恢复数据失败，请检查文件格式', 'error');
+                    showNotification(error.message || '恢复数据失败，请检查文件格式', 'error');
                 } finally {
                     restoreBtn.disabled = false;
                     loading.style.display = 'none';

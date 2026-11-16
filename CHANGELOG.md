@@ -4,7 +4,23 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
-## [Unreleased]
+## [v1.1.0] - 2026-11-16
+
+### Added
+
+- Added full application backup and restore support, with monthly local backup handling when the app is opened.
+- Added Time Train and refreshed productivity feature pages.
+
+### Fixed
+
+- Fixed Time Train errors after a hard refresh and task decomposition dialog failures.
+- Fixed dashboard detail panels, settings dialog clipping, and several mobile layout issues.
+- Fixed admin statistics theme contrast and notification placement.
+
+### Changed
+
+- Refreshed the dashboard, review, account, notification, help, and admin interfaces.
+- Improved Daily Fortune and Pomodoro layouts while retaining their distinct workflows.
 
 ### Documentation
 

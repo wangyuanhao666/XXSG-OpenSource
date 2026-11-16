@@ -26,6 +26,8 @@
 /* 列表模式下的象限调整 */
 .quadrant-view.list-mode .quadrant {
     min-height: 500px;
+    height: 70vh;
+    max-height: 800px;
     width: 100% !important;
     min-width: 0;
     box-sizing: border-box;
@@ -40,10 +42,10 @@
 /* 列表模式下任务容器自适应高度 */
 .quadrant-view.list-mode .quadrant .quadrant-tasks {
     height: auto;
-    max-height: 600px;
-    overflow-y: auto;
+    max-height: none !important;
     overflow-x: hidden;
     flex: 1;
+    min-height: 0;
 }
 
 /* 自定义横向滚动条 - Webkit浏览器 */
@@ -96,10 +98,11 @@
 
     .quadrant-view.list-mode .quadrant {
         min-height: 400px !important;
+        height: 65vh;
     }
 
     .quadrant-view.list-mode .quadrant .quadrant-tasks {
-        max-height: 400px !important;
+        max-height: none !important;
     }
 }
 
@@ -115,11 +118,12 @@
 
     .quadrant-view.list-mode .quadrant {
         min-height: 400px !important;
+        height: auto;
         width: 100% !important;
     }
 
     .quadrant-view.list-mode .quadrant .quadrant-tasks {
-        max-height: 400px !important;
+        max-height: none !important;
     }
 }
 

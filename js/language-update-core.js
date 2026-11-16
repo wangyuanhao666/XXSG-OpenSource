@@ -36,11 +36,11 @@ function updateLanguage() {
         'fortune-tab-btn',
         'dashboard-tab-btn',
         'review-tab-btn',
-        'templates-tab-btn',
+        'time-train-tab-btn',
         'more-features-tab-btn'
     ];
 
-    const tabKeys = ['listTab', 'quadrantTab', 'fortuneTab', 'dashboardTab', 'reviewTab', 'templatesTab', 'moreFeaturesTab'];
+    const tabKeys = ['listTab', 'quadrantTab', 'fortuneTab', 'dashboardTab', 'reviewTab', 'timeTrainTab', 'moreFeaturesTab'];
 
     tabButtons.forEach((btnId, index) => {
         const btnEl = document.getElementById(btnId);

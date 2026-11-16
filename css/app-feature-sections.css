@@ -721,6 +721,21 @@
         0 4px 10px rgba(79, 70, 229, 0.25);
 }
 
+#fortune-view #draw-fortune-btn,
+#fortune-view #ai-fortune-btn {
+    box-sizing: border-box;
+    width: 166px;
+    min-height: 52px;
+    justify-content: center;
+}
+
+@media (max-width: 480px) {
+    #fortune-view #draw-fortune-btn,
+    #fortune-view #ai-fortune-btn {
+        width: 100%;
+    }
+}
+
 /* ==================== 加载状态样式 ==================== */
 .ai-loading {
     display: flex;

@@ -538,7 +538,7 @@ function initGlobalErrorHandling() {
             showErrorNotification('发生了一个错误，请刷新页面重试', 'error');
         }
 
-        logError('JavaScript Error', event.error, event.filename, event.lineno);
+        logError('JavaScript Error', event.error || errorMessage || 'Unknown error', event.filename, event.lineno);
     });
 
     // 捕获未处理的Promise拒绝

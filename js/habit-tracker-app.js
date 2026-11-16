@@ -1198,12 +1198,12 @@ class HabitTrackerApp {
         try {
             const settings = JSON.parse(localStorage.getItem('habitTrackerSettings'));
             return settings || {
-                theme: 'purple',
+                theme: 'calm',
                 animation: true
             };
         } catch {
             return {
-                theme: 'purple',
+                theme: 'calm',
                 animation: true
             };
         }
@@ -1242,6 +1242,7 @@ class HabitTrackerApp {
 
     applyTheme(theme) {
         const themes = {
+            calm: { primary: '#167f81', secondary: '#2868cb' },
             purple: { primary: '#667eea', secondary: '#764ba2' },
             blue: { primary: '#4299e1', secondary: '#2b6cb0' },
             green: { primary: '#48bb78', secondary: '#38a169' },
@@ -1249,7 +1250,7 @@ class HabitTrackerApp {
             pink: { primary: '#fc8181', secondary: '#f56565' }
         };
 
-        const colors = themes[theme] || themes.purple;
+        const colors = themes[theme] || themes.calm;
         document.documentElement.style.setProperty('--ht-primary', colors.primary);
         document.documentElement.style.setProperty('--ht-secondary', colors.secondary);
     }

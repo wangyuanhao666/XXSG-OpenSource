@@ -259,6 +259,7 @@ function checkUserMenuPermissions() {
         console.log('❌ 用户未登录');
         return [];
     }
+    const isAdminAccount = currentUser.role === 'admin' || currentUser.username === 'admin';
 
     // 🔧 强制修复：直接从localStorage获取最新的用户数据
     try {
@@ -290,7 +291,7 @@ function checkUserMenuPermissions() {
             const session = createSecureSession(currentUserData, true);
             window.SessionStorage.setSession(session, { remember: true });
             console.log('🔧 会话数据已同步（安全存储）');
-        } else {
+        } else if (!isAdminAccount) {
             console.error('❌ 在用户数据中找不到当前用户:', currentUser.username);
         }
     } catch (error) {
@@ -331,7 +332,7 @@ function checkUserMenuPermissions() {
                     console.warn('⚠️ 更新会话数据失败:', error);
                 }
             }
-        } else {
+        } else if (!isAdminAccount) {
             console.warn('⚠️ 无法从localStorage获取用户权限数据');
         }
     }
@@ -363,7 +364,7 @@ function updateMenuVisibility() {
         'fortune': 'fortune-tab-btn',
         'dashboard': 'dashboard-tab-btn',
         'review': 'review-tab-btn',
-        'templates': 'templates-tab-btn',
+        'templates': 'time-train-tab-btn',
         'backup': 'backup-tab-btn',
         'more-features': 'more-features-tab-btn'
     };
@@ -456,13 +457,13 @@ function updateMenuVisibility() {
         // 🔧 验证关键权限是否正确显示
         setTimeout(() => {
             const reviewElement = document.getElementById('review-tab-btn');
-            const templatesElement = document.getElementById('templates-tab-btn');
+            const templatesElement = document.getElementById('time-train-tab-btn');
 
             console.log('🔧 关键权限菜单验证:');
             console.log('  - review-tab-btn 存在:', !!reviewElement);
             console.log('  - review-tab-btn 显示:', reviewElement ? reviewElement.style.display : 'N/A');
-            console.log('  - templates-tab-btn 存在:', !!templatesElement);
-            console.log('  - templates-tab-btn 显示:', templatesElement ? templatesElement.style.display : 'N/A');
+            console.log('  - time-train-tab-btn 存在:', !!templatesElement);
+            console.log('  - time-train-tab-btn 显示:', templatesElement ? templatesElement.style.display : 'N/A');
 
             if (criticalStatus.review && (!reviewElement || reviewElement.style.display === 'none')) {
                 console.warn('⚠️ review权限存在但菜单未显示，尝试强制显示');
@@ -598,7 +599,7 @@ function forcePermissionSyncFromStorage() {
                                 'fortune': 'fortune-tab-btn',
                                 'dashboard': 'dashboard-tab-btn',
                                 'review': 'review-tab-btn',
-                                'templates': 'templates-tab-btn',
+                                'templates': 'time-train-tab-btn',
                                 'more-features': 'more-features-tab-btn'
                             };
 
@@ -818,6 +819,7 @@ function performLoginCheck() {
                         updateUIForLoggedInUser();
                         updateMenuVisibility();
                         loadTasksFromStorage();
+                        window.XXSGMonthlyLocalBackup?.backup(tasks, currentUser.id);
                         if (typeof render === 'function') {
                             render();
                         }
@@ -928,6 +930,7 @@ function performLoginCheck() {
 
             // 加载用户数据
             loadTasksFromStorage();
+            window.XXSGMonthlyLocalBackup?.backup(tasks, currentUser.id);
             if (typeof render === 'function') {
                 render();
             }
@@ -1364,6 +1367,7 @@ function initDomCache() {
         dashboardView: document.getElementById('dashboard-view'),
         reviewView: document.getElementById('review-view'),
         templatesView: document.getElementById('templates-view'),
+        timeTrainView: document.getElementById('time-train-view'),
         moreFeaturesView: document.getElementById('more-features-view'),
         pomodoroView: document.getElementById('pomodoro-view'),
         countdownView: document.getElementById('countdown-view'),
@@ -1404,8 +1408,6 @@ const DEFAULT_USER_PERMISSIONS = [
     'add-task',
     'quadrant-view'
 ];
-
-const QUADRANT_SCROLL_THRESHOLD = 6; // 【关键配置】超过5条任务（6条及以上）时显示滚动条 - 2025-12-29
 
 // ==================== 四象限视图模式切换 ====================
 /**
@@ -1468,6 +1470,11 @@ function setQuadrantViewMode(mode) {
 
     // 更新象限卡片的点击事件
     updateQuadrantClickHandlers(mode);
+
+    // 先同步应用网格的固定5条策略，再等待浏览器完成排版复核真实溢出。
+    updateQuadrantScrollState([1, 2, 3, 4]
+        .map(index => document.getElementById(`q${index}-tasks`)));
+    scheduleQuadrantScrollStateUpdate();
 
     // 重新初始化拖拽功能，以适应新的布局模式
     // 延迟执行以确保DOM更新完成
@@ -2867,10 +2874,10 @@ function render() {
         }
     });
 
-    // 延迟更新滚动状态，确保DOM完全渲染
-    setTimeout(() => {
-        updateQuadrantScrollState(quadrantElements, quadrantTaskCounts);
-    }, 0);
+    // 网格模式先同步应用固定5条策略，避免“未限高 -> 测不到溢出 -> 不限高”的闭环。
+    updateQuadrantScrollState(quadrantElements, quadrantTaskCounts);
+    // DOM 内容更新后再复核一次真实布局；列表模式以这次测量为准。
+    scheduleQuadrantScrollStateUpdate(quadrantElements, quadrantTaskCounts);
 
     // 【关键修复】在四象限视图中，render()后需要重新初始化拖拽功能
     // 因为render()会清空象限内容，破坏Sortable实例
@@ -2894,13 +2901,8 @@ function createEmptyState(message) {
 function updateQuadrantScrollState(quadrantElements, taskCounts = []) {
     if (!Array.isArray(quadrantElements)) return taskCounts;
 
-    // 【修复】根据视图模式使用不同的滚动条阈值
-    // 网格模式：象限高度较矮，6条任务显示滚动条
-    // 列表模式：象限高度800px，11条任务后显示滚动条（第12条任务出现时启用滚动）
-    const isListMode = document.getElementById('quadrant-view')?.classList.contains('list-mode');
-    const scrollThreshold = isListMode ? 11 : 6; // 列表模式11条，网格模式6条
-
-    console.log(`📏 当前视图模式: ${isListMode ? '列表模式' : '网格模式'}, 滚动条阈值: ${scrollThreshold}`);
+    const isListMode = document.getElementById('quadrant-view')
+        ?.classList.contains('list-mode') === true;
 
     quadrantElements.forEach((el, index) => {
         if (!el) return;
@@ -2913,28 +2915,37 @@ function updateQuadrantScrollState(quadrantElements, taskCounts = []) {
         );
         const actualTaskCount = actualTaskItems.length;
 
+        // 网格模式的可视高度以真实渲染出的前5条任务为准，不能写死像素值。
+        // 这样在字体、缩放比例或标题换行变化时，仍然是第6条才开始滚动。
+        let gridViewportHeight = null;
+        if (!isListMode && actualTaskItems.length >= 5) {
+            const fifthTask = actualTaskItems[4];
+            const paddingBottom = Number.parseFloat(getComputedStyle(el).paddingBottom) || 0;
+            gridViewportHeight = Math.ceil(fifthTask.offsetTop + fifthTask.offsetHeight + paddingBottom + 1);
+        }
+
+        // 直接写入关键布局约束，避免旧缓存或选择器优先级覆盖运行时测量值。
+        el.style.setProperty('box-sizing', 'border-box', 'important');
+        el.style.setProperty('max-height', gridViewportHeight === null ? 'none' : `${gridViewportHeight}px`, 'important');
+        el.style.setProperty('overflow-y', 'auto', 'important');
+
         // 如果DOM中没有任务，使用传入的计数（可能为空状态）
         const taskCount = actualTaskCount > 0 ? actualTaskCount : (taskCounts[index] ?? 0);
 
-        // 根据视图模式和任务数量判断是否需要滚动条
-        const needsScroll = taskCount >= scrollThreshold;
+        // 网格模式固定展示5条，避免限高和溢出测量互相依赖；
+        // 列表模式则完全依据真实布局，兼容标题换行造成的高度变化。
+        const hasMeasurableViewport = el.clientHeight > 0;
+        const hasLayoutOverflow = hasMeasurableViewport && el.scrollHeight > el.clientHeight + 1;
+        const needsScroll = isListMode
+            ? hasLayoutOverflow
+            : taskCount > 5 || hasLayoutOverflow;
 
         // 通过CSS类控制滚动条显示
         el.classList.toggle('has-scroll', needsScroll);
         el.classList.toggle('no-scroll', !needsScroll);
         el.dataset.quadrantTaskCount = String(taskCount);
 
-        if (!needsScroll) {
-            el.scrollTop = 0;
-            // 移除内联样式，让CSS的 :not(.has-scroll) 规则生效
-            el.style.removeProperty('overflow-y');
-        } else {
-            // 移除内联样式，让CSS的 .has-scroll 规则生效
-            el.style.removeProperty('overflow-y');
-        }
-
-        // 详细的调试日志
-        console.log(`[象限${index + 1}] 视图=${isListMode ? '列表' : '网格'}, 任务=${taskCount}, 阈值=${scrollThreshold}, 需要滚动=${needsScroll}`);
+        if (!needsScroll) el.scrollTop = 0;
 
         // 如果有子元素但任务数为0，记录所有子元素的类名
         if (allChildren.length > 0 && actualTaskCount === 0) {
@@ -2944,6 +2955,26 @@ function updateQuadrantScrollState(quadrantElements, taskCounts = []) {
 
     return taskCounts;
 }
+
+let quadrantScrollFrame = null;
+
+function scheduleQuadrantScrollStateUpdate(quadrantElements = null, taskCounts = []) {
+    const elements = quadrantElements || [1, 2, 3, 4]
+        .map(index => document.getElementById(`q${index}-tasks`));
+
+    if (quadrantScrollFrame !== null) {
+        cancelAnimationFrame(quadrantScrollFrame);
+    }
+
+    quadrantScrollFrame = requestAnimationFrame(() => {
+        quadrantScrollFrame = requestAnimationFrame(() => {
+            quadrantScrollFrame = null;
+            updateQuadrantScrollState(elements, taskCounts);
+        });
+    });
+}
+
+window.addEventListener('resize', () => scheduleQuadrantScrollStateUpdate(), { passive: true });
 
 
 function getSortLabel(mode) {
@@ -5584,9 +5615,6 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM加载完成，开始初始化...');
 
     try {
-        // 首先检查登录状态
-        checkLoginStatus();
-
         // 初始化登录相关功能
         initLoginFeature();
         initUserMenu();
@@ -5636,6 +5664,9 @@ document.addEventListener('DOMContentLoaded', function () {
     modalTaskPriorityEl = document.getElementById('modal-task-priority');
     modalTaskStartEl = document.getElementById('modal-task-start');
     modalTaskEndEl = document.getElementById('modal-task-end');
+
+    // 登录检查会加载任务并调用 render，必须等渲染所需的 DOM 引用就绪。
+    checkLoginStatus();
 
     initializeTaskDetailPanel();
 
@@ -5869,14 +5900,11 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('顶级复盘视图按钮事件已绑定');
     }
 
-    // 【新增】模板标签页点击事件
-    const templatesTabBtn = document.getElementById('templates-tab-btn');
-    if (templatesTabBtn) {
-        templatesTabBtn.addEventListener('click', () => {
-            console.log('切换到任务模板视图');
-            switchView('templates');
+    const timeTrainTabBtn = document.getElementById('time-train-tab-btn');
+    if (timeTrainTabBtn) {
+        timeTrainTabBtn.addEventListener('click', () => {
+            switchView('time-train');
         });
-        console.log('任务模板视图按钮事件已绑定');
     }
 
     // 绑定添加任务按钮事件（只绑定list-view中的按钮）
@@ -6037,7 +6065,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const helpLink = document.getElementById('help-link');
     if (helpLink) {
         helpLink.addEventListener('click', function () {
-            const helpPage = currentLanguage === 'zh' ? 'help.html' : 'help-en.html';
+            const helpPage = currentLanguage === 'zh' ? 'help.html?v=20261113-3' : 'help-en.html';
             window.open(helpPage, '_blank');
         });
     }
@@ -6688,14 +6716,6 @@ function initDebounceThrottle() {
 function initMemoryManagement() {
     // 定期清理未使用的DOM元素
     setInterval(() => {
-        // 清理已移除的模态框
-        const modals = document.querySelectorAll('.modal:not([style*="display: none"])');
-        modals.forEach(modal => {
-            if (!modal.offsetParent) {
-                modal.remove();
-            }
-        });
-
         // 清理临时元素
         const tempElements = document.querySelectorAll('[data-temp="true"]');
         tempElements.forEach(el => {

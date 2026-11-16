@@ -1,0 +1,428 @@
+/* Dashboard and the detail panels reached from it. */
+#dashboard-view {
+    --dash-ink: #203a40;
+    --dash-muted: #5e7476;
+    --dash-line: #dbe4df;
+    --dash-paper: #fffdf8;
+    --dash-field: #f3f7f4;
+    --dash-accent: #087f80;
+    --dash-shadow: 0 14px 36px rgba(35, 68, 70, .08);
+    max-width: 1240px;
+    padding: 24px 0 72px !important;
+    color: var(--dash-ink);
+}
+
+#dashboard-view .dashboard-intro {
+    margin-bottom: 24px;
+    padding: clamp(26px, 4vw, 46px);
+    border: 1px solid #d4e4dc;
+    border-radius: 26px;
+    background: radial-gradient(circle at 90% 10%, #dceee9, transparent 36%),
+                linear-gradient(125deg, #fffdf7, #edf5f0);
+    box-shadow: var(--dash-shadow);
+    text-align: left;
+}
+#dashboard-view .dashboard-intro-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid #bcd8cf;
+    border-radius: 999px;
+    color: #116f70;
+    background: #e7f4ec;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+#dashboard-view .dashboard-intro h1 {
+    margin: 18px 0 8px;
+    color: var(--dash-ink);
+    font-size: clamp(1.75rem, 3vw, 2.65rem);
+    line-height: 1.22;
+    letter-spacing: -.025em;
+    text-align: left;
+    background: none !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+#dashboard-view .dashboard-intro p {
+    margin: 0;
+    color: var(--dash-muted);
+    line-height: 1.7;
+}
+#dashboard-view .dashboard-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+#dashboard-view .dashboard-stats .stat-item,
+#dashboard-view .dashboard-stats .stat-item:nth-child(n) {
+    min-height: 126px;
+    padding: 22px 24px;
+    text-align: left;
+    background: var(--dash-paper);
+    border: 1px solid var(--dash-line);
+    border-radius: 20px;
+    box-shadow: var(--dash-shadow);
+}
+#dashboard-view .dashboard-stats .stat-item:nth-child(1) { border-top: 4px solid #2868cb; }
+#dashboard-view .dashboard-stats .stat-item:nth-child(2) { border-top: 4px solid #0a9482; }
+#dashboard-view .dashboard-stats .stat-item:nth-child(3) { border-top: 4px solid #cc9350; }
+#dashboard-view .dashboard-stats .stat-item::before { display: none; }
+#dashboard-view .dashboard-stats .stat-item::after {
+    opacity: 1;
+    background-size: 22px;
+}
+#dashboard-view .dashboard-stats .stat-item:nth-child(1)::after {
+    background-color: #e6eefb;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="%23255ab4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h3M14 14h3M7 17h3M14 17h3"/></svg>');
+}
+#dashboard-view .dashboard-stats .stat-item:nth-child(2)::after {
+    background-color: #e2f3ed;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23077b69" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>');
+}
+#dashboard-view .dashboard-stats .stat-item:nth-child(3)::after {
+    background-color: #faedda;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23985e20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
+}
+#dashboard-view .dashboard-stats .stat-number,
+#dashboard-view .dashboard-stats .stat-item:nth-child(n) .stat-number {
+    margin: 0 0 12px !important;
+    color: var(--dash-ink) !important;
+    text-shadow: none !important;
+    font-size: clamp(2rem, 3vw, 2.65rem) !important;
+    letter-spacing: -.04em;
+}
+#dashboard-view .dashboard-stats .stat-label {
+    color: var(--dash-muted) !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+    letter-spacing: .02em !important;
+    text-transform: none !important;
+}
+#dashboard-view .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px;
+    margin-bottom: 24px !important;
+}
+#dashboard-view .dashboard-card,
+#dashboard-view .visualization-dashboard .chart-card,
+#dashboard-view .behavior-analysis-section,
+#dashboard-view .smart-health-section,
+#dashboard-view .smart-decomposition-section,
+#dashboard-view .smart-schedule-section,
+#dashboard-view .smart-reminder-section {
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 24px;
+    background: var(--dash-paper);
+    border: 1px solid var(--dash-line);
+    border-radius: 20px;
+    box-shadow: var(--dash-shadow);
+    color: var(--dash-ink);
+}
+#dashboard-view .dashboard-card { min-height: 280px; }
+#dashboard-view .dashboard-grid .dashboard-card {
+    height: auto !important;
+    min-height: 280px !important;
+    padding: 24px !important;
+    border: 1px solid var(--dash-line) !important;
+    border-radius: 20px !important;
+    background: var(--dash-paper) !important;
+    box-shadow: var(--dash-shadow) !important;
+}
+#dashboard-view .dashboard-card:last-child { grid-column: 1 / -1; min-height: 190px; }
+#dashboard-view .dashboard-grid .dashboard-card:last-child { min-height: 190px !important; }
+#dashboard-view .dashboard-card:hover,
+#dashboard-view .visualization-dashboard .chart-card:hover {
+    transform: translateY(-2px);
+    border-color: #a8cdc2;
+    box-shadow: 0 16px 38px rgba(35, 68, 70, .12);
+}
+#dashboard-view .dashboard-card .card-header,
+#dashboard-view .visualization-dashboard .chart-header {
+    border-bottom: 1px solid var(--dash-line);
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+}
+#dashboard-view .dashboard-card .card-header h3,
+#dashboard-view .visualization-dashboard .chart-title,
+#dashboard-view .section-header h3,
+#dashboard-view .section-header h4,
+#dashboard-view .recommendations-section h4,
+#dashboard-view .dashboard-title {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--dash-ink);
+    font-weight: 700;
+}
+#dashboard-view .dashboard-card .card-header i { color: var(--dash-accent); }
+#dashboard-view .metrics-grid { height: auto; min-height: 140px; gap: 16px; }
+#dashboard-view .metric-item,
+#dashboard-view .behavior-card,
+#dashboard-view .status-item,
+#dashboard-view .recommendation-item,
+#dashboard-view .health-recommendation-item,
+#dashboard-view .decomposition-item,
+#dashboard-view .history-item,
+#dashboard-view .timeline-item {
+    background: var(--dash-field);
+    border: 1px solid var(--dash-line);
+    border-radius: 14px;
+}
+#dashboard-view .metric-value,
+#dashboard-view .behavior-value,
+#dashboard-view .status-value { color: var(--dash-ink); }
+#dashboard-view .metric-label,
+#dashboard-view .behavior-title,
+#dashboard-view .status-title,
+#dashboard-view .recommendation-text,
+#dashboard-view .decomposition-text { color: var(--dash-muted); opacity: 1; }
+#dashboard-view .behavior-icon,
+#dashboard-view .status-icon { background: #e0f0eb; }
+
+#dashboard-view .visualization-dashboard { margin-bottom: 24px; animation: none; }
+#dashboard-view .visualization-dashboard .dashboard-header {
+    padding: 8px 2px 18px !important;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 0 !important;
+}
+#dashboard-view .visualization-dashboard .charts-row {
+    gap: 16px;
+    padding: 0;
+}
+#dashboard-view .visualization-dashboard .charts-row + .charts-row { margin-top: 16px; }
+#dashboard-view .visualization-dashboard .chart-container {
+    min-height: 300px;
+    height: 300px;
+}
+#dashboard-view .visualization-dashboard .chart-hint {
+    color: var(--dash-muted);
+    opacity: 1;
+    line-height: 1.5;
+}
+#dashboard-view .dashboard-actions button,
+#dashboard-view .chart-action-btn,
+#dashboard-view .time-range-selector,
+#dashboard-view .distribution-selector,
+#dashboard-view .analysis-btn,
+#dashboard-view .health-btn,
+#dashboard-view .decomposition-btn,
+#dashboard-view .schedule-btn,
+#dashboard-view .reminder-btn {
+    min-height: 40px;
+    background-color: var(--dash-field);
+    border: 1px solid var(--dash-line);
+    border-radius: 11px;
+    color: var(--dash-ink);
+    font-weight: 600;
+    cursor: pointer;
+}
+#dashboard-view .chart-action-btn.active,
+#dashboard-view .dashboard-actions button:hover,
+#dashboard-view .analysis-btn:hover,
+#dashboard-view .health-btn:hover,
+#dashboard-view .decomposition-btn:hover,
+#dashboard-view .schedule-btn:hover,
+#dashboard-view .reminder-btn:hover {
+    background: linear-gradient(120deg, #2868cb, #087f80);
+    border-color: transparent;
+    color: #fff;
+}
+#dashboard-view .chart-action-btn:focus-visible,
+#dashboard-view .dashboard-actions button:focus-visible,
+#dashboard-view .section-header button:focus-visible,
+#dashboard-view select:focus-visible {
+    outline: 3px solid #64b8ae;
+    outline-offset: 2px;
+}
+#dashboard-view .behavior-analysis-section,
+#dashboard-view .smart-health-section,
+#dashboard-view .smart-decomposition-section,
+#dashboard-view .smart-schedule-section,
+#dashboard-view .smart-reminder-section { margin-bottom: 16px; }
+#dashboard-view .behavior-analysis-section .section-header,
+#dashboard-view .smart-health-section .section-header,
+#dashboard-view .smart-decomposition-section .section-header,
+#dashboard-view .smart-schedule-section .section-header,
+#dashboard-view .smart-reminder-section .section-header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--dash-line);
+    margin-bottom: 18px;
+}
+#dashboard-view .smart-reminder-section::before { display: none; }
+#dashboard-view .health-recommendations,
+#dashboard-view .decomposition-results,
+#dashboard-view .schedule-timeline,
+#dashboard-view .reminder-history {
+    padding: 18px;
+    background: var(--dash-field);
+    border: 1px solid var(--dash-line);
+    border-radius: 14px;
+}
+
+/* Dashboard detail dialogs are mounted on body, outside #dashboard-view. */
+:is(.decomposition-settings-modal, .schedule-settings-modal, .reminder-settings-modal) .modal-content {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 0;
+}
+:is(.decomposition-settings-modal, .schedule-settings-modal, .reminder-settings-modal) .modal-header,
+:is(.decomposition-settings-modal, .schedule-settings-modal, .reminder-settings-modal) .modal-footer {
+    flex: 0 0 auto;
+}
+:is(.decomposition-settings-modal, .schedule-settings-modal, .reminder-settings-modal) .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+}
+:is(.health-report-modal, .health-recommendations-modal, .health-activity-modal,
+    .task-decomposition-modal, .decomposition-history-modal, .decomposition-settings-modal,
+    .schedule-settings-modal, .reminder-settings-modal, .notification-permission-modal) .modal-content {
+    background: #fffdf8 !important;
+    border: 1px solid #dbe4df;
+    border-radius: 22px;
+    box-shadow: 0 24px 70px rgba(19, 47, 49, .23);
+    color: #203a40;
+}
+:is(.health-report-modal, .health-recommendations-modal, .health-activity-modal,
+    .task-decomposition-modal, .decomposition-history-modal, .decomposition-settings-modal,
+    .schedule-settings-modal, .reminder-settings-modal, .notification-permission-modal) .modal-header {
+    background: linear-gradient(120deg, #2868cb, #087f80) !important;
+    color: #fff;
+}
+:is(.health-report-modal, .health-recommendations-modal, .health-activity-modal,
+    .task-decomposition-modal, .decomposition-history-modal, .decomposition-settings-modal,
+    .schedule-settings-modal, .reminder-settings-modal, .notification-permission-modal) .modal-header h3 {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    text-shadow: none;
+}
+:is(.schedule-settings-modal, .reminder-settings-modal) .settings-section {
+    background: #f3f7f4;
+    border: 1px solid #dbe4df;
+    border-radius: 14px;
+    box-shadow: none;
+}
+:is(.schedule-settings-modal, .reminder-settings-modal) .settings-section:hover {
+    background: #edf5f0;
+    border-color: #b9d7cb;
+    box-shadow: none;
+    transform: none;
+}
+:is(.schedule-settings-modal, .reminder-settings-modal) .settings-section h4 {
+    color: #116f70;
+}
+:is(.schedule-settings-modal, .reminder-settings-modal) .btn-primary {
+    background: linear-gradient(120deg, #2868cb, #087f80);
+    color: #fff;
+}
+:is(.health-report-modal, .health-recommendations-modal, .health-activity-modal,
+    .task-decomposition-modal, .decomposition-history-modal, .decomposition-settings-modal,
+    .schedule-settings-modal, .reminder-settings-modal, .notification-permission-modal) :is(input, select, textarea) {
+    border-radius: 10px;
+    accent-color: #087f80;
+}
+
+body.dark-mode #dashboard-view {
+    --dash-ink: #e3f0eb;
+    --dash-muted: #b0c7c1;
+    --dash-line: #39565b;
+    --dash-paper: #192f33;
+    --dash-field: #223c40;
+    --dash-shadow: 0 14px 36px rgba(0, 0, 0, .18);
+}
+body.dark-mode #dashboard-view .dashboard-intro {
+    background: radial-gradient(circle at 90% 10%, #254b48, transparent 38%),
+                linear-gradient(125deg, #1c3438, #172b31);
+    border-color: var(--dash-line);
+}
+body.dark-mode #dashboard-view .dashboard-intro-label,
+body.dark-mode #dashboard-view .behavior-icon,
+body.dark-mode #dashboard-view .status-icon {
+    background: #294b4c;
+    border-color: #426b68;
+    color: #d2ede4;
+}
+body.dark-mode #dashboard-view .dashboard-card,
+body.dark-mode #dashboard-view .visualization-dashboard .chart-card,
+body.dark-mode #dashboard-view .behavior-analysis-section,
+body.dark-mode #dashboard-view .smart-health-section,
+body.dark-mode #dashboard-view .smart-decomposition-section,
+body.dark-mode #dashboard-view .smart-schedule-section,
+body.dark-mode #dashboard-view .smart-reminder-section { background: var(--dash-paper); border-color: var(--dash-line); }
+body.dark-mode #dashboard-view .dashboard-grid .dashboard-card {
+    background: var(--dash-paper) !important;
+    border-color: var(--dash-line) !important;
+}
+body.dark-mode #dashboard-view .dashboard-stats .stat-item:nth-child(n) { background: var(--dash-paper); border-color: var(--dash-line); }
+body.dark-mode #dashboard-view .dashboard-stats .stat-item:nth-child(1) { border-top-color: #78aaf3; }
+body.dark-mode #dashboard-view .dashboard-stats .stat-item:nth-child(2) { border-top-color: #58c6ad; }
+body.dark-mode #dashboard-view .dashboard-stats .stat-item:nth-child(3) { border-top-color: #e6b778; }
+body.dark-mode #dashboard-view .metric-item,
+body.dark-mode #dashboard-view .behavior-card,
+body.dark-mode #dashboard-view .status-item,
+body.dark-mode #dashboard-view .recommendation-item,
+body.dark-mode #dashboard-view .health-recommendation-item,
+body.dark-mode #dashboard-view .decomposition-item { background: var(--dash-field); border-color: var(--dash-line); }
+body.dark-mode :is(.health-report-modal, .health-recommendations-modal, .health-activity-modal,
+    .task-decomposition-modal, .decomposition-history-modal, .decomposition-settings-modal,
+    .schedule-settings-modal, .reminder-settings-modal, .notification-permission-modal) .modal-content {
+    background: #192f33 !important;
+    border-color: #39565b;
+    color: #e3f0eb;
+}
+body.dark-mode :is(.schedule-settings-modal, .reminder-settings-modal) .settings-section {
+    background: #223c40;
+    border-color: #39565b;
+}
+body.dark-mode :is(.schedule-settings-modal, .reminder-settings-modal) .settings-section h4 {
+    color: #a8ded3;
+}
+
+@media (max-width: 850px) {
+    #dashboard-view { padding: 20px 22px 56px !important; }
+    #dashboard-view .dashboard-grid,
+    #dashboard-view .visualization-dashboard .charts-row-double { grid-template-columns: 1fr !important; }
+    #dashboard-view .dashboard-card:last-child { grid-column: auto; }
+}
+@media (max-width: 780px) {
+    body:has(header .logo-section) #dashboard-view {
+        width: calc(100% - 62px) !important;
+        max-width: calc(100% - 62px) !important;
+        margin-left: 46px !important;
+        margin-right: 0 !important;
+    }
+    #dashboard-view .dashboard-grid { width: 100% !important; }
+}
+@media (max-width: 600px) {
+    #dashboard-view { padding: 12px 14px 44px !important; }
+    #dashboard-view .dashboard-intro { padding: 24px; }
+    #dashboard-view .dashboard-stats { grid-template-columns: 1fr; gap: 10px; }
+    #dashboard-view .dashboard-stats .stat-item:nth-child(n) { min-height: 0; padding: 17px 20px; }
+    #dashboard-view .dashboard-card,
+    #dashboard-view .visualization-dashboard .chart-card,
+    #dashboard-view .behavior-analysis-section,
+    #dashboard-view .smart-health-section,
+    #dashboard-view .smart-decomposition-section,
+    #dashboard-view .smart-schedule-section,
+    #dashboard-view .smart-reminder-section { padding: 18px; }
+    #dashboard-view .visualization-dashboard .dashboard-header,
+    #dashboard-view .visualization-dashboard .chart-header,
+    #dashboard-view .section-header { flex-wrap: wrap; align-items: flex-start; }
+    #dashboard-view .dashboard-actions { width: 100%; }
+    #dashboard-view .dashboard-actions button { flex: 1; justify-content: center; }
+    #dashboard-view .behavior-grid,
+    #dashboard-view .health-status,
+    #dashboard-view .decomposition-status,
+    #dashboard-view .schedule-status,
+    #dashboard-view .reminder-status,
+    #dashboard-view .metrics-grid { grid-template-columns: 1fr; }
+    #dashboard-view .visualization-dashboard .chart-container { min-height: 240px; height: 240px; }
+}

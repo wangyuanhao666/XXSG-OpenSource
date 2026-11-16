@@ -309,8 +309,8 @@
     function logError(type, error, filename = '', lineno = 0) {
         const errorLog = {
             type,
-            message: error.message || error,
-            stack: error.stack || '',
+            message: error?.message || (typeof error === 'string' ? error : 'Unknown error'),
+            stack: error?.stack || '',
             filename,
             lineno,
             timestamp: new Date().toISOString(),

@@ -524,6 +524,7 @@ main > .view,
 #quadrant-view,
 #dashboard-view,
 #review-view,
+#time-train-view,
 #templates-view {
     width: var(--xxsg-shell-width) !important;
     max-width: none !important;
@@ -534,6 +535,7 @@ main > .view,
 
 body:has(header .logo-section) #dashboard-view,
 body:has(header .logo-section) #review-view,
+body:has(header .logo-section) #time-train-view,
 body:has(header .logo-section) #templates-view,
 body:has(header .logo-section) #fortune-view,
 body:has(header .logo-section) #habit-tracker-view,
@@ -547,6 +549,7 @@ body:has(header .logo-section) #countdown-view {
 
 body:has(header .logo-section) #dashboard-view > *,
 body:has(header .logo-section) #review-view > *,
+body:has(header .logo-section) #time-train-view > *,
 body:has(header .logo-section) #templates-view > *,
 body:has(header .logo-section) #fortune-view > *,
 body:has(header .logo-section) #habit-tracker-view > *,
@@ -1628,6 +1631,11 @@ body.dark-mode .fortune-right-section {
         --xxsg-feature-width: calc(100vw - 20px);
     }
 
+    body:has(header .logo-section) {
+        --xxsg-shell-width: calc(100vw - var(--xxsg-sidebar-width) - 20px);
+        --xxsg-feature-width: calc(100vw - var(--xxsg-sidebar-width) - 20px);
+    }
+
     body {
         padding-top: 10px;
     }
@@ -2151,9 +2159,18 @@ body.dark-mode #fortune-view .fortune-right-section {
     box-shadow: 0 10px 22px rgba(79, 70, 229, 0.20) !important;
 }
 
+#fortune-view #draw-fortune-btn.fortune-btn.primary:hover,
 #fortune-view #ai-fortune-btn.fortune-btn.ai:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35) !important;
+    background: linear-gradient(135deg, var(--xxsg-brand), var(--xxsg-accent)) !important;
+    color: #b8960f !important;
+    transform: translateY(-2px) !important;
+}
+
+#fortune-view:has(input[name="fortune-type"][value="traditional"]:checked) #draw-fortune-btn.fortune-btn.primary,
+#fortune-view:has(input[name="fortune-type"][value="ai"]:checked) #ai-fortune-btn.fortune-btn.ai {
+    color: #b8960f !important;
+    border-color: transparent !important;
+    background: linear-gradient(135deg, var(--xxsg-brand), var(--xxsg-accent)) !important;
 }
 
 /* Targeted layout fixes from visual review. */
@@ -2210,8 +2227,7 @@ body.dark-mode #quadrant-view .quadrant {
 #quadrant-view .quadrant-tasks .task-checkbox,
 #quadrant-view .quadrant-tasks .task-actions-container,
 #quadrant-view .quadrant-tasks .task-description,
-#quadrant-view .quadrant-tasks .task-tags,
-#quadrant-view .quadrant-tasks .task-subtasks-preview {
+#quadrant-view .quadrant-tasks .task-tags {
     display: none !important;
 }
 
