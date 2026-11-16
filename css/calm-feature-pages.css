@@ -1,0 +1,314 @@
+/* More Features: shared calm surface for habits, countdowns and time tracking. */
+:root {
+    --calm-ink: #263d42;
+    --calm-muted: #5d7777;
+    --calm-teal: #167f81;
+    --calm-teal-dark: #116a6c;
+    --calm-paper: #fffdf8;
+    --calm-field: #f5f7f3;
+    --calm-line: #dedfd5;
+    --calm-shadow: 0 12px 32px rgba(38, 61, 66, .08);
+    --calm-action: linear-gradient(120deg, #2868cb, #087f80);
+    --calm-page: radial-gradient(circle at 14% 0%, #fffaf0, #f1f4f1 55%, #e9efee);
+}
+
+body.dark-mode {
+    --calm-ink: #e5f0ed;
+    --calm-muted: #adc3be;
+    --calm-paper: #182d31;
+    --calm-field: #20383c;
+    --calm-line: #385358;
+    --calm-shadow: 0 12px 32px rgba(0, 0, 0, .2);
+    --calm-page: radial-gradient(circle at 14% 0%, #213b3d, #142a30 65%, #10252b);
+}
+
+body.dark-mode #habit-tracker-view .ht-welcome-badge,
+body.dark-mode #habit-tracker-view .ht-habit-card.completed,
+body.dark-mode #habit-tracker-view .ht-calendar-day.has-checkin,
+body.dark-mode #countdown-view .countdown-header .header-badge,
+body.dark-mode #countdown-view .filter-btn.active,
+body.dark-mode #time-tracker-view .header-badge,
+body.dark-mode #time-tracker-view .chart-tab.active,
+body.dark-mode #time-tracker-view .summary-value {
+    background: #294748;
+    border-color: #45676a;
+    color: #d3eee7;
+}
+body.dark-mode #countdown-view .countdown-header .badge-text,
+body.dark-mode #countdown-view .countdown-title .title-gradient,
+body.dark-mode #time-tracker-view .time-tracker-title .title-gradient,
+body.dark-mode #time-tracker-view .header-badge .badge-text { color: #d3eee7; -webkit-text-fill-color: #d3eee7; }
+
+/* The three entrance cards share the same surface without changing other features. */
+#habit-tracker-feature-card,
+#countdown-feature-card,
+#time-tracker-feature-card {
+    background: var(--calm-paper);
+    border-color: var(--calm-line);
+    box-shadow: var(--calm-shadow);
+}
+#habit-tracker-feature-card .feature-title,
+#countdown-feature-card .feature-title,
+#time-tracker-feature-card .feature-title { color: var(--calm-ink); }
+#habit-tracker-feature-card .feature-description,
+#countdown-feature-card .feature-description,
+#time-tracker-feature-card .feature-description { color: var(--calm-muted); }
+#habit-tracker-feature-card .icon-bg,
+#countdown-feature-card .icon-bg,
+#time-tracker-feature-card .icon-bg { background: linear-gradient(135deg, #d8eeea, #e4edf8); }
+#habit-tracker-feature-card .feature-btn,
+#countdown-feature-card .feature-btn,
+#time-tracker-feature-card .feature-btn { background: var(--calm-action) !important; color: #fff; }
+
+/* Habit main, calendar, statistics and settings pages. */
+#habit-tracker-view { background: var(--calm-page); color: var(--calm-ink); }
+#habit-tracker-view .ht-main-page,
+#habit-tracker-view .ht-page { min-height: 100vh; }
+#habit-tracker-view .ht-welcome-card,
+#habit-tracker-view .ht-navbar,
+#habit-tracker-view .ht-page-navbar,
+#habit-tracker-view .ht-progress-card,
+#habit-tracker-view .ht-quick-actions,
+#habit-tracker-view .ht-habits-container,
+#habit-tracker-view .ht-stat-card,
+#habit-tracker-view .ht-achievement-section,
+#habit-tracker-view .ht-chart-container,
+#habit-tracker-view .ht-ranking-section,
+#habit-tracker-view .ht-data-table-section,
+#habit-tracker-view .ht-calendar-selector,
+#habit-tracker-view .ht-calendar-controls,
+#habit-tracker-view .ht-calendar-wrapper,
+#habit-tracker-view .ht-calendar-stats,
+#habit-tracker-view .ht-settings-section {
+    background: var(--calm-paper);
+    border: 1px solid var(--calm-line);
+    box-shadow: var(--calm-shadow);
+}
+#habit-tracker-view .ht-welcome-badge {
+    background: #e4f2ed;
+    color: #116a6c;
+}
+#habit-tracker-view .ht-page-title,
+#habit-tracker-view .ht-stat-value,
+#habit-tracker-view .ht-stat-number { color: var(--calm-teal-dark); }
+#habit-tracker-view .ht-page-title {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+}
+#habit-tracker-view .ht-page-subtitle,
+#habit-tracker-view .ht-progress-date,
+#habit-tracker-view .ht-stat-label,
+#habit-tracker-view .ht-setting-desc { color: var(--calm-muted); }
+#habit-tracker-view .ht-section-title,
+#habit-tracker-view .ht-page-title-inline,
+#habit-tracker-view .ht-settings-section h3,
+#habit-tracker-view .ht-progress-header h2 { color: var(--calm-ink); }
+#habit-tracker-view .ht-habit-card,
+#habit-tracker-view .ht-ranking-item,
+#habit-tracker-view .ht-achievement-badge,
+#habit-tracker-view .ht-calendar-day,
+#habit-tracker-view .ht-filter-menu {
+    background: var(--calm-field);
+    border-color: var(--calm-line);
+    color: var(--calm-ink);
+}
+#habit-tracker-view .ht-habit-card.completed,
+#habit-tracker-view .ht-calendar-day.has-checkin { background: #e8f5ee; }
+#habit-tracker-view .ht-calendar-day.today { border-color: var(--ht-primary); }
+#habit-tracker-view .ht-setting-item { border-color: var(--calm-line); }
+#habit-tracker-view .ht-nav-btn,
+#habit-tracker-view .ht-month-nav,
+#habit-tracker-view .ht-settings-btn,
+#habit-tracker-view .ht-action-btn:not(.ht-btn-primary) {
+    background: var(--calm-field);
+    border: 1px solid var(--calm-line);
+    color: var(--calm-ink);
+}
+#habit-tracker-view .ht-nav-btn.active,
+#habit-tracker-view .ht-btn-primary,
+#habit-tracker-view .ht-back-btn { background: linear-gradient(120deg, var(--ht-secondary), var(--ht-primary)); color: #fff; }
+#habit-tracker-view .ht-progress-bar { background: #e1e9e4; }
+#habit-tracker-view .ht-data-table th { background: var(--calm-field); color: var(--calm-ink); }
+#habit-tracker-view .ht-data-table td { border-color: var(--calm-line); }
+#habit-tracker-view .ht-calendar-selector select,
+#habit-tracker-view .ht-form-group input,
+#habit-tracker-view .ht-form-group select,
+#habit-tracker-view .ht-form-group textarea {
+    background: var(--calm-field);
+    border-color: var(--calm-line);
+    color: var(--calm-ink);
+}
+#habit-tracker-view .ht-modal-dialog {
+    background: var(--calm-paper);
+    border: 1px solid var(--calm-line);
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+#habit-tracker-view .ht-modal-header,
+#habit-tracker-view .ht-modal-footer { border-color: var(--calm-line); }
+#habit-tracker-view .ht-modal-title,
+#habit-tracker-view .ht-form-group label { color: var(--calm-ink); }
+#habit-tracker-view .ht-modal-close,
+#habit-tracker-view .ht-icon-option { background: var(--calm-field); border-color: var(--calm-line); }
+
+/* Countdown page, search, filters, cards and create/edit dialogs. */
+#countdown-view { background: var(--calm-page); color: var(--calm-ink); }
+#countdown-view .countdown-shape.shape-1 { background: rgba(141, 194, 182, .18); }
+#countdown-view .countdown-shape.shape-2,
+#countdown-view .countdown-shape.shape-3 { background: rgba(92, 151, 169, .1); }
+#countdown-view .countdown-header .header-badge {
+    background: #e4f2ed;
+    border-color: #c7ded5;
+}
+#countdown-view .countdown-header .badge-text,
+#countdown-view .countdown-title .title-gradient {
+    background: none;
+    -webkit-text-fill-color: #116a6c;
+    color: #116a6c;
+    animation: none;
+}
+#countdown-view .countdown-subtitle { color: var(--calm-muted); }
+#countdown-view .add-countdown-btn { background: var(--calm-action); box-shadow: 0 6px 18px rgba(22, 127, 129, .18); }
+#countdown-view .controls-card,
+#countdown-view .countdown-card,
+#countdown-view .empty-countdown {
+    background: var(--calm-paper);
+    border-color: var(--calm-line);
+    box-shadow: var(--calm-shadow);
+}
+#countdown-view .controls-card .card-glow { display: none; }
+#countdown-view .search-box input,
+#countdown-view .data-btn,
+#countdown-view .filter-btn {
+    background: var(--calm-field);
+    border-color: var(--calm-line);
+    color: var(--calm-ink);
+}
+#countdown-view .search-box input:focus { border-color: var(--calm-teal); box-shadow: 0 0 0 3px rgba(22, 127, 129, .12); }
+#countdown-view .filter-btn.active {
+    background: #e4f2ed;
+    border-color: var(--calm-teal);
+    color: var(--calm-teal-dark);
+    box-shadow: none;
+}
+#countdown-view .filter-btn:hover:not(.active),
+#countdown-view .data-btn:hover { border-color: var(--calm-teal); color: var(--calm-teal-dark); }
+#countdown-view .countdown-card-title,
+#countdown-view .empty-title { color: var(--calm-ink); }
+#countdown-view .countdown-card-date,
+#countdown-view .empty-text { color: var(--calm-muted); }
+.countdown-modal .modal-content,
+.countdown-add-modal .modal-content,
+.countdown-edit-modal .modal-content { background: var(--calm-paper) !important; border: 1px solid var(--calm-line) !important; }
+.countdown-modal .modal-header,
+.countdown-add-modal .modal-header,
+.countdown-edit-modal .modal-header { border-color: var(--calm-line); }
+.countdown-modal .modal-header h3,
+.countdown-modal-title,
+.countdown-modal .form-label { color: var(--calm-ink); }
+.countdown-modal .modal-subtitle { color: var(--calm-muted); }
+.countdown-modal .form-input,
+.countdown-modal .form-select,
+.countdown-form-control { background: var(--calm-field); border-color: var(--calm-line); color: var(--calm-ink); }
+.countdown-modal .form-input:focus,
+.countdown-modal .form-select:focus,
+.countdown-form-control:focus { border-color: var(--calm-teal); box-shadow: 0 0 0 3px rgba(22, 127, 129, .12); }
+.countdown-modal .btn-save,
+.countdown-modal-button-primary { background: var(--calm-action); color: #fff; }
+.countdown-modal .preset-item:hover,
+.countdown-modal .preset-category.active { border-color: var(--calm-teal); background: #e4f2ed; }
+
+/* Time tracking dashboard, categories, charts, goals and their dialogs. */
+#time-tracker-view { background: var(--calm-page); color: var(--calm-ink); }
+#time-tracker-view .time-tracker-container {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+#time-tracker-view .time-tracker-title { text-shadow: none; }
+#time-tracker-view .time-tracker-title .title-gradient,
+#time-tracker-view .header-badge .badge-text {
+    background: none;
+    -webkit-text-fill-color: #116a6c;
+    color: #116a6c;
+    filter: none;
+}
+#time-tracker-view .time-tracker-subtitle { color: var(--calm-muted); text-shadow: none; }
+#time-tracker-view .header-badge { background: #e4f2ed; border-color: #c7ded5; box-shadow: none; }
+#time-tracker-view .time-tracker-date-controls,
+#time-tracker-view .time-record-card,
+#time-tracker-view .category-manage-card,
+#time-tracker-view .chart-card,
+#time-tracker-view .goal-tracker-card {
+    background: var(--calm-paper);
+    border: 1px solid var(--calm-line);
+    box-shadow: var(--calm-shadow);
+    backdrop-filter: none;
+}
+#time-tracker-view .time-tracker-left > .category-manage-card { margin-bottom: 0; }
+#time-tracker-view .card-glow { display: none; }
+#time-tracker-view .date-nav-btn,
+#time-tracker-view .current-date-display,
+#time-tracker-view .add-record-btn,
+#time-tracker-view .add-category-btn,
+#time-tracker-view .add-goal-btn { background: var(--calm-action); box-shadow: 0 5px 16px rgba(22, 127, 129, .17); }
+#time-tracker-view .add-category-btn {
+    color: #fff !important;
+    border-color: transparent;
+}
+#time-tracker-view .add-category-btn .btn-icon,
+#time-tracker-view .add-category-btn .btn-text { color: inherit !important; }
+#time-tracker-view .card-title,
+#time-tracker-view .category-name,
+#time-tracker-view .goal-name { color: var(--calm-ink); }
+#time-tracker-view .summary-label,
+#time-tracker-view .record-category,
+#time-tracker-view .goal-info { color: var(--calm-muted); }
+#time-tracker-view .time-record-item,
+#time-tracker-view .category-item,
+#time-tracker-view .goal-item { background: var(--calm-field); border-color: var(--calm-line); }
+#time-tracker-view .chart-tab { background: var(--calm-field); border-color: var(--calm-line); color: var(--calm-ink); }
+#time-tracker-view .chart-tab.active { background: #e4f2ed; border-color: var(--calm-teal); color: var(--calm-teal-dark); }
+#time-tracker-view .summary-value { background: #e4f2ed; color: var(--calm-teal-dark); border-color: #c7ded5; }
+.time-tracker-modal .modal-content { background: var(--calm-paper) !important; border: 1px solid var(--calm-line) !important; }
+.time-tracker-modal h2,
+.time-tracker-modal h3,
+.time-tracker-modal label { color: var(--calm-ink); }
+.time-tracker-modal input,
+.time-tracker-modal select,
+.time-tracker-modal textarea { background: var(--calm-field); border-color: var(--calm-line); color: var(--calm-ink); }
+.time-tracker-modal input:focus,
+.time-tracker-modal select:focus,
+.time-tracker-modal textarea:focus { border-color: var(--calm-teal); box-shadow: 0 0 0 3px rgba(22, 127, 129, .12); }
+.time-tracker-modal .btn-save,
+.time-tracker-modal .modal-btn.primary { background: var(--calm-action); color: #fff; }
+.time-tracker-modal .btn-cancel,
+.time-tracker-modal .modal-btn.secondary { background: var(--calm-field); border: 1px solid var(--calm-line); color: var(--calm-ink); }
+
+@media (max-width: 768px) {
+    html body:has(header .logo-section) #habit-tracker-view,
+    html body:has(header .logo-section) #countdown-view,
+    html body:has(header .logo-section) #time-tracker-view {
+        width: calc(100% - 62px) !important;
+        max-width: calc(100% - 62px) !important;
+        margin-left: 46px !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+    #habit-tracker-view .ht-container,
+    #countdown-view .countdown-container,
+    #time-tracker-view .time-tracker-container { padding: 1rem; }
+    #habit-tracker-view .ht-calendar-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    #habit-tracker-view .ht-calendar-day { width: auto; min-width: 0; padding: .25rem; box-sizing: border-box; }
+    #habit-tracker-view .ht-setting-item { flex-direction: column; align-items: flex-start; gap: .75rem; }
+    #habit-tracker-view .ht-theme-colors { width: 100%; min-width: 0; flex-wrap: wrap; gap: .5rem; }
+    #habit-tracker-view .ht-theme-color { width: 44px; height: 44px; flex: 0 0 44px; }
+    #countdown-view .search-and-actions { flex-direction: column; align-items: stretch; }
+    #countdown-view .search-box,
+    #countdown-view .search-box input { width: 100%; max-width: none; min-width: 0; box-sizing: border-box; }
+    .countdown-modal .modal-content,
+    .time-tracker-modal .modal-content { max-width: calc(100vw - 2rem); box-sizing: border-box; }
+    .countdown-form-grid { grid-template-columns: 1fr; }
+    #time-tracker-view .date-selector { min-width: 0; gap: .5rem; }
+    #time-tracker-view .current-date-display { min-width: 0; padding: 0 .5rem; white-space: nowrap; font-size: .85rem; }
+}

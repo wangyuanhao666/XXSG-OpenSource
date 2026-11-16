@@ -7,8 +7,8 @@ function initPWA() {
 
     try {
 
-        // 注册 Service Worker（只在HTTPS或localhost环境下）- 临时禁用
-        if (false && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        // 注册 Service Worker（只在HTTPS或localhost环境下）
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
             console.log('开始注册Service Worker');
             navigator.serviceWorker.register('./sw.js')
                 .then(registration => {

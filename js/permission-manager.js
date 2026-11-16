@@ -240,7 +240,7 @@ const PermissionManager = {
 
         const criticalMenus = {
             'review-tab-btn': '顶级复盘',
-            'templates-tab-btn': '任务模板'
+            'time-train-tab-btn': '时光列车'
         };
 
         const results = {};

@@ -22,11 +22,11 @@
     <script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf("xxsg")>=0}).map(function(k){return caches.delete(k)}))})</script>
     <script src="js/session-sanitize-boot.js?v=1.0.0"></script>
     <script src="js/indexeddb-storage.js?v=20260619-1"></script>
-    <link rel="stylesheet" href="style-blue.css?v=20260621-3">
-    <link rel="stylesheet" href="css/app-feature-sections.css?v=1.0.0">
-    <link rel="stylesheet" href="css/app-dashboard-sections.css?v=1.0.0">
+    <link rel="stylesheet" href="style-blue.css?v=20260930-2">
+    <link rel="stylesheet" href="css/app-feature-sections.css?v=20261110-2">
+    <link rel="stylesheet" href="css/app-dashboard-sections.css?v=20261110-1">
     <link rel="stylesheet" href="css/app-productivity-sections.css?v=1.0.0">
-    <link rel="stylesheet" href="css/quadrant-view-modes.css?v=20250104-8">
+    <link rel="stylesheet" href="css/quadrant-view-modes.css?v=20260930-1">
     <link rel="stylesheet" href="css/time-tracker.css?v=1.3.7">
     <link rel="stylesheet" href="decomposition-settings.css?v=20260621">
     <link rel="stylesheet" href="task-decomposition-modal.css?v=20260621">
@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="feature-views-styles.css?v=20260621">
     <link rel="stylesheet" href="habit-tracker-integrated.css?v=20260621">
     <!-- 顶级复盘UI改造 - Modern Clean Productivity 风格 -->
-    <link rel="stylesheet" href="css/review-modern.css?v=2.0.0">
+    <link rel="stylesheet" href="css/review-modern.css?v=2.1.4">
 
     <!-- 复盘文本框自定义拖拽缩放样式 -->
     <link rel="stylesheet" href="css/review-textarea-resize.css?v=1.0.0">
@@ -54,7 +54,7 @@
     <link rel="dns-prefetch" href="https://cdn.staticfile.org">
 
     <!-- 预加载关键CSS -->
-    <link rel="preload" href="style-blue.css?v=20260621-1" as="style">
+    <link rel="preload" href="style-blue.css?v=20260930-2" as="style">
 
     <!-- 引入中文字体 -->
     <link
@@ -65,7 +65,7 @@
     <link href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- 倒数纪念日页面样式 -->
-    <link rel="stylesheet" href="css/countdown-page.css?v=1.0.0">
+    <link rel="stylesheet" href="css/countdown-page.css?v=20261111-1">
     <!-- 引入 SortableJS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -88,7 +88,12 @@
     <!-- Apple Touch Icons -->
     <link rel="apple-touch-icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
-    <link rel="stylesheet" href="world-class-design-system.css?v=20260621-3">
+    <link rel="stylesheet" href="world-class-design-system.css?v=20261116-1">
+    <link rel="stylesheet" href="css/calm-feature-pages.css?v=1.0.7">
+    <link rel="stylesheet" href="css/fortune-pomodoro-pages.css?v=1.0.10">
+    <link rel="stylesheet" href="css/account-center.css?v=1.0.5">
+    <link rel="stylesheet" href="css/notification-settings.css?v=1.0.2">
+    <link rel="stylesheet" href="css/dashboard-modern.css?v=1.0.6">
 <style>
 :root{--primary-color:#2563eb!important;--primary-dark:#1d4ed8!important}
 .dropdown-item .material-icons{color:#2563eb!important}
@@ -198,11 +203,11 @@
                         <span class="tab-label" data-translate="reviewTab">顶级复盘</span>
                     </span>
                 </button>
-                <button class="tab-button" id="templates-tab-btn" role="tab"
-                    aria-selected="false" aria-controls="templates-view" tabindex="-1">
+                <button class="tab-button" id="time-train-tab-btn" role="tab"
+                    aria-selected="false" aria-controls="time-train-view" tabindex="-1">
                     <span class="tab-content">
-                        <span class="material-icons tab-icon" aria-hidden="true">view_list</span>
-                        <span class="tab-label" data-translate="templatesTab">任务模板</span>
+                        <span class="material-icons tab-icon" aria-hidden="true">train</span>
+                        <span class="tab-label" data-translate="timeTrainTab">时光列车</span>
                     </span>
                 </button>
                 <button class="tab-button" id="more-features-tab-btn" role="tab" aria-selected="false"
@@ -1395,7 +1400,7 @@
                 <!-- 左侧区域：封套/签文主文字 -->
                 <div class="fortune-left-section" id="fortune-left-section">
                     <!-- 封套状态 -->
-                    <div class="fortune-envelope" id="fortune-envelope">
+                    <div class="fortune-envelope" id="fortune-envelope" role="button" tabindex="0" aria-label="抽取今日签文">
                         <div class="envelope-front">
                             <div class="envelope-icon">🎯</div>
                             <div class="envelope-seal">🌟</div>
@@ -1458,16 +1463,6 @@
 
             <!-- 操作按钮 -->
             <div class="fortune-actions">
-                <button id="draw-fortune-btn" class="fortune-btn primary">
-                    <span class="btn-icon">✨</span>
-                    <span class="btn-text" data-translate="drawFortune">抽取签文</span>
-                    <span class="btn-arrow">→</span>
-                </button>
-                <button id="ai-fortune-btn" class="fortune-btn ai" style="display: none;">
-                    <span class="btn-icon">🤖</span>
-                    <span class="btn-text">AI生成</span>
-                    <span class="btn-arrow">→</span>
-                </button>
                 <div class="action-buttons-group" style="display: none;" id="action-buttons-group">
                     <button id="share-fortune-btn" class="fortune-btn secondary">
                         <span class="btn-icon">💜</span>
@@ -1670,6 +1665,20 @@
                     </button>
                     <input type="datetime-local" id="date-time-picker" class="date-time-input" style="display: none;">
                 </div>
+            </div>
+
+            <div class="review-save-notice">
+                <div class="review-save-notice-copy">
+                    <span class="material-icons" aria-hidden="true">cloud_done</span>
+                    <div>
+                        <strong id="review-save-status" role="status" aria-live="polite">填写后自动保存到当前浏览器</strong>
+                        <p>浏览器数据可能被清理。请及时下载复盘记录到本地电脑。</p>
+                    </div>
+                </div>
+                <button id="download-review-reminder" type="button" class="review-download-link">
+                    <span class="material-icons" aria-hidden="true">download</span>
+                    下载当前复盘
+                </button>
             </div>
 
             <!-- 复盘内容区域 -->
@@ -2289,7 +2298,7 @@
                                 </div>
                             </div>
 
-                            <div class="preference-item" id="preference-telemetry">
+                            <div class="preference-item" id="preference-telemetry" data-page-click="togglePreference" data-page-arg="telemetry-setting">
                                 <div class="preference-icon">📊</div>
                                 <div class="preference-text">
                                     匿名使用统计
@@ -2815,35 +2824,37 @@
 <script src="js/safe-logger.js?v=1.0.0" defer></script>
 <script src="js/telemetry-service.js?v=1.0.0" defer></script>
 <script src="js/ai-core.js?v=1.0.0" defer></script>
-<script src="js/settings-avatar-core.js?v=1.0.0" defer></script>
-<script src="js/fortune-core.js?v=1.0.0" defer></script>
+<script src="js/settings-avatar-core.js?v=1.0.1" defer></script>
+<script src="js/fortune-core.js?v=20261113-1" defer></script>
 <script src="js/pomodoro-habit-core.js?v=1.0.0" defer></script>
-<script src="js/pwa-update-core.js?v=1.0.0" defer></script>
+    <script src="js/pwa-update-core.js?v=1.0.1" defer></script>
 <script src="js/i18n-dictionary-core.js?v=1.0.0" defer></script>
-<script src="js/review-system-core.js?v=1.0.0" defer></script>
-<script src="js/app-resilience-core.js?v=1.0.3" defer></script>
+<script src="js/review-system-core.js?v=1.1.1" defer></script>
+<script src="js/app-resilience-core.js?v=1.0.4" defer></script>
 <script src="js/static-translation-core.js?v=1.0.0" defer></script>
 <script src="js/language-update-core.js?v=1.0.0" defer></script>
 <script src="js/task-sortable-core.js?v=1.0.0" defer></script>
 <script src="js/api-sync-ui-core.js?v=1.0.0" defer></script>
-<script src="js/dashboard-card-core.js?v=1.0.0" defer></script>
-<script src="js/view-switch-core.js?v=1.0.0" defer></script>
-<script src="js/app-feature-view-loader.js?v=1.0.0" defer></script>
+    <script src="js/dashboard-card-core.js?v=1.0.1" defer></script>
+<script src="js/view-switch-core.js?v=20261116-1" defer></script>
+<script src="js/time-train-view.js?v=20261113-4" defer></script>
+<script src="js/app-feature-view-loader.js?v=20261113-4" defer></script>
 <script src="js/restore-preview-core.js?v=1.0.0" defer></script>
 <script src="js/search-dialog-core.js?v=1.0.0" defer></script>
-<script src="js/backup-recovery-core.js?v=1.0.0" defer></script>
+<script src="js/backup-recovery-core.js?v=1.0.1" defer></script>
+<script src="js/monthly-local-backup.js?v=20261116-1" defer></script>
 <script src="js/export-feature-core.js?v=1.0.0" defer></script>
-<script src="script.js?v=3.0.21" defer></script>
-    <script src="js/notification-system.js?v=1.0.0" defer></script>
+<script src="script.js?v=20261116-1" defer></script>
+    <script src="js/notification-system.js?v=1.0.1" defer></script>
     <script src="js/task-template-system.js?v=1.0.0" defer></script>
-    <script src="js/countdown-system.js?v=1.0.0" defer></script>
-    <script src="js/habit-tracker-app.js?v=1.0.0" defer></script>
+    <script src="js/countdown-system.js?v=20261111-1" defer></script>
+    <script src="js/habit-tracker-app.js?v=1.1.0" defer></script>
     <script src="js/time-tracker-system.js?v=1.0.0" defer></script>
     <script src="js/calendar-module.js?v=1.0.0" defer></script>
     <script src="js/permission-manager.js?v=1.0.0" defer></script>
     <script src="js/smart-reminder-system.js?v=1.0.0" defer></script>
     <script src="js/smart-schedule-system.js?v=1.0.0" defer></script>
-    <script src="js/task-decomposition-system.js?v=1.0.0" defer></script>
+    <script src="js/task-decomposition-system.js?v=1.0.1" defer></script>
     <script src="js/smart-health-system.js?v=1.0.0" defer></script>
     <script src="i18n-auto.js?v=1.0.6" defer></script>
     <script src="calendar-sync-tasks.js?v=20251203-3" defer></script>

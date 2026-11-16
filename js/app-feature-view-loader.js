@@ -4,7 +4,7 @@
     if (!anchor) return;
 
     const request = new XMLHttpRequest();
-    request.open('GET', 'partials/app-feature-views.html?v=1.0.0', false);
+    request.open('GET', 'partials/app-feature-views.html?v=20261113-4', false);
 
     try {
         request.send();

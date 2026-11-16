@@ -480,7 +480,7 @@ window.fixEditUserPermissionLoading = function() {
             // 创建编辑用户模态对话框
             const modalHTML = `
                 <div id="edit-user-modal" class="modal-overlay">
-                    <div class="modal-content">
+                    <div class="modal-content edit-user-dialog">
                         <div class="modal-header">
                             <h3>
                                 <span class="material-icons">✏️</span>
@@ -2830,8 +2830,6 @@ function createSystemStatsPage() {
                         <span>正在加载数据...</span>
                     </div>
 
-                    <div class="notification-area" id="notificationArea"></div>
-
                     <div class="quick-actions">
                         <h3>⚡ 快速操作</h3>
                         <div class="quick-action-buttons">
@@ -3980,6 +3978,7 @@ function createSystemLogRow(log) {
 function renderAdminMarkup(container, markup) {
     if (!container) return;
     container.replaceChildren(...createSanitizedAdminNodes(markup));
+    window.scrollTo(0, 0);
 }
 
 function appendAdminMarkup(container, markup) {
@@ -4615,8 +4614,13 @@ function hideLoadingIndicator() {
 
 // 显示通知
 function showNotification(message, type = 'info', duration = 3000) {
-    const notificationArea = document.getElementById('notificationArea');
-    if (!notificationArea) return;
+    let notificationArea = document.getElementById('adminNotificationPortal');
+    if (!notificationArea) {
+        notificationArea = document.createElement('div');
+        notificationArea.id = 'adminNotificationPortal';
+        notificationArea.className = 'admin-notification-portal';
+        document.body.appendChild(notificationArea);
+    }
 
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -4686,11 +4690,13 @@ function toggleAutoRefresh() {
 function toggleDarkMode() {
     const darkModeText = document.getElementById('darkModeText');
     const quickBtn = event.target.closest('.quick-btn');
-    const body = document.body;
+    const statsPage = document.querySelector('.system-stats-page');
+    if (!statsPage || !darkModeText || !quickBtn) return;
 
     if (isDarkMode) {
         // 关闭深色模式
-        body.classList.remove('dark-mode');
+        statsPage.classList.remove('dark-mode');
+        document.body.classList.remove('admin-stats-dark-mode');
         isDarkMode = false;
         darkModeText.textContent = '深色模式';
         quickBtn.classList.remove('active');
@@ -4698,7 +4704,8 @@ function toggleDarkMode() {
         showNotification('已切换到浅色模式', 'info', 2000);
     } else {
         // 开启深色模式
-        body.classList.add('dark-mode');
+        statsPage.classList.add('dark-mode');
+        document.body.classList.add('admin-stats-dark-mode');
         isDarkMode = true;
         darkModeText.textContent = '浅色模式';
         quickBtn.classList.add('active');
@@ -4752,7 +4759,8 @@ function initUXEnhancements() {
     // 检查深色模式设置
     const savedDarkMode = window.AdminStorage.getRaw('darkMode');
     if (savedDarkMode === 'true') {
-        document.body.classList.add('dark-mode');
+        document.querySelector('.system-stats-page')?.classList.add('dark-mode');
+        document.body.classList.add('admin-stats-dark-mode');
         isDarkMode = true;
         const darkModeText = document.getElementById('darkModeText');
 const quickBtn = document.querySelector('.quick-btn[data-admin-action="toggleDarkMode"]');
@@ -5554,8 +5562,8 @@ function editUser(userId) {
 
     // 创建编辑用户模态对话框
     const modalHTML = `
-        <div id="edit-user-modal" class="modal-overlay" style="display: flex !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0,0,0,0.5) !important; z-index: 9999 !important; align-items: center !important; justify-content: center !important;">
-            <div class="modal-content" style="max-width: 90% !important; max-height: 90% !important; overflow-y: auto !important; background: white !important; border-radius: 15px !important; box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;">
+        <div id="edit-user-modal" class="modal-overlay">
+            <div class="modal-content edit-user-dialog">
                 <div class="modal-header">
                     <h3>
                         <span class="material-icons">✏️</span>
@@ -5598,7 +5606,7 @@ function editUser(userId) {
                     <!-- 权限设置分组 -->
                     <div class="form-group">
                         <label>⚙️ 功能权限 (${permissionEntries.length}个选项)</label>
-                        <div class="permissions-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; max-height: 400px; overflow-y: auto; padding: 1rem; background: rgba(var(--theme-primary-rgb), 0.03); border-radius: 14px; border: 2px solid rgba(var(--theme-primary-rgb), 0.1);">
+                        <div class="permissions-grid">
                             ${permissionsHTML}
                         </div>
                         <div style="margin-top: 10px; color: #666; font-size: 0.9rem;">
@@ -6537,7 +6545,7 @@ function initChart() {
                     fill: false
                 },
                 {
-                    label: 'AI签语生成',
+                    label: 'AI签语生成次数',
                     data: historicalData.data.map(d => d.totalGenerations),
                     borderColor: '#2196F3',
                     backgroundColor: 'rgba(33, 150, 243, 0.1)',
@@ -6545,7 +6553,7 @@ function initChart() {
                     fill: false
                 },
                 {
-                    label: '生成成功',
+                    label: '生成成功次数',
                     data: historicalData.data.map(d => d.successfulGenerations),
                     borderColor: '#FF9800',
                     backgroundColor: 'rgba(255, 152, 0, 0.1)',
@@ -6553,7 +6561,7 @@ function initChart() {
                     fill: false
                 },
                 {
-                    label: '生成失败',
+                    label: '生成失败次数',
                     data: historicalData.data.map(d => d.failedGenerations),
                     borderColor: '#F44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.1)',
@@ -6568,9 +6576,9 @@ function initChart() {
             plugins: {
                 legend: {
                     labels: {
-                        color: 'white',
+                        color: '#264247',
                         font: {
-                            size: 12
+                            size: 13
                         }
                     }
                 }
@@ -6578,24 +6586,24 @@ function initChart() {
             scales: {
                 x: {
                     ticks: {
-                        color: 'white',
+                        color: '#61777b',
                         font: {
                             size: 10
                         }
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: 'rgba(38, 66, 71, 0.12)'
                     }
                 },
                 y: {
                     ticks: {
-                        color: 'white',
+                        color: '#61777b',
                         font: {
                             size: 10
                         }
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: 'rgba(38, 66, 71, 0.12)'
                     }
                 }
             }

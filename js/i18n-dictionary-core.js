@@ -154,6 +154,7 @@ window.XXSG_TRANSLATIONS = {
         // 【新增】顶级复盘功能翻译
         reviewTab: '顶级复盘',
         templatesTab: '任务模板',
+        timeTrainTab: '时光列车',
         dailyReview: '每日复盘',
         weeklyReview: '每周复盘',
         monthlyReview: '每月复盘',
@@ -531,6 +532,7 @@ window.XXSG_TRANSLATIONS = {
         // 【新增】顶级复盘功能翻译
         reviewTab: 'Top\nReview',
         templatesTab: 'Task\nTemplates',
+        timeTrainTab: 'Time\nTrain',
         dailyReview: 'Daily Review',
         weeklyReview: 'Weekly Review',
         monthlyReview: 'Monthly Review',

@@ -188,7 +188,7 @@ class CountdownSystem {
                             <div class="countdown-settings-panel countdown-settings-panel-spaced">
                                 <div class="countdown-check-row countdown-check-row-spaced">
                                     <input class="countdown-check-input" type="checkbox" id="countdown-reminder">
-                                    <label class="countdown-check-label">🔔 提醒设置</label>
+                                    <label class="countdown-check-label" for="countdown-reminder">🔔 提醒设置</label>
                                 </div>
                                 <div id="reminder-settings" class="countdown-settings-body">
                                     <div class="countdown-settings-grid">
@@ -224,7 +224,7 @@ class CountdownSystem {
                             <div class="countdown-settings-panel">
                                 <div class="countdown-check-row">
                                     <input class="countdown-check-input" type="checkbox" id="countdown-repeat">
-                                    <label class="countdown-check-label">🔄 重复设置</label>
+                                    <label class="countdown-check-label" for="countdown-repeat">🔄 重复设置</label>
                                 </div>
                                 <div id="repeat-settings" class="countdown-settings-body">
                                     <div class="countdown-settings-grid">
@@ -553,7 +553,7 @@ class CountdownSystem {
                             <div class="countdown-settings-panel countdown-settings-panel-spaced">
                                 <div class="countdown-check-row countdown-check-row-spaced">
                                     <input class="countdown-check-input" type="checkbox" id="edit-countdown-reminder" ${event.reminder.enabled ? 'checked' : ''}>
-                                    <label class="countdown-check-label">🔔 提醒设置</label>
+                                    <label class="countdown-check-label" for="edit-countdown-reminder">🔔 提醒设置</label>
                                 </div>
                                 <div id="edit-reminder-settings" class="countdown-settings-body${event.reminder.enabled ? ' is-visible' : ''}">
                                     <div class="countdown-settings-grid">
@@ -589,7 +589,7 @@ class CountdownSystem {
                             <div class="countdown-settings-panel">
                                 <div class="countdown-check-row">
                                     <input class="countdown-check-input" type="checkbox" id="edit-countdown-repeat" ${event.repeat.enabled ? 'checked' : ''}>
-                                    <label class="countdown-check-label">🔄 重复设置</label>
+                                    <label class="countdown-check-label" for="edit-countdown-repeat">🔄 重复设置</label>
                                 </div>
                                 <div id="edit-repeat-settings" class="countdown-settings-body${event.repeat.enabled ? ' is-visible' : ''}">
                                     <div class="countdown-settings-grid">

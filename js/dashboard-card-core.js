@@ -166,6 +166,10 @@ function bindDashboardCardEvents() {
             event.preventDefault();
             event.stopPropagation();
 
+            // 三张统计卡片共用一个详情位置，切换前先关闭当前详情。
+            closeTaskModal();
+            closeCompletionRateModal();
+
             if (index === 0) {
                 console.log('点击总任务卡片 - 事件触发');
                 showTaskModal('all');

@@ -1226,17 +1226,14 @@ body.dark-mode .pin-task.pinned:hover {
     color: #d97706;
 }
 
-/* Q3（不重要但紧急）- 蓝色图标 */
+/* Q3 的操作图标与任务数徽标的蓝色终点保持一致。 */
 #q3 .copy-task .material-icons,
 #q3 .pin-task .material-icons,
-#q3 .delete-task .material-icons {
-    color: #2563eb;
-}
-
+#q3 .delete-task .material-icons,
 #q3 .copy-task:hover .material-icons,
 #q3 .pin-task:hover .material-icons,
 #q3 .delete-task:hover .material-icons {
-    color: #1d4ed8;
+    color: #2196f3;
 }
 
 /* Q4（不重要不紧急）- 绿色图标 */
@@ -1259,6 +1256,11 @@ body.dark-mode .pin-task.pinned:hover {
 
 .pin-task.pinned:hover .material-icons {
     color: #ff9800 !important;
+}
+
+#q3 .pin-task.pinned .material-icons,
+#q3 .pin-task.pinned:hover .material-icons {
+    color: #2196f3 !important;
 }
 
 /* 优先级圆点 */
@@ -1382,15 +1384,15 @@ body.dark-mode .start-icon {
 }
 
 .task-item[data-priority="3"] .task-main-toggle {
-    color: #2563eb;
+    color: #2196f3;
 }
 
 .task-item[data-priority="3"] .task-main-toggle:hover {
-    color: #1d4ed8;
+    color: #2196f3;
 }
 
 .task-item[data-priority="3"] .task-main-toggle.completed {
-    color: #2563eb;
+    color: #2196f3;
 }
 
 .task-item[data-priority="4"] .task-main-toggle {
@@ -1423,11 +1425,11 @@ body.dark-mode .task-item[data-priority="2"] .task-main-toggle.completed {
 }
 
 body.dark-mode .task-item[data-priority="3"] .task-main-toggle {
-    color: #60a5fa;
+    color: #2196f3;
 }
 
 body.dark-mode .task-item[data-priority="3"] .task-main-toggle.completed {
-    color: #60a5fa;
+    color: #2196f3;
 }
 
 body.dark-mode .task-item[data-priority="4"] .task-main-toggle {
@@ -1450,7 +1452,7 @@ body.dark-mode #q2 .delete-task:hover .material-icons {
 body.dark-mode #q3 .copy-task:hover .material-icons,
 body.dark-mode #q3 .pin-task:hover .material-icons,
 body.dark-mode #q3 .delete-task:hover .material-icons {
-    color: #60a5fa;
+    color: #2196f3;
 }
 
 body.dark-mode #q4 .copy-task:hover .material-icons,

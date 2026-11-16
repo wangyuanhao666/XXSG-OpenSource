@@ -8,7 +8,6 @@ function showSettingsModal() {
 
         // 禁用背景页面滚动，避免双滚动条
         document.body.style.overflow = 'hidden';
-
         console.log('✅ 账户设置模态框已显示');
     } else {
         console.error('❌ 未找到设置模态框元素');
@@ -841,8 +840,19 @@ function togglePreference(preferenceId) {
     updatePreferenceVisualState(preferenceId, newState, preferenceItemId);
 
     // 保存到localStorage
-    const storageKey = preferenceId === 'remember-me-setting' ? 'rememberMe' : preferenceId;
-    window.DataSyncStorage.setRaw(storageKey, newState);
+    const storageKeys = {
+        'auto-save': 'autoSave',
+        'task-notifications': 'taskNotifications',
+        'remember-me-setting': 'rememberMe'
+    };
+    const storageKey = storageKeys[preferenceId];
+    if (storageKey) {
+        if (window.SettingsStorage) {
+            window.SettingsStorage.setBoolean(storageKey, newState);
+        } else {
+            window.DataSyncStorage.setRaw(storageKey, newState);
+        }
+    }
 
     // 遥测开关特殊处理
     if (preferenceId === 'telemetry-setting' && window.Telemetry) {
@@ -886,11 +896,8 @@ function updatePreferenceVisualState(preferenceId, isSelected, preferenceItemId 
         return;
     }
 
-    if (isSelected) {
-        preferenceItem.classList.add('selected');
-    } else {
-        preferenceItem.classList.remove('selected');
-    }
+    preferenceItem.classList.toggle('active', isSelected);
+    preferenceItem.classList.toggle('selected', isSelected);
 
     console.log(`✅ 偏好设置视觉状态已更新: ${preferenceId} = ${isSelected}`);
 }

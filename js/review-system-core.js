@@ -220,14 +220,16 @@ class ReviewSystem {
         // 心情选择 - 修复类名匹配问题
         document.querySelectorAll('.mood-btn').forEach(option => {
             option.addEventListener('click', (e) => {
-                this.selectMood(e.target.dataset.mood);
+                this.selectMood(e.currentTarget.dataset.mood);
+                this.scheduleAutoSave();
             });
         });
 
         // 评分系统 - 修复类名匹配问题
         document.querySelectorAll('.star').forEach(star => {
             star.addEventListener('click', (e) => {
-                this.setRating(parseInt(e.target.dataset.rating));
+                this.setRating(parseInt(e.currentTarget.dataset.rating));
+                this.scheduleAutoSave();
             });
         });
 
@@ -237,6 +239,9 @@ class ReviewSystem {
         });
 
         document.getElementById('export-review-btn')?.addEventListener('click', () => {
+            this.exportReview();
+        });
+        document.getElementById('download-review-reminder')?.addEventListener('click', () => {
             this.exportReview();
         });
 
@@ -275,12 +280,18 @@ class ReviewSystem {
         });
 
         // 自动保存 - 使用可重用的处理函数
-        document.querySelectorAll('textarea').forEach(textarea => {
+        document.querySelectorAll('#review-view .review-template textarea').forEach(textarea => {
             textarea.addEventListener('input', this.autoSaveHandler);
+        });
+        window.addEventListener('pagehide', () => this.flushPendingAutoSave());
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') this.flushPendingAutoSave();
         });
     }
 
     switchReviewType(type) {
+        if (type === this.currentType) return;
+        this.flushPendingAutoSave();
         this.currentType = type;
 
         // 更新按钮状态
@@ -313,6 +324,7 @@ class ReviewSystem {
     }
 
     navigateDate(direction) {
+        this.flushPendingAutoSave();
         console.log('navigateDate 被调用:', {
             direction,
             currentDate: this.currentDate.toISOString(),
@@ -359,6 +371,7 @@ class ReviewSystem {
 
     setCustomDateTime(dateTimeString) {
         if (dateTimeString) {
+            this.flushPendingAutoSave();
             this.currentDate = new Date(dateTimeString);
             this.updateDateDisplay();
             this.loadCurrentReview();
@@ -372,6 +385,7 @@ class ReviewSystem {
     }
 
     goToToday() {
+        this.flushPendingAutoSave();
         this.currentDate = new Date();
         this.updateDateDisplay();
         this.loadCurrentReview();
@@ -531,9 +545,11 @@ class ReviewSystem {
                 const dataToSave = JSON.stringify(this.reviews);
                 window.DataSyncStorage.setRaw('reviews', dataToSave);
             }
+            return true;
         } catch (error) {
             console.error('保存复盘数据失败:', error);
             this.showMessage('保存失败，请检查浏览器存储权限');
+            return false;
         }
     }
 
@@ -599,6 +615,7 @@ class ReviewSystem {
 
         // 加载评分
         this.setRating(review.rating || 0);
+        this.setSaveStatus(this.reviews[key] ? 'saved' : 'idle');
 
         // ✅ 确保加载后 textarea 可以拖动
         setTimeout(() => {
@@ -707,12 +724,39 @@ class ReviewSystem {
         if (this.autoSaveTimer) {
             clearTimeout(this.autoSaveTimer);
         }
+        this.setSaveStatus('pending');
         this.autoSaveTimer = setTimeout(() => {
+            this.autoSaveTimer = null;
             this.saveReview(true);
         }, 2000);
     }
 
+    flushPendingAutoSave() {
+        if (!this.autoSaveTimer) return;
+        clearTimeout(this.autoSaveTimer);
+        this.autoSaveTimer = null;
+        this.saveReview(true);
+    }
+
+    setSaveStatus(state) {
+        const status = document.getElementById('review-save-status');
+        if (!status) return;
+        const zh = getReviewLanguage() === 'zh';
+        const messages = {
+            pending: zh ? '正在输入，稍后自动保存…' : 'Editing, saving shortly…',
+            saved: zh ? '已自动保存到当前浏览器' : 'Saved in this browser',
+            failed: zh ? '保存失败，请检查浏览器存储空间' : 'Save failed; check browser storage',
+            idle: zh ? '填写后自动保存到当前浏览器' : 'Changes save in this browser automatically'
+        };
+        status.textContent = messages[state] || messages.idle;
+        status.dataset.state = state;
+    }
+
     saveReview(isAutoSave = false) {
+        if (this.autoSaveTimer) {
+            clearTimeout(this.autoSaveTimer);
+            this.autoSaveTimer = null;
+        }
         const review = {
             date: this.currentDate.toISOString(),
             type: this.currentType,
@@ -755,8 +799,9 @@ class ReviewSystem {
             'yearly-next-goals': 'nextGoals'
         };
 
-        // 收集所有textarea内容（只收集复盘区域内的）
-        document.querySelectorAll('#review-view textarea').forEach(textarea => {
+        // 仅收集当前复盘类型，避免隐藏模板的内容混入此记录。
+        const currentTemplate = document.getElementById(`${this.currentType}-review-template`);
+        currentTemplate?.querySelectorAll('textarea').forEach(textarea => {
             const fieldName = fieldMapping[textarea.id] || textarea.dataset.field || textarea.id;
             if (fieldName && textarea.value.trim()) {
                 review[fieldName] = textarea.value.trim();
@@ -765,7 +810,11 @@ class ReviewSystem {
 
         const key = this.getReviewKey();
         this.reviews[key] = review;
-        this.saveReviews();
+        if (!this.saveReviews()) {
+            this.setSaveStatus('failed');
+            return false;
+        }
+        this.setSaveStatus('saved');
 
         if (!isAutoSave) {
             this.showMessage(t('reviewSaved'));
@@ -777,11 +826,16 @@ class ReviewSystem {
             this.updateHistoryPreview();
             this.updateDetailedHistoryView();
         }, 500);
+        return true;
     }
 
     clearReview() {
         if (confirm(t('confirmClear'))) {
-            document.querySelectorAll('textarea').forEach(textarea => {
+            if (this.autoSaveTimer) {
+                clearTimeout(this.autoSaveTimer);
+                this.autoSaveTimer = null;
+            }
+            document.getElementById(`${this.currentType}-review-template`)?.querySelectorAll('textarea').forEach(textarea => {
                 textarea.value = '';
             });
             this.selectMood('');
@@ -790,6 +844,7 @@ class ReviewSystem {
             const key = this.getReviewKey();
             delete this.reviews[key];
             this.saveReviews();
+            this.setSaveStatus('idle');
 
             this.showMessage(t('reviewCleared'));
 
@@ -802,6 +857,7 @@ class ReviewSystem {
     }
 
     exportReview() {
+        this.flushPendingAutoSave();
         const key = this.getReviewKey();
         const review = this.reviews[key];
 
@@ -1169,6 +1225,7 @@ class ReviewSystem {
 
     // 显示复盘记录历史视图
     showReviewHistoryView() {
+        this.flushPendingAutoSave();
         document.getElementById('review-content').style.display = 'none';
         document.getElementById('review-history-view').style.display = 'block';
         this.loadDetailedReviewHistory();

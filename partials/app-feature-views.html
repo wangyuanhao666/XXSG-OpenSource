@@ -281,7 +281,8 @@
                             <div class="ht-setting-desc">选择你喜欢的主题颜色风格</div>
                         </div>
                         <div class="ht-theme-colors" id="ht-themeColors">
-                            <div class="ht-theme-color active" data-theme="indigo" style="background: linear-gradient(135deg, #2563eb, #3b82f6);" title="默认紫"></div>
+                            <div class="ht-theme-color active" data-theme="calm" style="background: linear-gradient(135deg, #167f81, #2868cb);" title="静谧青绿"></div>
+                            <div class="ht-theme-color" data-theme="purple" style="background: linear-gradient(135deg, #667eea, #764ba2);" title="经典紫"></div>
                             <div class="ht-theme-color" data-theme="blue" style="background: linear-gradient(135deg, #4299e1, #2b6cb0);" title="海洋蓝"></div>
                             <div class="ht-theme-color" data-theme="green" style="background: linear-gradient(135deg, #48bb78, #38a169);" title="清新绿"></div>
                             <div class="ht-theme-color" data-theme="orange" style="background: linear-gradient(135deg, #f6ad55, #ed8936);" title="阳光橙"></div>
@@ -903,6 +904,11 @@
     <!-- 可视化看板视图 -->
 
 <div id="dashboard-view" class="view" style="display: none;">
+        <div class="dashboard-intro">
+            <span class="dashboard-intro-label"><span aria-hidden="true">◈</span> 数据概览</span>
+            <h1>看清任务进展，安排好下一步</h1>
+            <p>从完成情况到工作节奏，在一处查看值得关注的变化。</p>
+        </div>
         <div class="dashboard-stats">
             <div class="stat-item">
                 <div class="stat-number" id="dashboard-total-tasks">0</div>
@@ -1330,6 +1336,9 @@
 
     <!-- 每日一签视图 -->
 
+<div id="time-train-view" class="view" style="display: none;">
+    <iframe id="time-train-frame" title="时光列车" data-src="design/time-train/journey-prototype.html?embedded=1" style="display:block;width:100%;min-height:750px;border:0;background:transparent"></iframe>
+</div>
 <div id="templates-view" class="view" style="display: none;">
         <div class="templates-container">
             <div class="templates-header">

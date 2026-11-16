@@ -10,3 +10,7 @@ test-results/
 .env
 .env.*
 !.env.example
+
+# Local browser and backup data
+.codex/
+backups/

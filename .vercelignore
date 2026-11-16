@@ -45,3 +45,7 @@ permission-debug.html
 view_comparison.html
 .claude/
 .cursor/
+
+# Local browser and backup data
+.codex/
+backups/

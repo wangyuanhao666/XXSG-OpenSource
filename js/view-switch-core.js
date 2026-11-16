@@ -114,16 +114,15 @@ function switchView(view) {
         if (window.XXSGAppRuntime.reviewSystem) {
             window.XXSGAppRuntime.reviewSystem.updateLanguage();
         }
-    } else if (view === 'templates') {
-        if (views.templatesView) views.templatesView.style.display = 'block';
-        if (tabButtons[4]) tabButtons[4].classList.add('active'); // 🔧 修复：templates应该是索引4
+    } else if (view === 'time-train') {
+        if (views.timeTrainView) views.timeTrainView.style.display = 'block';
+        if (tabButtons[4]) tabButtons[4].classList.add('active');
 
         if (taskActions) {
             taskActions.style.display = 'none';
         }
 
-        // 初始化模板系统
-        initTemplateSystem();
+        initTimeTrainView();
     } else if (view === 'backup') {
         // 备份功能通过模态框实现，不是独立视图
         console.log('打开备份功能模态框');
@@ -202,6 +201,13 @@ function switchView(view) {
         // 初始化时间管理可视化看板功能
         ensureChartJsLoaded(() => initTimeTrackerSystem());
     }
+
+    // Keep the accessible tab state in sync with the visual active state.
+    tabButtons.forEach(btn => {
+        const selected = btn.classList.contains('active');
+        btn.setAttribute('aria-selected', String(selected));
+        btn.tabIndex = selected ? 0 : -1;
+    });
 
     // 重新渲染任务列表以更新图标显示（仅对任务相关视图）
     if (view === 'list' || view === 'quadrant') {
