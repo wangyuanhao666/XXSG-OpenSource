@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.29';
+const CACHE_VERSION = 'xxsg-v3.0.30';
 const APP_SHELL = [
   './',
   './index.html',
@@ -45,6 +45,15 @@ const APP_SHELL = [
   './design/time-train/journey-prototype.html',
   './design/time-train/journey-prototype.css',
   './design/time-train/journey-prototype.js',
+  './design/time-train/scenes/hangzhou-east.webp',
+  './design/time-train/scenes/fuyang.webp',
+  './design/time-train/scenes/tonglu.webp',
+  './design/time-train/scenes/jiande.webp',
+  './design/time-train/scenes/qiandaohu.webp',
+  './design/time-train/scenes/sanyang.webp',
+  './design/time-train/scenes/jixi-north.webp',
+  './design/time-train/scenes/sheixian-north.webp',
+  './design/time-train/scenes/huangshan-north.webp',
   './src/core/security.js',
   './src/core/secure-storage.js',
   './src/core/logger.js',
