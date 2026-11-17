@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.28';
+const CACHE_VERSION = 'xxsg-v3.0.29';
 const APP_SHELL = [
   './',
   './index.html',
@@ -41,6 +41,10 @@ const APP_SHELL = [
   './js/telemetry-service.js',
   './js/monthly-local-backup.js',
   './js/time-train-view.js',
+  './visualization-charts.js',
+  './design/time-train/journey-prototype.html',
+  './design/time-train/journey-prototype.css',
+  './design/time-train/journey-prototype.js',
   './src/core/security.js',
   './src/core/secure-storage.js',
   './src/core/logger.js',

@@ -4,6 +4,14 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [v1.1.3] - 2026-11-17
+
+### Fixed
+
+- Included the time train page and station images in the public site, fixing the 404 when opening the feature.
+- Included the visualization charts module to remove its 404 and the related resource warning.
+- Added a release check for feature pages and their referenced assets.
+
 ## [v1.1.2] - 2026-11-16
 
 ### Fixed
