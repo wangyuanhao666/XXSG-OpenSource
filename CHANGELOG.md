@@ -4,6 +4,14 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [v1.1.4] - 2026-11-17
+
+### Added
+
+- Published a dedicated watercolor illustration library for the nine Time Train stations.
+- Time Train now loads the station's hosted illustration and keeps a bundled offline scene as fallback.
+- After the ninth station, the route starts a new journey and alternates scene variants on later journeys.
+
 ## [v1.1.3] - 2026-11-17
 
 ### Fixed
