@@ -27,7 +27,11 @@ const stationImages = [...journeyScript.matchAll(/image:\s*'([^']+)'/g)].map(mat
 assert.ok(stationImages.length > 0, 'Time train station images are missing');
 stationImages.forEach(image => requireFile(`${frameDirectory}/scenes/${image}`));
 assert.equal(new Set(stationImages).size, stationImages.length, 'Time train station images must be unique');
-assert.ok(journeyScript.includes('journeyDay % stations.length'), 'Time train must restart after the final station');
+const grandIds = [...journeyScript.matchAll(/id:\s*'([^']+)'/g)].map(match => match[1]);
+assert.equal(grandIds.length, 34, 'Grand tour must have 34 destinations');
+assert.equal(new Set(grandIds).size, 34, 'Grand tour destination ids must be unique');
+requireFile(`${frameDirectory}/scenes/china-generic.webp`);
+assert.ok(journeyScript.includes('grandDay % grandStations.length'), 'Grand tour must restart after the final station');
 assert.ok(journeyScript.includes('XXSG-TimeTrain-Images/manifest.json'), 'Hosted illustration manifest is missing');
 
 const appScript = read('script.js');
@@ -36,7 +40,7 @@ assert.ok(chartPath, 'Visualization charts module source is missing');
 requireFile(chartPath);
 
 const cacheManifest = read('sw.js');
-for (const asset of [iframePath, `${frameDirectory}/journey-prototype.js`, `${frameDirectory}/journey-prototype.css`, ...stationImages.map(image => `${frameDirectory}/scenes/${image}`), chartPath]) {
+for (const asset of [iframePath, `${frameDirectory}/journey-prototype.js`, `${frameDirectory}/journey-prototype.css`, ...stationImages.map(image => `${frameDirectory}/scenes/${image}`), `${frameDirectory}/scenes/china-generic.webp`, chartPath]) {
     assert.ok(cacheManifest.includes(`'./${asset}'`), `Missing service worker cache entry: ${asset}`);
 }
 

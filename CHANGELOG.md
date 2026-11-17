@@ -4,6 +4,18 @@ All notable changes to XXSG OpenSource will be documented in this file.
 
 The project follows pragmatic release notes rather than strict semantic versioning while it is still being prepared as a local-first open-source application.
 
+## [v1.1.5] - 2026-11-17
+
+### Added
+
+- After the original nine-station route, Time Train begins a 34-stop tour of China's provincial-level regions and repeats that tour after Shanghai.
+- Added regional watercolor scenes through the dedicated image library, with a bundled offline fallback for the new route.
+- Marked Taipei and Macau as themed travel stops rather than direct rail connections.
+
+### Fixed
+
+- Corrected the Taiyuan bridge pier in its watercolor scene.
+
 ## [v1.1.4] - 2026-11-17
 
 ### Added
