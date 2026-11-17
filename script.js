@@ -4462,7 +4462,7 @@ function ensureVisualizationChartsLoaded(callback) {
             }
 
             const script = document.createElement('script');
-            script.src = 'visualization-charts.js?v=1.0.11';
+            script.src = 'visualization-charts.js?v=1.0.12';
             script.defer = true;
             script.dataset.lib = 'visualization-charts';
             script.onload = () => {

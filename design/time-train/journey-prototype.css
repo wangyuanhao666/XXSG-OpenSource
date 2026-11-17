@@ -1,0 +1,18 @@
+.window { transition: filter .6s ease, background-image .3s ease; }
+.window.time-morning { filter: saturate(.94) sepia(.06); }
+.window.time-day { filter: brightness(1.07) saturate(1.08); }
+.window.time-evening { filter: sepia(.16) saturate(.93) brightness(.9); }
+.window.time-night { filter: saturate(.64) brightness(.53) hue-rotate(13deg); }
+.light-caption { position: absolute; z-index: 2; right: 20px; top: 22px; padding: 8px 12px; border-radius: 99px; color: #244947; background: #fffdf5db; font-size: 12px; font-weight: 700; }
+.today-button { display: inline-block; text-decoration: none; }
+.note-label { display: block; margin: 20px 0 8px; color: #657a72; font-size: 12px; }
+#journal-note { width: 100%; min-height: 135px; padding: 12px; resize: vertical; border: 1px solid #c9d5c9; border-radius: 10px; color: #405d55; background: #fffdf8; font: 17px/1.7 "KaiTi", "Microsoft YaHei", sans-serif; }
+#journal-note:focus { outline: 2px solid #80aba1; outline-offset: 2px; }
+.save-status { margin: 8px 0; font-size: 12px; color: #63847a; }
+@media (max-width: 570px) { .light-caption { top: auto; right: 12px; bottom: 12px; } }
+html.embedded body { background: transparent; }
+html.embedded .shell { max-width: none; padding: 4px 8px 22px; }
+html.embedded .topbar, html.embedded .eyebrow, html.embedded .concept-tag { display: none; }
+html.embedded .headline { margin: 0 0 15px; }
+html.embedded .carriage { box-shadow: 0 14px 30px #3b55501a; }
+@media (max-width: 570px) { html.embedded .shell { padding: 2px 0 16px; } }
