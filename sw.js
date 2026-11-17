@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.30';
+const CACHE_VERSION = 'xxsg-v3.0.31';
 const APP_SHELL = [
   './',
   './index.html',
@@ -54,6 +54,7 @@ const APP_SHELL = [
   './design/time-train/scenes/jixi-north.webp',
   './design/time-train/scenes/sheixian-north.webp',
   './design/time-train/scenes/huangshan-north.webp',
+  './design/time-train/scenes/china-generic.webp',
   './src/core/security.js',
   './src/core/secure-storage.js',
   './src/core/logger.js',

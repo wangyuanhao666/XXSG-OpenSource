@@ -32,8 +32,10 @@ function renderAt(day) {
   return {
     name: element('ticket-name').textContent,
     kicker: element('ticket-kicker').textContent,
+    description: element('ticket-desc').textContent,
     route: element('route-future').textContent,
     origin: element('route-origin').textContent,
+    journalDate: element('journal-date').textContent,
     background: element('journey-window').style.backgroundImage
   };
 }
@@ -44,7 +46,17 @@ assert.equal(renderAt(8).route, '下一程 · 明日从杭州东出发');
 assert.equal(renderAt(9).name, '杭州东');
 assert.match(renderAt(9).kicker, /第 2 程/);
 assert.equal(renderAt(9).origin, '新一程 · 今日始发');
-assert.equal(renderAt(17).name, '黄山北');
-assert.match(renderAt(18).kicker, /第 3 程/);
+assert.equal(renderAt(10).name, '福州');
+assert.equal(renderAt(11).name, '台北');
+assert.match(renderAt(11).description, /主题漫游/);
+assert.equal(renderAt(14).name, '澳门');
+assert.match(renderAt(14).description, /主题漫游/);
+assert.equal(renderAt(41).name, '南京');
+assert.equal(renderAt(42).name, '上海虹桥');
+assert.equal(renderAt(42).route, '下一程 · 明日从杭州东出发');
+assert.equal(renderAt(43).name, '杭州东');
+assert.match(renderAt(43).kicker, /第 3 程/);
+assert.match(renderAt(10).journalDate, /中国漫游/);
 assert.match(renderAt(0).background, /hangzhou-east\.webp/);
-console.log('Time Train station and journey rotation passed.');
+assert.match(renderAt(10).background, /china-generic\.webp/);
+console.log('Time Train initial route and grand tour rotation passed.');
