@@ -86,7 +86,7 @@
                             style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">数据同步</a>
                     </div>
                     <div>
-                        还没有账号？<a href="register.html" id="local-register-link">本地注册 / 创建账号</a>
+                        还没有账号？<a href="register.html" id="local-register-link">本地注册 / 创建账号</a> · <a href="#" id="show-admin-contact">联系管理员</a>
                     </div>
                 </div>
             </form>
@@ -114,7 +114,7 @@
                 </button>
 
                 <div class="login-footer">
-                    <a href="#" id="show-admin-contact-from-admin">查看开源版使用说明</a>
+                    <a href="#" id="show-admin-contact-from-admin">联系管理员</a>
                     <span class="footer-separator">|</span>
                     <button type="button" class="link-button" id="reset-local-admin-btn">重置本地管理员</button>
                 </div>
@@ -183,8 +183,22 @@
             <!-- 开源版使用说明（静态HTML，避免JS克隆导致ID丢失） -->
             <div class="admin-contact-container" style="display: none;">
                 <div class="admin-contact-card">
-                    <h2>🌱 开源版使用说明</h2>
+                    <h2>📞 联系管理员</h2>
                     <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>邮箱联系</h3>
+                                <p><a href="mailto:3077571067@qq.com">3077571067@qq.com</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <div class="contact-details">
+                                <h3>电话联系</h3>
+                                <p><a href="tel:15608357291">15608357291</a></p>
+                            </div>
+                        </div>
                         <div class="contact-item">
                             <div class="contact-icon">👤</div>
                             <div class="contact-details">
@@ -235,7 +249,7 @@
     <!-- 安全模块 -->
     <script src="src/core/security.js?v=c1afadf00bef"></script>
     <script src="src/core/secure-storage.js?v=1.0.0"></script>
-    <script src="js/login-page.js?v=88253743fdd9"></script>
+    <script src="js/login-page.js?v=d4432f734f16"></script>
 
     <!-- 日志管理系统 -->
     <script src="src/core/logger.js?v=1.0.0"></script>

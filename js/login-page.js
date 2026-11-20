@@ -2324,7 +2324,12 @@ function bindOtherEvents() {
         });
     }
 
-    // 显示开源版使用说明（从管理员表单）
+    document.getElementById('show-admin-contact')?.addEventListener('click', event => {
+        event.preventDefault();
+        showAdminContact();
+    });
+
+    // 管理员登录表单联系方式
     const showAdminContactFromAdminBtn = document.getElementById('show-admin-contact-from-admin');
     if (showAdminContactFromAdminBtn) {
         showAdminContactFromAdminBtn.addEventListener('click', function (e) {
@@ -2427,7 +2432,7 @@ function showAdminForm() {
             </button>
 
             <div class="login-footer">
-                <a href="#" id="show-admin-contact-from-admin">查看开源版使用说明</a>
+                <a href="#" id="show-admin-contact-from-admin">联系管理员</a>
             </div>
         `);
         adminForm.style.display = 'block';
@@ -3210,42 +3215,6 @@ function createAdminSystem() {
     `;
 
     // 创建管理员联系方式页面
-    const adminContactHTML = `
-        <div class="admin-contact-container" style="display: none;">
-            <div class="admin-contact-card">
-                <h2>🌱 开源版使用说明</h2>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">👤</div>
-                        <div class="contact-details">
-                            <h3>普通用户</h3>
-                            <p>点击“本地注册 / 创建账号”，即可在当前浏览器创建个人账号并开始使用。</p>
-                        </div>
-                    </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">🔐</div>
-                        <div class="contact-details">
-                            <h3>本地管理员</h3>
-                            <p>管理员用户名固定为 admin；首次输入任意 8 位以上密码会初始化当前浏览器的本地管理员。</p>
-                        </div>
-                    </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">💾</div>
-                        <div class="contact-details">
-                            <h3>数据边界</h3>
-                            <p>当前开源版默认使用浏览器本地存储；换浏览器或清理缓存前请先导出备份。</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-actions">
-                    <button data-admin-action="closeAdminContact" class="btn-secondary">🔙 返回登录页</button>
-                </div>
-            </div>
-        </div>
-    `;
 
     // 将HTML添加到页面
     appendLoginMarkup(document.body, adminLoginHTML);
@@ -3253,7 +3222,6 @@ function createAdminSystem() {
     appendLoginMarkup(document.body, createUserHTML);
     appendLoginMarkup(document.body, changeAdminPasswordHTML);
     appendLoginMarkup(document.body, aiKeyConfigHTML);
-    appendLoginMarkup(document.body, adminContactHTML);
 
     // 绑定管理员登录事件
     document.getElementById('admin-login-form').addEventListener('submit', handleAdminLogin);
