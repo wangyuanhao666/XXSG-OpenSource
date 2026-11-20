@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.35';
+const CACHE_VERSION = 'xxsg-v3.0.36';
 const APP_SHELL = [
   './',
   './index.html',
@@ -118,6 +118,7 @@ const APP_SHELL = [
   './logo-text.svg',
   './logo-text-dark.svg',
   './favicon.svg',
+  './assets/admin-wechat-qr.jpg',
   './assets/codex-floral-a.mp4'
 ];
 
