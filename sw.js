@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.33';
+const CACHE_VERSION = 'xxsg-v3.0.34';
 const APP_SHELL = [
   './',
   './index.html',
@@ -149,7 +149,7 @@ self.addEventListener('fetch', event => {
   if (/\/(?:api|backups)\//.test(url.pathname) || request.headers.has('Authorization')) return;
 
   event.respondWith(
-    fetch(request)
+    fetch(request, request.mode === 'navigate' ? { cache: 'no-cache' } : {})
       .then(response => {
         if (response.ok) {
           const copy = response.clone();
@@ -161,7 +161,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(async () => {
         const cache = await caches.open(CACHE_VERSION);
-        const cached = await cache.match(request, { ignoreSearch: true });
+        const cached = await cache.match(request) || await cache.match(url.origin + url.pathname);
         if (cached) return cached;
         if (request.mode === 'navigate') {
           return (await cache.match('./index.html')) || Response.error();

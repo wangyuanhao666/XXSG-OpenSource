@@ -84,6 +84,11 @@ class LocalHandler(SimpleHTTPRequestHandler):
         path = unquote(urlsplit(self.path).path).replace("\\", "/")
         return any(part.lower() == "backups" for part in path.split("/"))
 
+    def end_headers(self):
+        if Path(urlsplit(self.path).path).suffix.lower() in {".html", ".js", ".css"}:
+            self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
     def send_head(self):
         if self._blocked_path():
             self.send_error(404)

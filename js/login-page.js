@@ -1751,6 +1751,10 @@ function drawCodexGlyph(ctx, x, y, glyph, angle, size, alpha) {
 }
 
 // 页面加载完成后初始化
+// The forms precede this script. Bind them before optional startup work.
+initializeLoginPage();
+bindFormEvents();
+
 document.addEventListener('DOMContentLoaded', function () {
     // 首先清理URL中的敏感参数
     cleanURL();
@@ -1761,30 +1765,17 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeDefaultData();
 
     // 确保初始状态正确
-    initializeLoginPage();
+
 
     // 先恢复保存的用户凭据，再检查登录状态
     initLoginPage();
     checkLoginStatus();
     createAdminSystem();
-    bindFormEvents();
+
     bindForgotPasswordActions();
 
-    // 初始化管理员登录部分
-    initAdminForm();
     enhancePasswordVisibilityToggles();
-
-    // 确保管理员标签页可见
-    const adminTab = document.querySelector('[data-tab="admin"]');
-    if (adminTab) {
-        adminTab.style.display = 'block';
-        adminTab.style.visibility = 'visible';
-    }
-
-    // 确保默认只显示账号登录表单，隐藏管理员和注册表单
-    setLoginView('account');
     updateAdminLocalState();
-
     console.log('登录页面初始化完成');
 });
 
@@ -1985,8 +1976,24 @@ function checkLoginStatus() {
 // 管理员登录处理
 async function handleAdminLogin(e) {
     e.preventDefault();
-    const username = getInputValue('admin-username', 'admin-username-2');
-    const adminCredential = getInputValue('admin-password', 'admin-password-2');
+    const form = e.currentTarget;
+    const submit = form.querySelector('button[type="submit"]');
+    if (submit.disabled) return;
+    submit.disabled = true;
+    try {
+        await window.XXSGLocalStore?.ready;
+        await submitAdminLogin(form);
+    } catch (error) {
+        console.error('管理员登录未完成', error.name);
+        showNotification('登录组件加载失败，请刷新页面后重试。', 'error');
+    } finally {
+        submit.disabled = false;
+    }
+}
+
+async function submitAdminLogin(form) {
+    const username = form.querySelector('input[type="text"]').value.trim();
+    const adminCredential = form.querySelector('input[name*="password"]').value;
 
     console.log('管理员登录尝试:', username);
 
@@ -2039,7 +2046,7 @@ async function handleAdminLogin(e) {
 
         // 跳转到独立的管理员后台页面
         console.log('跳转到独立的管理员后台页面');
-        window.location.href = 'admin.html';
+        window.location.href = 'admin.html?v=20261120-2';
     } else {
         console.log('管理员登录失败: 账号或密码错误');
         showError('admin-username-error', '管理员账号或密码错误。如果忘记本地管理员密码，可点击下方“重置本地管理员”后重新初始化。');
