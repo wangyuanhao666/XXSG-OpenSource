@@ -25,9 +25,17 @@
         }
     }
 
+    const legacyPermissions = new Map([
+        ['task-template', 'templates'],
+        ['daily-sign', 'fortune'],
+        ['kanban-view', 'dashboard'],
+        ['top-review', 'review']
+    ]);
+
     function uniqueStrings(values) {
         return [...new Set((Array.isArray(values) ? values : [])
             .map(value => String(value || '').trim())
+            .map(key => legacyPermissions.get(key) || key)
             .filter(Boolean))];
     }
 

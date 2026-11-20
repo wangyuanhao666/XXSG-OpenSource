@@ -45,16 +45,6 @@ window.addEventListener('unhandledrejection', function (event) {
     event.preventDefault();
 });
 
-// 菜单权限定义
-const MENU_PERMISSIONS = {
-    'add-task': '添加任务',
-    'quadrant-view': '四象限视图',
-    'daily-sign': '每日一签',
-    'kanban-view': '可视化看板',
-    'top-review': '顶级复盘',
-    'task-template': '任务模板'
-};
-
 // 用户登录状态管理
 let currentUser = null;
 let isLoggedIn = false;
@@ -316,18 +306,7 @@ function checkUserMenuPermissions() {
 
 // 根据权限显示/隐藏菜单
 function updateMenuVisibility() {
-    // 🔧 防止重复调用导致控制台疯狂刷新
-    if (window._menuVisibilityUpdating) {
-        console.log('⚠️ 菜单权限更新中，跳过重复调用');
-        return;
-    }
-
-    window._menuVisibilityUpdating = true;
-
-    console.log('🔧 updateMenuVisibility 强化版本');
-    console.log('=== 开始更新菜单权限 ===');
-    const permissions = checkUserMenuPermissions();
-
+    const permissions = new Set(checkUserMenuPermissions());
     // 主导航栏菜单项ID映射
     const mainMenuItems = {
         'add-task': 'list-tab-btn',
@@ -350,252 +329,20 @@ function updateMenuVisibility() {
         'calendar': 'calendar-feature-card'           // 沉浸式日历
     };
 
-    console.log('🔧 主导航栏菜单映射:', mainMenuItems);
-    console.log('🔧 更多功能卡片映射:', moreFeatureCards);
-    console.log('🔧 用户权限数组:', permissions);
-    console.log('🔧 权限数量:', permissions.length);
-
-    // === 第1步：隐藏所有主导航栏菜单项 ===
-    console.log('--- 隐藏所有主导航栏菜单项 ---');
-    Object.values(mainMenuItems).forEach(menuId => {
-        const menuElement = document.getElementById(menuId);
-        if (menuElement) {
-            menuElement.style.display = 'none';
-            console.log('✅ 隐藏主菜单:', menuId);
-        } else {
-            console.log('⚠️ 主菜单元素不存在:', menuId);
-        }
-    });
-
-    // === 第2步：隐藏所有更多功能卡片 ===
-    console.log('--- 隐藏所有更多功能卡片 ---');
-    Object.values(moreFeatureCards).forEach(cardId => {
-        const cardElement = document.getElementById(cardId);
-        if (cardElement) {
-            cardElement.style.display = 'none';
-            console.log('✅ 隐藏功能卡片:', cardId);
-        } else {
-            console.log('⚠️ 功能卡片元素不存在:', cardId);
-        }
-    });
-
-    // === 第3步：根据权限显示菜单项 ===
-    console.log('--- 根据权限显示菜单项 ---');
-    let hasMoreFeatures = false; // 标记是否有更多功能权限
-
-    if (permissions && permissions.length > 0) {
-        // 🔧 特殊处理关键权限
-        const criticalPermissions = ['review', 'templates'];
-        const criticalStatus = {
-            review: permissions.includes('review'),
-            templates: permissions.includes('templates')
-        };
-
-        console.log('🔧 关键权限状态:', criticalStatus);
-
-        permissions.forEach(permission => {
-            // 显示主导航栏菜单
-            const menuId = mainMenuItems[permission];
-            if (menuId) {
-                const menuElement = document.getElementById(menuId);
-                if (menuElement) {
-                    menuElement.style.display = 'flex'; // 使用flex而不是block
-                    console.log('✅ 显示主菜单:', menuId, '权限:', permission);
-
-                    // 🔧 特别标记关键权限
-                    if (criticalPermissions.includes(permission)) {
-                        console.log(`🔑 关键权限菜单已显示: ${permission}`);
-                    }
-                } else {
-                    console.log('⚠️ 主菜单元素不存在:', menuId, '权限:', permission);
-                }
-            }
-
-            // 显示更多功能卡片
-            const cardId = moreFeatureCards[permission];
-            if (cardId) {
-                const cardElement = document.getElementById(cardId);
-                if (cardElement) {
-                    cardElement.style.display = 'block';
-                    hasMoreFeatures = true;
-                    console.log('✅ 显示功能卡片:', cardId, '权限:', permission);
-                } else {
-                    console.log('⚠️ 功能卡片元素不存在:', cardId, '权限:', permission);
-                }
-            }
-        });
-
-        // 🔧 验证关键权限是否正确显示
-        setTimeout(() => {
-            const reviewElement = document.getElementById('review-tab-btn');
-            const templatesElement = document.getElementById('time-train-tab-btn');
-
-            console.log('🔧 关键权限菜单验证:');
-            console.log('  - review-tab-btn 存在:', !!reviewElement);
-            console.log('  - review-tab-btn 显示:', reviewElement ? reviewElement.style.display : 'N/A');
-            console.log('  - time-train-tab-btn 存在:', !!templatesElement);
-            console.log('  - time-train-tab-btn 显示:', templatesElement ? templatesElement.style.display : 'N/A');
-
-            if (criticalStatus.review && (!reviewElement || reviewElement.style.display === 'none')) {
-                console.warn('⚠️ review权限存在但菜单未显示，尝试强制显示');
-                if (reviewElement) {
-                    reviewElement.style.display = 'flex';
-                }
-            }
-
-            if (criticalStatus.templates && (!templatesElement || templatesElement.style.display === 'none')) {
-                console.warn('⚠️ templates权限存在但菜单未显示，尝试强制显示');
-                if (templatesElement) {
-                    templatesElement.style.display = 'flex';
-                }
-            }
-        }, 100);
-
-    } else {
-        console.log('⚠️ 用户无权限或权限为空，默认显示所有功能卡片');
-        // 🔧 当用户无权限时，默认显示所有6个功能卡片
-        Object.values(moreFeatureCards).forEach(cardId => {
-            const cardElement = document.getElementById(cardId);
-            if (cardElement) {
-                cardElement.style.display = 'block';
-                console.log('✅ 默认显示功能卡片:', cardId);
-            }
-        });
-        hasMoreFeatures = true;
+    let hasFeatureCard = false;
+    for (const [permission, id] of Object.entries(moreFeatureCards)) {
+        const allowed = permissions.has(permission);
+        hasFeatureCard ||= allowed;
+        const card = document.getElementById(id);
+        if (card) card.style.setProperty('display', allowed ? 'block' : 'none', 'important');
     }
 
-    // 🔧 移除错误的强制显示逻辑 - 只有有权限的功能才应该显示
-
-    // === 第4步：根据是否有更多功能权限，显示/隐藏“更多功能”标签页 ===
-    const moreFeaturesTabBtn = document.getElementById('more-features-tab-btn');
-    if (moreFeaturesTabBtn) {
-        if (hasMoreFeatures) {
-            moreFeaturesTabBtn.style.display = '';
-            console.log('✅ 显示“更多功能”标签页');
-        } else {
-            moreFeaturesTabBtn.style.display = 'none';
-            console.log('❌ 隐藏“更多功能”标签页（用户无任何更多功能权限）');
-        }
+    for (const [permission, id] of Object.entries(mainMenuItems)) {
+        const allowed = permissions.has(permission) || (permission === 'more-features' && hasFeatureCard);
+        const button = document.getElementById(id);
+        if (button) button.style.setProperty('display', allowed ? 'flex' : 'none', 'important');
     }
-
-    // 智能调整导航栏背景框长度
     adjustNavigationBarWidth();
-
-    // 🔧 强制权限同步：确保权限显示与后台数据一致
-    forcePermissionSyncFromStorage();
-
-    // 🔧 强制刷新更多功能菜单显示
-    setTimeout(() => {
-        if (typeof currentUser !== 'undefined' && currentUser && currentUser.permissions &&
-            currentUser.permissions.some(p => ['fortune', 'pomodoro', 'habit-tracker', 'countdown', 'time-tracker', 'calendar'].includes(p))) {
-            const moreFeaturesTabBtn = document.getElementById('more-features-tab-btn');
-            if (moreFeaturesTabBtn) {
-                moreFeaturesTabBtn.style.display = '';
-                console.log('🔧 强制显示更多功能标签页');
-            }
-        }
-    }, 200);
-
-    // 🔧 立即强制显示更多功能菜单（备用方案）
-    setTimeout(() => {
-        const moreFeaturesTabBtn = document.getElementById('more-features-tab-btn');
-        if (moreFeaturesTabBtn) {
-            moreFeaturesTabBtn.style.display = '';
-            console.log('🔧 立即强制显示更多功能菜单');
-
-            // 显示后立即调整导航栏宽度
-            setTimeout(() => {
-                adjustNavigationBarWidth();
-            }, 50);
-        }
-    }, 300);
-
-    console.log('=== 菜单权限更新完成 ===');
-
-    // 🔧 清除更新标志
-    setTimeout(() => {
-        window._menuVisibilityUpdating = false;
-    }, 100);
-}
-
-// 🔧 强制权限同步函数
-function forcePermissionSyncFromStorage() {
-    // 减少控制台输出频率
-    if (!window._lastSyncTime || Date.now() - window._lastSyncTime > 5000) {
-        console.log('🔧 强制权限同步中...');
-        window._lastSyncTime = Date.now();
-    }
-
-    try {
-        // 从localStorage读取最新的用户数据
-        const users = window.UserStorage.getUsers();
-        const sessionData = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
-
-        if (sessionData) {
-            const session = JSON.parse(sessionData);
-            const currentUser = session.user;
-
-            if (currentUser) {
-                // 从用户数据中获取最新权限
-                const latestUser = users.find(u => u.username === currentUser.username);
-
-                if (latestUser && latestUser.permissions) {
-                    // 强制更新会话中的权限
-                    session.user.permissions = latestUser.permissions;
-                    // 使用安全方法保存，不包含敏感凭据
-                    const sanitizedSession = sanitizeSession(session);
-                    window.SessionStorage.setSession(sanitizedSession, { remember: true });
-
-                    // 强制更新全局变量
-                    if (typeof window.currentUser !== 'undefined') {
-                        window.currentUser.permissions = latestUser.permissions;
-                    }
-
-                    console.log('✅ 权限已同步:', latestUser.permissions);
-
-                    // 如果权限变化，立即重新应用菜单显示
-                    if (sessionData) {
-                        const oldSession = JSON.parse(sessionData);
-                        const oldPermissions = oldSession.user.permissions;
-                        const newPermissions = latestUser.permissions;
-
-                        // 权限发生变化，重新应用显示
-                        if (JSON.stringify(oldPermissions.sort()) !== JSON.stringify(newPermissions.sort())) {
-                            console.log('🔄 检测到权限变化，重新应用菜单显示...');
-
-                            // 重新执行权限显示逻辑
-                            const mainMenuItems = {
-                                'add-task': 'list-tab-btn',
-                                'quadrant-view': 'quadrant-tab-btn',
-                                'fortune': 'fortune-tab-btn',
-                                'dashboard': 'dashboard-tab-btn',
-                                'review': 'review-tab-btn',
-                                'templates': 'time-train-tab-btn',
-                                'more-features': 'more-features-tab-btn'
-                            };
-
-                            // 先隐藏所有菜单
-                            Object.values(mainMenuItems).forEach(menuId => {
-                                const menu = document.getElementById(menuId);
-                                if (menu) menu.style.display = 'none';
-                            });
-
-                            // 只显示有权限的菜单
-                            newPermissions.forEach(permission => {
-                                const menuId = mainMenuItems[permission];
-                                if (menuId) {
-                                    const menu = document.getElementById(menuId);
-                                    if (menu) menu.style.display = 'flex';
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error('❌ 权限同步失败:', error);
-    }
 }
 
 // 智能调整导航栏背景框长度

@@ -5,30 +5,8 @@
  * 用于诊断、验证和修复用户权限问题
  */
 const PermissionManager = {
-    // 权限定义
-    PERMISSIONS: {
-        'add-task': { name: '添加任务', icon: '📝' },
-        'quadrant-view': { name: '四象限视图', icon: '📊' },
-        'fortune': { name: '每日一签', icon: '🔮' },
-        'dashboard': { name: '可视化看板', icon: '📈' },
-        'backup': { name: '更多功能', icon: '💾' },
-        'review': { name: '顶级复盘', icon: '🔍' },
-        'templates': { name: '任务模板', icon: '📋' }
-    },
-
-    // 权限名称映射（不依赖外部常量）
-    PERMISSION_NAMES: {
-        'add-task': '添加任务',
-        'quadrant-view': '四象限视图',
-        'fortune': '每日一签',
-        'dashboard': '可视化看板',
-        'backup': '更多功能',
-        'review': '顶级复盘',
-        'templates': '任务模板'
-    },
-
-    // 关键权限列表
-    CRITICAL_PERMISSIONS: ['review', 'templates'],
+    PERMISSIONS: window.XXSGPermissionCatalog,
+    PERMISSION_NAMES: Object.fromEntries(Object.entries(window.XXSGPermissionCatalog).map(([key, item]) => [key, item.name])),
 
     // 诊断用户权限
     diagnoseUserPermissions: function(username) {
@@ -36,7 +14,7 @@ const PermissionManager = {
         console.log('目标用户:', username);
 
         try {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const users = window.UserStorage.getUsers();
             const user = users.find(u => u.username === username);
 
             if (!user) {
@@ -97,13 +75,7 @@ const PermissionManager = {
             issues.push('存在重复权限');
         }
 
-        // 检查关键权限
-        const missingCritical = this.CRITICAL_PERMISSIONS.filter(p => !permissions.includes(p));
-        if (missingCritical.length > 0) {
-            issues.push(`缺失关键权限: ${missingCritical.join(', ')}`);
-        }
-
-        const cleanPermissions = permissions.filter(p => validPermissions.includes(p));
+        const cleanPermissions = uniquePermissions.filter(p => validPermissions.includes(p));
 
         console.log('  - 原始权限:', permissions);
         console.log('  - 有效权限:', cleanPermissions);
@@ -141,14 +113,9 @@ const PermissionManager = {
             const user = users[userIndex];
             console.log('修复前权限:', user.permissions);
 
-            // 确保权限是数组
-            if (!Array.isArray(user.permissions)) {
-                user.permissions = [];
-            }
-
-            // 设置完整权限（排除已删除的backup权限）
-            const fullPermissions = Object.keys(this.PERMISSIONS).filter(p => p !== 'backup');
-            user.permissions = [...fullPermissions];
+            // 保留旧版本或扩展功能的权限，仅清理重复项。
+            const cleanPermissions = [...new Set(Array.isArray(user.permissions) ? user.permissions : [])];
+            user.permissions = cleanPermissions;
 
             console.log('修复后权限:', user.permissions);
 
@@ -159,11 +126,11 @@ const PermissionManager = {
             const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
             const savedUser = savedUsers.find(u => u.username === username);
 
-            if (savedUser && savedUser.permissions.includes('review') && savedUser.permissions.includes('templates')) {
+            if (savedUser && JSON.stringify(savedUser.permissions) === JSON.stringify(cleanPermissions)) {
                 console.log('✅ 权限修复成功');
 
                 // 如果是当前登录用户，更新会话
-                if (currentUser && currentUser.username === username) {
+                if (typeof currentUser !== 'undefined' && currentUser && currentUser.username === username) {
                     currentUser.permissions = savedUser.permissions;
                     console.log('✅ 已更新当前用户会话');
 

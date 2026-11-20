@@ -277,6 +277,45 @@ class JWTManager {
  * 使用Web Crypto API进行密码哈希
  */
 class PasswordManager {
+    isHash(value) {
+        return typeof value === 'string' && /^[a-f0-9]{32}:[a-f0-9]{64}$/i.test(value);
+    }
+
+    async matches(input, stored) {
+        if (!input || typeof stored !== 'string' || !stored) return false;
+        return this.isHash(stored) ? this.verifyPassword(input, stored) : input === stored;
+    }
+
+    async readAdminCredential() {
+        return localStorage.getItem('adminPassword') || await window.SecureStorage?.getSecure('adminPassword') || '';
+    }
+
+    async authenticateAdmin(input) {
+        const stored = await this.readAdminCredential();
+        if (!(await this.matches(input, stored))) return false;
+        const hash = this.isHash(stored) ? stored : await this.hashPassword(input);
+        if (await this.readAdminCredential() !== stored) return false;
+        localStorage.setItem('adminPassword', hash);
+        window.SecureStorage?.removeSecure('adminPassword');
+        return true;
+    }
+
+    async authenticateUser(identity, input) {
+        const account = window.UserStorage.getUsers().find(u => u.username === identity || u.email === identity);
+        if (!account || !(await this.matches(input, account.password))) return null;
+        const needsMigration = !this.isHash(account.password);
+        const hash = needsMigration ? await this.hashPassword(input) : account.password;
+        const users = window.UserStorage.getUsers();
+        const current = users.find(u => u.username === account.username);
+        if (!current || current.password !== account.password) return null;
+        if (needsMigration) {
+            current.password = hash;
+            current.passwordMigrated = true;
+            window.UserStorage.setUsers(users);
+        }
+        return current;
+    }
+
     /**
      * 哈希密码
      * @param {string} password - 明文密码

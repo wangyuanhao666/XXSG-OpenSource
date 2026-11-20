@@ -1,3 +1,5 @@
+const MENU_PERMISSIONS = Object.fromEntries(Object.entries(window.XXSGPermissionCatalog).map(([key, item]) => [key, item.name]));
+
 // ==================== 调试配置 ====================
 // 设置为 false 可关闭调试日志，保留错误和警告
 const DEBUG_MODE = false;
@@ -94,28 +96,6 @@ function getInputValue(...ids) {
     return '';
 }
 
-async function hashAdminCredentialIfPossible(credential) {
-    if (window.Security?.Password?.hashPassword) {
-        return window.Security.Password.hashPassword(credential);
-    }
-    return credential;
-}
-
-function isStoredCredentialHash(credential) {
-    return typeof credential === 'string' && credential.includes(':');
-}
-
-async function verifyCredentialIfPossible(inputCredential, storedCredential) {
-    if (!inputCredential || !storedCredential) {
-        return false;
-    }
-
-    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
-        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
-    }
-
-    return inputCredential === storedCredential;
-}
 
 function updateAdminLocalState() {
     const stateBox = document.getElementById('admin-local-state');
@@ -394,30 +374,21 @@ async function simulateLogin(username, authCredential) {
     return new Promise(async (resolve) => {
         setTimeout(async () => {
             try {
-                // 模拟用户数据
-                const users = window.UserStorage.getUsers();
-
                 // 首先检查是否是管理员账户
                 if (username === 'admin') {
                     let adminResult;
-                    if (window.secureAdminLogin) {
-                        adminResult = await window.secureAdminLogin(username, authCredential);
-                    } else {
-                        // 降级方案
-                        const storedAdminCredential = window.AdminStorage.getRaw('adminPassword');
-                        if (authCredential === storedAdminCredential) {
-                            adminResult = {
-                                id: 'admin',
-                                username: 'admin',
-                                email: 'admin@system.com',
-                                phone: '',
-                                avatar: '',
-                                role: 'admin',
-                                permissions: ['add-task', 'quadrant-view', 'fortune', 'backup', 'ai-fortune', 'dashboard', 'review', 'templates'],
-                                createdAt: new Date().toISOString(),
-                                createdBy: 'system'
-                            };
-                        }
+                    if (await window.Security.Password.authenticateAdmin(authCredential)) {
+                        adminResult = {
+                            id: 'admin',
+                            username: 'admin',
+                            email: 'admin@system.com',
+                            phone: '',
+                            avatar: '',
+                            role: 'admin',
+                            permissions: ['add-task', 'quadrant-view', 'fortune', 'backup', 'ai-fortune', 'dashboard', 'review', 'templates'],
+                            createdAt: new Date().toISOString(),
+                            createdBy: 'system'
+                        };
                     }
 
                     if (adminResult) {
@@ -429,45 +400,23 @@ async function simulateLogin(username, authCredential) {
 
                 // 普通用户登录
                 let userResult;
-                if (window.secureUserLogin) {
-                    userResult = await window.secureUserLogin(username, authCredential);
-                } else {
-                    // 降级方案：支持历史明文密码和当前开源版哈希密码
-                    let user = null;
-                    for (const candidate of users) {
-                        const matchesIdentity = candidate.username === username || candidate.email === username;
-                        if (!matchesIdentity) continue;
+                const user = await window.Security.Password.authenticateUser(username, authCredential);
+                if (user) {
+                    console.log('找到用户:', user.username);
+                    const normalizedPermissions = Array.isArray(user.permissions) && user.permissions.length > 0
+                        ? user.permissions
+                        : DEFAULT_USER_PERMISSIONS.slice();
 
-                        if (candidate.password && candidate.password.includes(':') &&
-                            window.Security && window.Security.Password && window.Security.Password.verifyPassword) {
-                            const verified = await window.Security.Password.verifyPassword(authCredential, candidate.password);
-                            if (verified) {
-                                user = candidate;
-                                break;
-                            }
-                        } else if (candidate.password === authCredential) {
-                            user = candidate;
-                            break;
-                        }
-                    }
-
-                    if (user) {
-                        console.log('找到用户:', user.username);
-                        const normalizedPermissions = Array.isArray(user.permissions) && user.permissions.length > 0
-                            ? user.permissions
-                            : DEFAULT_USER_PERMISSIONS.slice();
-
-                        userResult = {
-                            id: user.id,
-                            username: user.username,
-                            email: user.email,
-                            phone: user.phone,
-                            avatar: user.avatar || '',
-                            role: user.role || 'user',
-                            permissions: normalizedPermissions,
-                            loginTime: new Date().toISOString()
-                        };
-                    }
+                    userResult = {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        phone: user.phone,
+                        avatar: user.avatar || '',
+                        role: user.role || 'user',
+                        permissions: normalizedPermissions,
+                        loginTime: new Date().toISOString()
+                    };
                 }
 
                 if (userResult) {
@@ -2048,38 +1997,14 @@ async function handleAdminLogin(e) {
     }
 
     // 检查管理员凭据 - 支持哈希密码验证
-    const storedAdminCredential = window.AdminStorage.getRaw('adminPassword');
+    const storedAdminCredential = await window.Security.Password.readAdminCredential();
     let isValid = false;
-
     if (storedAdminCredential) {
-        if (username !== 'admin') {
-            isValid = false;
-        } else if (storedAdminCredential.includes(':')) {
-            // 哈希格式，使用Security模块的verifyPassword方法
-            console.log('检测到哈希密码，使用Security模块验证');
-            if (window.Security && window.Security.Password && window.Security.Password.verifyPassword) {
-                isValid = await window.Security.Password.verifyPassword(adminCredential, storedAdminCredential);
-                console.log('哈希验证结果:', isValid ? '✅ 成功' : '❌ 失败');
-            } else {
-                console.error('❌ Security模块不可用，无法验证哈希密码');
-                // 回退到明文比较（虽然会失败）
-                isValid = (username === 'admin' && adminCredential === storedAdminCredential);
-            }
-        } else {
-            // 明文格式
-            console.log('检测到明文密码');
-            isValid = (username === 'admin' && adminCredential === storedAdminCredential);
-            if (isValid) {
-                const hashedCredential = await hashAdminCredentialIfPossible(adminCredential);
-                if (hashedCredential !== adminCredential) {
-                    window.AdminStorage.setAdminPassword(hashedCredential);
-                }
-            }
-        }
+        isValid = username === 'admin' && await window.Security.Password.authenticateAdmin(adminCredential);
     } else {
         // Open-source/self-hosted first run: initialize the local admin password.
         if (username === 'admin' && adminCredential.length >= 8) {
-            const hashedCredential = await hashAdminCredentialIfPossible(adminCredential);
+            const hashedCredential = await window.Security.Password.hashPassword(adminCredential);
             window.AdminStorage.setAdminPassword(hashedCredential);
             isValid = true;
             console.log('Admin password initialized for this browser deployment.');
@@ -2136,9 +2061,7 @@ async function handleCreateUser(e) {
     const permissions = Array.from(permissionCheckboxes).map(cb => cb.value);
 
     // 创建用户（密码使用哈希存储）
-    const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
-        ? await window.Security.Password.hashPassword(initialCredential)
-        : initialCredential;
+    const passwordHash = await window.Security.Password.hashPassword(initialCredential);
     const newUser = {
         id: 'user_' + Date.now(),
         username: username,
@@ -2672,9 +2595,7 @@ async function handleRegister(e) {
             return;
         }
 
-        const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
-            ? await window.Security.Password.hashPassword(newCredential)
-            : newCredential;
+        const passwordHash = await window.Security.Password.hashPassword(newCredential);
 
         const newUser = {
             id: `user_${Date.now()}`,
@@ -3041,43 +2962,39 @@ async function simulatePhoneLogin(phone, code) {
 
 // 模拟注册请求
 async function simulateRegister(username, phone, newCredential) {
-    return new Promise((resolve) => {
-        setTimeout(async () => {
-            // 检查用户是否已存在
-            const users = window.UserStorage.getUsers();
-            const existingUser = users.find(u =>
-                u.username === username || u.phone === phone
-            );
+    const passwordHash = await window.Security.Password.hashPassword(newCredential);
+    // 检查用户是否已存在
+    const users = window.UserStorage.getUsers();
+    const existingUser = users.find(u =>
+        u.username === username || u.phone === phone
+    );
 
-            if (existingUser) {
-                resolve(null);
-            } else {
-                const passwordHash = await hashAdminCredentialIfPossible(newCredential);
-                const newUser = {
-                    id: 'user_' + Date.now(),
-                    username: username,
-                    phone: phone,
-                    password: passwordHash,
-                    passwordMigrated: passwordHash !== newCredential,
-                    avatar: '',
-                    createdAt: new Date().toISOString(),
-                    verified: true // 通过验证码验证
-                };
+    if (existingUser) {
+        return null;
+    } else {
+        const newUser = {
+            id: 'user_' + Date.now(),
+            username: username,
+            phone: phone,
+            password: passwordHash,
+            passwordMigrated: passwordHash !== newCredential,
+            avatar: '',
+            createdAt: new Date().toISOString(),
+            verified: true // 通过验证码验证
+        };
 
-                users.push(newUser);
-                window.UserStorage.setUsers(users);
+        users.push(newUser);
+        window.UserStorage.setUsers(users);
 
-                resolve({
-                    id: newUser.id,
-                    username: newUser.username,
-                    email: newUser.email,
-                    phone: newUser.phone,
-                    avatar: newUser.avatar,
-                    loginTime: new Date().toISOString()
-                });
-            }
-        }, 1000);
-    });
+        return {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            phone: newUser.phone,
+            avatar: newUser.avatar,
+            loginTime: new Date().toISOString()
+        };
+    }
 }
 
 // 管理员系统实现
@@ -3206,42 +3123,14 @@ function createAdminSystem() {
                     <div class="form-group">
                         <label>菜单权限</label>
                         <div class="permission-checkboxes">
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="add-task">
-                                    <span>📝 添加任务</span>
-                                </label>
-                            </div>
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="quadrant-view">
-                                    <span>📊 四象限视图</span>
-                                </label>
-                            </div>
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="daily-sign">
-                                    <span>📅 每日一签</span>
-                                </label>
-                            </div>
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="kanban-view">
-                                    <span>📋 可视化看板</span>
-                                </label>
-                            </div>
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="top-review">
-                                    <span>🔍 顶级复盘</span>
-                                </label>
-                            </div>
-                            <div class="permission-item">
-                                <label class="permission-label">
-                                    <input type="checkbox" name="permissions" value="task-template">
-                                    <span>📄 任务模板</span>
-                                </label>
-                            </div>
+                            ${Object.entries(window.XXSGPermissionCatalog).map(([key, permission]) => `
+                                <div class="permission-item">
+                                    <label class="permission-label">
+                                        <input type="checkbox" name="permissions" value="${key}">
+                                        <span>${permission.icon} ${permission.name}</span>
+                                    </label>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                     <button type="submit" class="login-btn">✅ 创建用户</button>
@@ -3838,7 +3727,7 @@ function editUser(userId) {
         // 获取选中的权限
         const permissionCheckboxes = document.querySelectorAll('input[name="edit-permissions"]:checked');
         const permissions = Array.from(permissionCheckboxes).map(cb => cb.value);
-        const passwordHash = editedCredential ? await hashAdminCredentialIfPossible(editedCredential) : null;
+        const passwordHash = editedCredential ? await window.Security.Password.hashPassword(editedCredential) : null;
 
         // 更新用户信息
         const updatedUsers = users.map(u => {
@@ -4105,7 +3994,7 @@ async function resetPassword() {
         }
 
         // 更新用户密码。开源版兼容旧明文数据，但新写入统一保存为哈希。
-        const passwordHash = await hashAdminCredentialIfPossible(newCredential);
+        const passwordHash = await window.Security.Password.hashPassword(newCredential);
         user.password = passwordHash;
         user.passwordMigrated = passwordHash !== newCredential;
 
@@ -4114,31 +4003,6 @@ async function resetPassword() {
 
         // 修改密码后备份数据
         backupUserData();
-
-        // 如果用户当前已登录，也更新会话中的密码
-        const sessionStr = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
-        if (sessionStr) {
-            try {
-                const session = JSON.parse(sessionStr);
-                if (session.user && (session.user.username === user.username || session.user.id === user.id)) {
-                    // 更新整个用户对象，确保数据完整性
-                    session.user = { ...session.user, ...user };
-                    console.log('已更新会话中的用户数据:', session.user);
-
-                    const existingSession = window.SessionStorage.getSession('userSession');
-                    window.SessionStorage.setSession(session, { remember: Boolean(existingSession?.rememberMe) });
-
-                    // 同步更新当前用户对象（如果用户已登录）
-                    if (typeof currentUser !== 'undefined' && currentUser &&
-                        (currentUser.username === user.username || currentUser.id === user.id)) {
-                        currentUser = { ...currentUser, ...user };
-                    console.log('Current user state synchronized.');
-                    }
-                }
-            } catch (e) {
-                console.warn('更新会话密码失败:', e);
-            }
-        }
 
         showNotification('密码重置成功！请使用新密码登录', 'success');
         closeForgotPasswordPage();
@@ -4168,10 +4032,10 @@ function updateMenuVisibility() {
     const menuItems = {
         'add-task': 'add-task-menu',
         'quadrant-view': 'quadrant-view-menu',
-        'daily-sign': 'daily-sign-menu',
-        'kanban-view': 'kanban-view-menu',
-        'top-review': 'top-review-menu',
-        'task-template': 'task-template-menu'
+        'fortune': 'fortune-tab-btn',
+        'dashboard': 'dashboard-tab-btn',
+        'review': 'review-tab-btn',
+        'templates': 'time-train-tab-btn'
     };
 
     // 隐藏所有菜单项
@@ -4263,16 +4127,16 @@ async function changeAdminPassword() {
         }
 
         // 验证指令密码
-        const storedAdminCredential = getCurrentAdminPassword();
+        const storedAdminCredential = await window.Security.Password.readAdminCredential();
 
-        if (!(await verifyCredentialIfPossible(commandCredential, storedAdminCredential))) {
+        if (!(await window.Security.Password.matches(commandCredential, storedAdminCredential))) {
             showError('command-password-error', '指令密码错误，无法完成修改');
             showNotification('指令密码验证失败', 'error');
             return;
         }
 
         // 验证当前密码
-        if (!(await verifyCredentialIfPossible(currentCredential, storedAdminCredential))) {
+        if (!(await window.Security.Password.matches(currentCredential, storedAdminCredential))) {
             showError('current-admin-password-error', '当前密码不正确');
             return;
         }
@@ -4300,7 +4164,7 @@ async function changeAdminPassword() {
         }
 
         // 更新管理员密码。兼容旧明文密码，但新密码统一保存为哈希。
-        const hashedCredential = await hashAdminCredentialIfPossible(newCredential);
+        const hashedCredential = await window.Security.Password.hashPassword(newCredential);
         setAdminPassword(hashedCredential);
 
         // 修改管理员密码后备份数据

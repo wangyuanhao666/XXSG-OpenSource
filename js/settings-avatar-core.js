@@ -913,29 +913,6 @@ function getPreferenceName(preferenceId) {
     return names[preferenceId] || preferenceId;
 }
 
-function isStoredCredentialHash(credential) {
-    return typeof credential === 'string' && credential.includes(':');
-}
-
-async function verifyCredentialIfPossible(inputCredential, storedCredential) {
-    if (!inputCredential || !storedCredential) {
-        return false;
-    }
-
-    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
-        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
-    }
-
-    return inputCredential === storedCredential;
-}
-
-async function hashCredentialIfPossible(credential) {
-    if (window.Security?.Password?.hashPassword) {
-        return window.Security.Password.hashPassword(credential);
-    }
-    return credential;
-}
-
 async function changePassword() {
     try {
         const currentCredential = document.getElementById('current-password').value;
@@ -962,115 +939,19 @@ async function changePassword() {
             return;
         }
 
-        // 重新从会话中获取最新的用户数据，确保密码是最新的
-        let latestUser = currentUser;
-        const sessionStr = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
-        if (sessionStr) {
-            try {
-                const session = JSON.parse(sessionStr);
-                if (session.user && (session.user.username === currentUser.username || session.user.id === currentUser.id)) {
-                    latestUser = session.user;
-                    console.log('Latest user data loaded from session.', {
-                        userId: latestUser.id || null,
-                        username: latestUser.username || null
-                    });
-                }
-            } catch (e) {
-                console.warn('获取最新用户数据失败:', e);
-            }
-        }
-
-        // 如果会话中没有找到用户，尝试从localStorage的users数组中获取最新数据
-        if (latestUser === currentUser) {
-            try {
-                const users = window.UserStorage.getUsers();
-                const userFromStorage = users.find(u =>
-                    (u.username === currentUser.username) ||
-                    (u.id && currentUser.id && u.id === currentUser.id)
-                );
-                if (userFromStorage) {
-                    latestUser = userFromStorage;
-                    console.log('Latest user data loaded from user list.', {
-                        userId: latestUser.id || null,
-                        username: latestUser.username || null
-                    });
-                }
-            } catch (e) {
-                console.warn('从用户列表获取数据失败:', e);
-            }
-        }
-
-        console.log('Credential verification prepared.', {
-            userId: latestUser.id || currentUser.id || null,
-            username: latestUser.username || currentUser.username || null,
-            sessionActive: Boolean(sessionStr)
-        });
-
-        // 验证当前密码。兼容旧明文密码和新哈希密码。
-        if (!(await verifyCredentialIfPossible(currentCredential, latestUser.password))) {
-            console.log('Credential verification failed.', {
-                userId: latestUser.id || currentUser.id || null,
-                username: latestUser.username || currentUser.username || null,
-                credentialMatched: false
-            });
+        const account = window.UserStorage.findUserByUsername(currentUser.username);
+        if (!account || !(await window.Security.Password.matches(currentCredential, account.password))) {
             showNotification('当前密码不正确', 'error');
             return;
         }
 
-        console.log('密码验证成功，开始更新密码');
-
-        // 更新用户密码。兼容旧明文数据，但新写入统一保存为哈希。
-        const passwordHash = await hashCredentialIfPossible(newCredential);
-        currentUser.password = passwordHash;
-        currentUser.passwordMigrated = passwordHash !== newCredential;
-
-        // 更新localStorage中的用户会话
-        const localSessionStr = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
-        const sessionSessionStr = (window.SessionStorage.getSession('userSession') ? JSON.stringify(window.SessionStorage.getSession('userSession')) : '');
-
-        if (localSessionStr) {
-            try {
-                const sess = JSON.parse(localSessionStr);
-                sess.user = currentUser;
-                const sanitizedSess = sanitizeSession(sess);
-                window.SessionStorage.setSession(sanitizedSess, { remember: true });
-                console.log('密码已更新到localStorage会话（安全存储）');
-            } catch (e) {
-                console.warn('localStorage会话更新失败:', e);
-            }
-        } else if (sessionSessionStr) {
-            try {
-                const sess = JSON.parse(sessionSessionStr);
-                sess.user = currentUser;
-                const sanitizedSess = sanitizeSession(sess);
-                window.SessionStorage.setSession(sanitizedSess, { remember: false });
-                console.log('密码已更新到sessionStorage会话（安全存储）');
-            } catch (e) {
-                console.warn('sessionStorage会话更新失败:', e);
-            }
+        const hash = await window.Security.Password.hashPassword(newCredential);
+        const latest = window.UserStorage.findUserByUsername(currentUser.username);
+        if (!latest || latest.password !== account.password) {
+            showNotification('账号已变更，请重新登录', 'error');
+            return;
         }
-
-        // 更新用户列表中的密码
-        try {
-            const usersStr = window.DataSyncStorage.getRaw('users');
-            if (usersStr) {
-                let users = JSON.parse(usersStr);
-                users = users.map(u => {
-                    if ((u.id && currentUser.id && u.id === currentUser.id) || (u.username === currentUser.username)) {
-                        return {
-                            ...u,
-                            password: passwordHash,
-                            passwordMigrated: passwordHash !== newCredential
-                        };
-                    }
-                    return u;
-                });
-                window.UserStorage.setUsers(users);
-                console.log('用户列表中的密码已更新');
-            }
-        } catch (e) {
-            console.warn('用户列表更新失败:', e);
-        }
+        window.UserStorage.upsertUser({ ...latest, password: hash, passwordMigrated: true });
 
         showNotification('密码修改成功！', 'success');
 

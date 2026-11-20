@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'xxsg-v3.0.31';
+const CACHE_VERSION = 'xxsg-v3.0.33';
 const APP_SHELL = [
   './',
   './index.html',
@@ -100,6 +100,7 @@ const APP_SHELL = [
   './js/habit-tracker-app.js',
   './js/time-tracker-system.js',
   './js/calendar-module.js',
+  './js/permission-catalog.js',
   './js/permission-manager.js',
   './js/smart-reminder-system.js',
   './js/smart-schedule-system.js',

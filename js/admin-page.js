@@ -347,78 +347,7 @@ async function getDecryptedApiKeyFromConfig(serviceName) {
 }
 
 // 权限定义对象
-const PERMISSIONS = {
-    'add-task': {
-        name: '添加任务',
-        description: '允许用户创建和管理任务',
-        icon: '📝'
-    },
-    'quadrant-view': {
-        name: '四象限视图',
-        description: '允许用户使用四象限时间管理视图',
-        icon: '📊'
-    },
-      'dashboard': {
-        name: '可视化看板',
-        description: '允许用户查看数据可视化看板和统计图表',
-        icon: '📈'
-    },
-    'review': {
-        name: '顶级复盘',
-        description: '允许用户进行深度复盘和总结分析',
-        icon: '🔍'
-    },
-    'templates': {
-        name: '任务模板',
-        description: '允许用户创建和使用任务模板',
-        icon: '📋'
-    },
-    'habit-tracker': {
-        name: '习惯打卡',
-        description: '允许用户使用习惯打卡功能，记录和统计习惯养成',
-        icon: '✅'
-    },
-    'pomodoro': {
-        name: '番茄专注',
-        description: '允许用户使用番茄计时器，提升专注力和效率',
-        icon: '🍅'
-    },
-    'countdown': {
-        name: '倒数日',
-        description: '允许用户创建和管理倒数日，记录重要日期',
-        icon: '📅'
-    },
-    'time-tracker': {
-        name: '时间管理看板',
-        description: '允许用户使用时间管理可视化看板，记录和查看时间分配',
-        icon: '⏱️'
-    },
-    'calendar': {
-        name: '沉浸式日历',
-        description: '允许用户使用沉浸式自然日历，在山景云海中规划日程',
-        icon: '🌄'
-    },
-    'fortune': {
-        name: '每日一签',
-        description: '允许用户查看每日签语（包括传统签语和AI生成）',
-        icon: '🔮'
-    },
-    'more-features': {
-        name: '更多功能',
-        description: '允许用户访问更多功能页面',
-        icon: '⚙️'
-    },
-    'backup': {
-        name: '数据备份',
-        description: '允许用户备份和恢复数据',
-        icon: '💾'
-    },
-    'api-sync': {
-        name: 'API同步',
-        description: '允许任务数据通过API自动同步到外部服务器',
-        icon: '🔄'
-    }
-};
+const PERMISSIONS = window.XXSGPermissionCatalog;
 
 // 检查管理员登录状态
 function checkAdminStatus() {
@@ -633,13 +562,7 @@ function animateCounter(elementId, targetValue) {
 // 快捷操作：创建用户
 function quickCreateUser() {
     goToUserManagement();
-    // 延迟打开创建用户表单
-    setTimeout(() => {
-        const createBtn = document.querySelector('.admin-actions button[onclick*="showCreateUser"]');
-        if (createBtn) {
-            createBtn.click();
-        }
-    }, 500);
+    createNewUser();
 }
 
 // 快捷操作：查看统计
@@ -5444,15 +5367,13 @@ async function handleCreateUser() {
     }
 
     // 检查用户名是否已存在
+    const passwordHash = await window.Security.Password.hashPassword(initialCredential);
     const users = window.UserStorage.getUsers();
     if (users.find(user => user.username === username)) {
         alert('用户名已存在，请选择其他用户名');
         return;
     }
 
-    const passwordHash = (window.Security && window.Security.Password && window.Security.Password.hashPassword)
-        ? await window.Security.Password.hashPassword(initialCredential)
-        : initialCredential;
 
     const newUser = {
         id: 'user_' + Date.now(),
@@ -5472,10 +5393,9 @@ async function handleCreateUser() {
     // 验证保存是否成功
     const savedUsers = window.UserStorage.getUsers();
     const savedUser = savedUsers.find(u => u.username === username);
-    console.log('🔧 从localStorage读取的用户:', savedUser);
     console.log('🔧 保存的用户权限:', savedUser ? savedUser.permissions : '未找到');
 
-    alert(`用户创建成功！\n用户名：${username}\n权限数量：${selectedPermissions.length}\n权限列表：${selectedPermissions.join('、')}`);
+    alert(`用户创建成功！\n用户名：${username}\n权限数量：${selectedPermissions.length}\n权限列表：${selectedPermissions.map(p => PERMISSIONS[p].name).join('、')}`);
     closeCreateUserModal();
     loadUserList();
 }
@@ -5627,33 +5547,6 @@ function editUser(userId) {
     console.log('🔧 复选框数量:', checkboxes.length);
     console.log('🔧 生成的HTML长度:', modalHTML.length);
 
-    // 🔧 重要修复：在模态框创建后立即修复权限复选框状态
-    setTimeout(() => {
-        console.log('🔧 修复权限复选框状态...');
-
-        // 重新获取用户权限（确保是最新的）
-        const updatedUsers = window.UserStorage.getUsers();
-        const updatedUser = updatedUsers.find(u => u.id === userId);
-
-        if (updatedUser) {
-            const updatedPermissions = Array.isArray(updatedUser.permissions) ? [...updatedUser.permissions] : [];
-            console.log('📋 最新用户权限:', updatedPermissions);
-
-            // 重新设置所有复选框状态
-            const checkboxes = document.querySelectorAll('input[name="edit-permissions"]');
-            checkboxes.forEach(checkbox => {
-                const shouldBeChecked = updatedPermissions.includes(checkbox.value);
-                checkbox.checked = shouldBeChecked;
-
-                console.log(`复选框 ${checkbox.value} (${PERMISSIONS[checkbox.value]?.name || checkbox.value}): ${shouldBeChecked ? '✓ 选中' : '✗ 未选中'}`);
-            });
-
-            console.log('✅ 权限复选框状态已修复');
-        } else {
-            console.error('❌ 无法获取最新用户数据');
-        }
-    }, 100);
-
     // 绑定表单提交事件
     const form = document.getElementById('edit-user-form');
     if (form) {
@@ -5681,29 +5574,6 @@ function editUser(userId) {
     } else {
         console.log('⚠️ 未找到保存按钮');
     }
-}
-
-function isStoredCredentialHash(credential) {
-    return typeof credential === 'string' && credential.includes(':');
-}
-
-async function verifyCredentialIfPossible(inputCredential, storedCredential) {
-    if (!inputCredential || !storedCredential) {
-        return false;
-    }
-
-    if (isStoredCredentialHash(storedCredential) && window.Security?.Password?.verifyPassword) {
-        return window.Security.Password.verifyPassword(inputCredential, storedCredential);
-    }
-
-    return inputCredential === storedCredential;
-}
-
-async function hashCredentialIfPossible(credential) {
-    if (window.Security?.Password?.hashPassword) {
-        return window.Security.Password.hashPassword(credential);
-    }
-    return credential;
 }
 
 // 处理编辑用户
@@ -5769,7 +5639,7 @@ async function handleEditUser(userId) {
     users[userIndex].role = role;
     users[userIndex].permissions = cleanPermissions;
     if (editedCredential) {
-        const passwordHash = await hashCredentialIfPossible(editedCredential);
+        const passwordHash = await window.Security.Password.hashPassword(editedCredential);
         users[userIndex].password = passwordHash;
         users[userIndex].passwordMigrated = passwordHash !== editedCredential;
     }
@@ -5804,21 +5674,7 @@ async function handleEditUser(userId) {
             }
 
             // 获取权限名称
-            const permissionNames = cleanPermissions.map(p => {
-                const permissionNameMap = {
-                    'add-task': '添加任务',
-                    'quadrant-view': '四象限视图',
-                    'dashboard': '可视化看板',
-                    'review': '顶级复盘',
-                    'templates': '任务模板',
-                    'more-features': '更多功能',
-                    'fortune': '每日一签',
-                    'habit-tracker': '习惯打卡',
-                    'pomodoro': '番茄专注',
-                    'countdown': '倒数日'
-                };
-                return permissionNameMap[p] || PERMISSIONS[p]?.name || p;
-            }).join('、');
+            const permissionNames = cleanPermissions.map(p => PERMISSIONS[p]?.name || p).join('、');
 
             alert(`用户信息修改成功！\n权限：${permissionNames}`);
             closeEditUserModal();
@@ -5873,13 +5729,13 @@ async function changePassword() {
         return;
     }
 
-    const storedAdminCredential = window.AdminStorage.getRaw('adminPassword') || '';
-    if (!(await verifyCredentialIfPossible(currentCredential, storedAdminCredential))) {
+    const storedAdminCredential = await window.Security.Password.readAdminCredential();
+    if (!(await window.Security.Password.matches(currentCredential, storedAdminCredential))) {
         alert('当前密码不正确');
         return;
     }
 
-    const hashedCredential = await hashCredentialIfPossible(newCredential);
+    const hashedCredential = await window.Security.Password.hashPassword(newCredential);
     window.AdminStorage.setAdminPassword(hashedCredential);
     window.AdminStorage.addPasswordChangeLog({ action: 'password_changed', note: 'admin page update' });
     alert('密码修改成功！');

@@ -6,6 +6,7 @@ function getSwitchTasks() {
 }
 
 function switchView(view) {
+    if (view === 'time-train' && !checkUserMenuPermissions().includes('templates')) return;
     // 使用缓存的DOM元素
     const views = getCachedViews();
     const tabButtons = getCachedTabButtons();
